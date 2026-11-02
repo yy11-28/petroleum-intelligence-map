@@ -1,0 +1,149 @@
+{
+  "id": "thermal-string-stress",
+  "sceneId": "co36",
+  "title": "热采井完井管柱应力智能评价：温度—载荷耦合校核",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "稠油热采井注汽温度 300℃ 以上，管柱在升温—降温的循环里反复伸缩：热应力叠加轴向力后常出现屈曲、套管错断与螺纹失效。按常温工况做一次校核不够用，多轮次吞吐后的累积损伤更要命——事故大多发生在第 2 到第 4 轮。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "时序 + 结构",
+          "desc": "注汽温度、压力史、管柱结构与材料参数"
+        },
+        {
+          "label": "标注成本",
+          "value": "低",
+          "desc": "工况记录齐全，失效样本少但可用机理补"
+        },
+        {
+          "label": "可见收益",
+          "value": "高",
+          "desc": "提前指出第几轮会出事，避免修井"
+        },
+        {
+          "label": "难度",
+          "value": "高",
+          "desc": "热—固耦合 + 循环疲劳，温度场本身有不确定性"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>现场做法是按常温等效做一次管柱校核：把注汽温度折算成一个等效温差，算出热应力后叠加轴力，再除以一个经验安全系数。一轮吞吐算一次，结论写进设计书就不再更新。</p><p>问题有三个：<b>温度场靠经验取值</b>——井筒沿深度的温度分布随注汽速率、焖井时间与地层导热变化，取一个平均值会低估局部热应力；<b>循环损伤没有量化</b>——每轮升温降温都在累积低周疲劳，单轮次校核看不出第 3 轮会断；<b>预应力与补偿方式凭习惯</b>——要不要加伸缩管、预应力拉多少，通常照抄邻井。</p><svg viewBox='0 0 660 130' role='img' aria-label='单轮次常温校核与全周期热—固耦合校核的差别' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>同样一口井：常温等效只算一个点，全周期校核算的是温度与轴向力随时间的整条历程</text><text x='40' y='42' font-size='10' fill='#3d4a48'>常温等效校核（现状）</text><rect x='40' y='50' width='260' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='56' y='68' font-size='9' fill='#4d565b'>ΔT 取定值 240℃</text><text x='56' y='84' font-size='9' fill='#4d565b'>σ = E·α·ΔT + F/A</text><text x='56' y='100' font-size='9' fill='#4d565b'>除以经验安全系数 1.5</text><circle cx='180' cy='86' r='14' fill='none' stroke='#2f7d6b' stroke-width='1.5'/><text x='200' y='90' font-size='9' fill='#2f7d6b'>一次通过即定案</text><text x='340' y='42' font-size='10' fill='#3d4a48'>全周期热—固耦合校核（本方法）</text><rect x='340' y='50' width='300' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><polyline points='360,100 400,66 440,100 480,62 520,100 560,72 600,100' fill='none' stroke='#c9613f' stroke-width='1.6'/><text x='356' y='68' font-size='9' fill='#4d565b'>注汽 → 焖井 → 采油：温度与轴向力逐时程计算</text><text x='356' y='84' font-size='9' fill='#4d565b'>第 1 轮…第 6 轮：累积低周疲劳损伤</text><text x='356' y='100' font-size='9' fill='#2f7d6b'>输出：第几轮超限 + 预应力与补偿建议</text><circle cx='620' cy='92' r='12' fill='none' stroke='#c9613f' stroke-width='1.5'/><text x='12' y='122' font-size='8.5' fill='#79828a'>差别不在算得准，而在把「一次静态校核」换成「按轮次推演的损伤历程」</text></svg><div class='viz-cap'>图：单轮次常温校核与全周期热—固耦合校核的差别</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>用热—固耦合的代理模型预测注汽、焖井、采油全周期的温度场与轴向力历程，再按屈服、屈曲、低周疲劳三项判据逐轮校核，最后给出预应力与补偿方式的建议区间。模型不替代机理——它把机理计算从「一次」变成「每一轮、每一米」。</p><p>关键在于三件事：温度场按井筒传热逐段算而不是取定值；轴向力把活塞效应、屈曲约束与摩阻一起算；疲劳损伤按轮次累加并给出剩余寿命。输出不是「安全 / 不安全」，而是<b>「第几轮、哪一段、哪种失效模式先到」</b>。</p><svg viewBox='0 0 660 130' role='img' aria-label='热采管柱应力评价的四段链路：温度场 → 轴向力 → 三项判据 → 补偿建议' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><rect x='20' y='34' width='140' height='56' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='36' y='54' font-size='10' fill='#3d4a48'>① 温度场</text><text x='36' y='70' font-size='8.5' fill='#79828a'>井筒传热逐段算</text><text x='36' y='84' font-size='8.5' fill='#79828a'>注汽 / 焖井 / 采油</text><line x1='162' y1='62' x2='194' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='194,62 188,58.5 188,65.5' fill='#8a8f80'/><rect x='196' y='34' width='140' height='56' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='212' y='54' font-size='10' fill='#3d4a48'>② 轴向力</text><text x='212' y='70' font-size='8.5' fill='#79828a'>热应力 + 活塞效应</text><text x='212' y='84' font-size='8.5' fill='#79828a'>+ 屈曲约束 + 摩阻</text><line x1='338' y1='62' x2='370' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='370,62 364,58.5 364,65.5' fill='#8a8f80'/><rect x='372' y='34' width='140' height='56' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='388' y='54' font-size='10' fill='#3d4a48'>③ 三项判据</text><text x='388' y='70' font-size='8.5' fill='#79828a'>屈服 / 屈曲 / 疲劳</text><text x='388' y='84' font-size='8.5' fill='#79828a'>按轮次累加损伤</text><line x1='514' y1='62' x2='546' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='546,62 540,58.5 540,65.5' fill='#8a8f80'/><rect x='548' y='34' width='100' height='56' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='560' y='54' font-size='10' fill='#3d4a48'>④ 建议</text><text x='560' y='70' font-size='8.5' fill='#79828a'>预应力 / 伸缩管</text><text x='560' y='84' font-size='8.5' fill='#79828a'>可行区间</text><text x='12' y='112' font-size='8.5' fill='#79828a'>每段都可单独核查：温度场对不对、轴向力项有没有漏、判据阈值按哪个规范</text></svg><div class='viz-cap'>图：热采管柱应力评价的四段链路：温度场 → 轴向力 → 三项判据 → 补偿建议</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>注汽与生产史</b>（注汽温度、速率、焖井时间、产液与含水）；<b>管柱结构</b>（钢级、壁厚、螺纹、扶正器、伸缩管位置）；<b>井筒与地层参数</b>（井身结构、导热系数、地温梯度）；<b>历史失效记录</b>（失效轮次、位置、形貌与处置）。</p><p>温度史与工况记录齐全的井优先；失效样本少不要紧，可用机理模型补，但材料高温性能曲线必须来自实测而不是手册值。</p><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>注汽温度 250—340℃、焖井 3—10 天、单井 4—8 轮；管柱参数按单根记录，材料高温屈服与疲劳曲线取实测值</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>温度场沿深度逐段算，不得取全井平均；屈曲判据需区分自由段与约束段；疲劳按低周（循环次数 < 10⁴）处理</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>给出「第几轮、哪一段、先出现哪种失效」+ 剩余寿命 + 预应力与补偿方式的可行区间</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度偏高：热—固耦合本身计算量大，而温度场受注汽参数与地层导热影响存在不确定性，材料高温性能随批次波动；管柱一旦在第 3 轮失效，后果由整口井承担，模型必须给保守边界。</p><p><b>难在哪</b>：温度场有 10% 量级的不确定性，而低周疲劳对循环幅值极敏感——温度取高了乐观、取低了浪费，必须给出区间而不是单点结论。参考方向为热—固耦合代理模型、低周疲劳累积与多目标校核。</p><p><b>与传统做法的本质差别</b>：过去是「折算温差 + 安全系数一次通过」，现在是「按轮次推演损伤并指出最先失效的位置与模式」——差别不在安全系数取多大，而在把静态结论换成随时间演化的判断。</p>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "热采管柱应力评价怎么做",
+      "lead": [
+        "核心是把「折算一个温差算一次」换成「按注汽—焖井—采油的全周期算温度与轴向力历程，再逐轮累加疲劳损伤」。",
+        "下面的示范是第 2—4 步：调整注汽温度、轮次与预应力，看管柱的屈服、屈曲与疲劳裕度怎么变化。"
+      ],
+      "stats": [
+        [
+          "注汽温度",
+          "250—340℃"
+        ],
+        [
+          "吞吐轮次",
+          "4—8 轮"
+        ],
+        [
+          "判据",
+          "屈服 / 屈曲 / 疲劳"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "工况与结构整理",
+          "role": "数据",
+          "do": "整理注汽温度与速率、焖井与采油时间、管柱结构与材料高温性能曲线，统一深度基准后按 10 m 一段切片。",
+          "effect": "一口井一套随深度与时间变化的工况输入，材料参数带来源标记。",
+          "trap": "材料高温屈服与疲劳曲线若取手册值，批次差异可达 15%，必须优先用实测或同批数据。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='工况与结构整理：温度史 + 管柱结构 + 材料曲线' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>整理口径：时间维度（注汽—焖井—采油）× 深度维度（按 10 m 切片）× 材料参数（高温实测）</text><line x1='60' y1='40' x2='60' y2='100' stroke='#242b2e' stroke-width='1'/><text x='40' y='46' font-size='8.5' fill='#79828a'>温度</text><polyline points='64,96 120,92 150,50 180,46 210,50 250,88 300,92 340,60 380,58 420,62 460,90 520,92' fill='none' stroke='#c9613f' stroke-width='1.8'/><text x='150' y='40' font-size='8.5' fill='#c9613f'>注汽 310℃</text><text x='250' y='100' font-size='8.5' fill='#79828a'>焖井降温</text><text x='340' y='54' font-size='8.5' fill='#c9613f'>第 2 轮注汽</text><rect x='548' y='34' width='100' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='558' y='52' font-size='9' fill='#4d565b'>管柱结构</text><text x='558' y='66' font-size='8.5' fill='#79828a'>钢级 / 壁厚</text><text x='558' y='80' font-size='8.5' fill='#79828a'>螺纹 / 伸缩管</text><text x='558' y='96' font-size='8.5' fill='#c9613f'>材料高温曲线</text><text x='12' y='118' font-size='8.5' fill='#79828a'>工况输入的时间分辨率决定后面所有计算：注汽速率曲线缺失就只能取定值，误差从这里进入</text></svg><div class='viz-cap'>图：工况与结构整理：温度史 + 管柱结构 + 材料曲线</div>"
+        },
+        {
+          "name": "井筒温度场计算",
+          "role": "算法",
+          "do": "按井筒传热逐段计算注汽、焖井与采油阶段的温度分布，输出随深度与时间变化的温度场。",
+          "effect": "得到每米、每小时的温度历程，而不是一个全井平均温差。",
+          "trap": "地层导热系数与水泥环热阻取值会改变局部温度梯度，敏感性必须显式给出。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='井筒温度场：随深度与时间变化的温度分布' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>温度场不是一条曲线：沿深度有梯度，随时间随阶段变化，局部峰值决定局部热应力</text><line x1='60' y1='34' x2='60' y2='104' stroke='#242b2e' stroke-width='1'/><text x='40' y='40' font-size='8' fill='#4d565b'>0 m</text><text x='34' y='70' font-size='8' fill='#4d565b'>600</text><text x='34' y='100' font-size='8' fill='#4d565b'>1200</text><polyline points='64,40 110,42 160,46 210,52 260,60 310,70 360,80 400,88' fill='none' stroke='#c9613f' stroke-width='2'/><text x='360' y='98' font-size='8.5' fill='#c9613f'>注汽末期</text><polyline points='64,44 110,48 160,56 210,64 260,72 310,80 360,86 400,90' fill='none' stroke='#41699b' stroke-width='1.6'/><text x='300' y='82' font-size='8.5' fill='#41699b'>焖井 5 天</text><polyline points='64,50 110,56 160,64 210,72 260,78 310,82 360,86 400,88' fill='none' stroke='#2f7d6b' stroke-width='1.6'/><text x='180' y='74' font-size='8.5' fill='#2f7d6b'>采油期</text><rect x='430' y='40' width='218' height='60' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='58' font-size='8.5' fill='#4d565b'>局部峰值温度出现在注汽段中部</text><text x='442' y='74' font-size='8.5' fill='#c9613f'>热阻取值改变梯度 → 敏感性必须给</text><text x='442' y='92' font-size='8.5' fill='#c9613f'>取全井平均温差会低估局部热应力</text><text x='12' y='124' font-size='8.5' fill='#79828a'>温度场是整套校核的输入：这里取平均，后面全部失效</text></svg><div class='viz-cap'>图：井筒温度场：随深度与时间变化的温度分布</div>"
+        },
+        {
+          "name": "轴向力与热应力合成",
+          "role": "算法",
+          "do": "把热应力与活塞效应、屈曲约束、摩阻逐项合成，输出随深度与时间变化的轴向力历程。",
+          "effect": "每一米、每一时刻的轴力可查，压曲段与拉伸段在图上分开标注。",
+          "trap": "漏掉活塞效应或摩阻会系统性低估轴力；屈曲后轴力重分布不能再用线性叠加。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='轴向力合成：热应力 + 活塞效应 + 屈曲约束 + 摩阻' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>四项叠加：漏一项就系统性偏乐观，而偏乐观的方向正好是出事的方向</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='30' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>深度 →</text><text x='46' y='40' font-size='8.5' fill='#79828a'>轴力</text><polyline points='70,80 120,74 170,66 220,56 270,48 320,42 370,40' fill='none' stroke='#41699b' stroke-width='2'/><text x='300' y='36' font-size='8.5' fill='#41699b'>热应力</text><polyline points='70,86 120,80 170,72 220,64 270,56 320,50 370,48' fill='none' stroke='#2f7d6b' stroke-width='1.6'/><text x='240' y='60' font-size='8.5' fill='#2f7d6b'>+ 活塞效应</text><polyline points='70,90 120,86 170,80 220,74 270,68 320,62 370,58' fill='none' stroke='#c9613f' stroke-width='1.6'/><text x='230' y='78' font-size='8.5' fill='#c9613f'>+ 屈曲约束 + 摩阻</text><rect x='300' y='30' width='70' height='32' fill='#f4ded4' opacity='0.5'/><text x='308' y='44' font-size='8.5' fill='#8a3d20'>压曲段</text><rect x='430' y='34' width='218' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='52' font-size='8.5' fill='#c9613f'>屈曲后轴力重分布，不能线性叠加</text><text x='442' y='68' font-size='8.5' fill='#4d565b'>拉伸段与压曲段必须分开判据</text><text x='442' y='88' font-size='8.5' fill='#c9613f'>漏项 = 系统性低估，方向最危险</text><text x='12' y='124' font-size='8.5' fill='#79828a'>合成结果要给出分项构成：偏在哪里一眼可见，便于与现场经验对账</text></svg><div class='viz-cap'>图：轴向力合成：热应力 + 活塞效应 + 屈曲约束 + 摩阻</div>"
+        },
+        {
+          "name": "三项判据逐轮校核",
+          "role": "算法",
+          "do": "按屈服、屈曲、低周疲劳三项判据逐轮校核，累加疲劳损伤并给出最先超限的轮次、位置与失效模式。",
+          "effect": "输出「第 4 轮、820—880 m、低周疲劳先到」这类可执行的结论与剩余寿命。",
+          "trap": "疲劳对循环幅值极敏感，温度取高一点就乐观、取低一点就浪费，必须给区间而不是单点。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='三项判据逐轮校核：屈服 / 屈曲 / 疲劳' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>逐轮累加：哪一轮先到、在哪一段、是哪种模式——这才是现场要的结论</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>轮次（1 → 8）</text><text x='46' y='38' font-size='8.5' fill='#79828a'>损伤 ↑</text><text x='70' y='106' font-size='8' fill='#4d565b'>1</text><text x='120' y='106' font-size='8' fill='#4d565b'>2</text><text x='170' y='106' font-size='8' fill='#4d565b'>3</text><text x='220' y='106' font-size='8' fill='#4d565b'>4</text><text x='270' y='106' font-size='8' fill='#4d565b'>5</text><text x='320' y='106' font-size='8' fill='#4d565b'>6</text><text x='370' y='106' font-size='8' fill='#4d565b'>7</text><polyline points='70,86 120,78 170,66 220,52 270,44 320,38 370,32' fill='none' stroke='#c9613f' stroke-width='2'/><text x='280' y='36' font-size='8.5' fill='#c9613f'>累积疲劳损伤</text><line x1='60' y1='40' x2='400' y2='40' stroke='#41699b' stroke-width='1.4' stroke-dasharray='6 3'/><text x='300' y='34' font-size='8.5' fill='#41699b'>疲劳限值 D = 1</text><circle cx='220' cy='52' r='8' fill='none' stroke='#c9613f' stroke-width='1.5'/><text x='232' y='62' font-size='8.5' fill='#c9613f'>第 4 轮超限：820—880 m</text><rect x='430' y='34' width='218' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='52' font-size='8.5' fill='#4d565b'>屈服：应力 / 高温屈服强度</text><text x='442' y='68' font-size='8.5' fill='#4d565b'>屈曲：临界载荷 / 实际轴力</text><text x='442' y='88' font-size='8.5' fill='#c9613f'>疲劳：D 逐轮累加（低周）</text><text x='12' y='124' font-size='8.5' fill='#79828a'>三项一起看：单看屈服通过的井，往往先倒在疲劳上——事故集中在第 2—4 轮正是这个原因</text></svg><div class='viz-cap'>图：三项判据逐轮校核：屈服 / 屈曲 / 疲劳</div>"
+        },
+        {
+          "name": "预应力与补偿建议",
+          "role": "人工",
+          "do": "工程师结合工具库存与作业习惯确认预应力大小与是否加伸缩管，模型给出可行区间与各自的裕度。",
+          "effect": "从「照抄邻井」变成「在区间内按当前工况选」，并说明改一项会换来多少轮次余量。",
+          "trap": "预应力过大反而提高平均应力、加速疲劳，不是越大越好，必须给可行区间而不是推荐单点。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='预应力与补偿方式：可行区间与裕度权衡' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>预应力不是越大越好：过大提高平均应力反而加速疲劳，给区间让现场按工况选</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>预应力（kN）→</text><text x='46' y='38' font-size='8.5' fill='#79828a'>可用轮次 ↑</text><polyline points='70,60 130,44 190,36 250,40 310,50 370,68' fill='none' stroke='#2f7d6b' stroke-width='2'/><rect x='130' y='30' width='120' height='62' fill='#a9c9ba' opacity='0.35'/><text x='148' y='44' font-size='8.5' fill='#2f5a4d'>可行区间 120—240 kN</text><circle cx='190' cy='36' r='7' fill='none' stroke='#2f7d6b' stroke-width='1.5'/><text x='202' y='30' font-size='8.5' fill='#2f7d6b'>最优 ≈ 180 kN（+2 轮）</text><text x='300' y='78' font-size='8.5' fill='#c9613f'>过大 → 平均应力↑ 疲劳加速</text><rect x='430' y='34' width='218' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='52' font-size='8.5' fill='#4d565b'>伸缩管：吸收热伸长</text><text x='442' y='68' font-size='8.5' fill='#4d565b'>预应力：抵消热应力峰值</text><text x='442' y='88' font-size='8.5' fill='#c9613f'>两者都要给可行区间</text><text x='12' y='124' font-size='8.5' fill='#79828a'>模型给区间与代价，人按现场条件定：可干预的才是建议，不可干预的只是结论</text></svg><div class='viz-cap'>图：预应力与补偿方式：可行区间与裕度权衡</div>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>失效轮次命中</b>：预测最先失效的轮次与位置，与实际发生复杂情况的轮次偏差 ≤ 1 轮。</p><p><b>余量可解释</b>：三项判据各自的裕度分项列出，任一项超限都要能指出是哪一段、哪一项贡献最大。</p><p><b>保守方向正确</b>：温度场取区间下限时结论仍安全，不允许出现「取低值才安全」的反向结论。</p>"
+      },
+      "fails": [
+        {
+          "name": "温度场取定值",
+          "why": "折算温差取全井平均，局部热应力被低估，校核通过但现场仍屈曲。"
+        },
+        {
+          "name": "漏算轴向力项",
+          "why": "只用热应力叠加自重，漏掉活塞效应与摩阻，轴力系统性偏低。"
+        },
+        {
+          "name": "只看屈服不看疲劳",
+          "why": "单轮次屈服通过就定案，第 3—4 轮在低周疲劳上失效。"
+        },
+        {
+          "name": "预应力一味加大",
+          "why": "预应力过大提高平均应力，反而缩短疲劳寿命。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 700,
+      "intro": "拖动注汽温度、吞吐轮次与预应力，看三项判据的裕度怎么变——把轮次拉到第 6 轮，注意疲劳损伤曲线的位置。",
+      "html": "demo/index.html"
+    }
+  }
+}

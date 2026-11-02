@@ -1,0 +1,168 @@
+{
+ "id": "completion-string-force",
+ "sceneId": "co3",
+ "methods": [
+  "opt"
+ ],
+ "title": "完井管柱受力智能分析：多工况校核",
+ "version": "1.0.0",
+ "updated": "2026-10-23",
+ "tabs": {
+  "background": {
+   "label": "专业背景",
+   "lede": "生产管柱在温度、压力变化下会产生轴向力与变形，设计不当会导致管柱屈曲、接头泄漏甚至断脱。真正难的不是算一个工况，而是工况组合很多、参数又不确定——工程师只能按最保守的那几个工况校核，于是安全余量常年按最悲观工况留足，成为常态化的材料浪费。",
+   "judge": [
+    {
+     "label": "数据形态",
+     "value": "机理模型 + 工况表",
+     "desc": "参数都是结构化的，能批量仿真"
+    },
+    {
+     "label": "标注成本",
+     "value": "低",
+     "desc": "训练标签由仿真生成，真实失效样本只做校验"
+    },
+    {
+     "label": "可见收益",
+     "value": "中",
+     "desc": "把几天的工况校核压到几分钟，还能找出真正危险的那几个"
+    },
+    {
+     "label": "难度",
+     "value": "中",
+     "desc": "机理可信度高，难点在不确定参数的传播"
+    }
+   ],
+   "sections": [
+    {
+     "no": 1,
+     "en": "PROBLEM",
+     "title": "当前做法与问题",
+     "html": "<p>常规做法：工程师在商用管柱力学软件里挑几个「最不利工况」——通常是最高内压、最低温度、最大产量——分别算一遍轴向力、安全系数与长度变化，逐个看是否越限。</p><p>问题在于组合会爆掉：温度、油压、套压、产量、流体密度每一个都在取值区间内连续变化，两两组合就是几百种。实际只能校核其中六七种，<b>危险可能藏在没算的那一格</b>；反过来为了保证不出事，设计又习惯按最保守工况取壁厚与钢级，<b>材料常年过剩</b>。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='管柱三种效应与两种失效形式'>\n<rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/>\n<defs><marker id='arF' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0 0 L6 3 L0 6 Z' fill='#41699b'/></marker><marker id='arF2' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0 0 L6 3 L0 6 Z' fill='#b26a39'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>管柱在下井后并不是静止的：投产时的压力、温度变化会让它被额外拉伸或压缩</text>\n<rect x='16' y='28' width='320' height='200' rx='6' fill='#efece1' stroke='#e2ded0'/><text x='30' y='48' font-size='10.5' fill='#4d565b'>三个效应叠加成封隔器处的轴向力</text>\n<rect x='150' y='62' width='30' height='150' fill='#fff' stroke='#242b2e'/><text x='165' y='58' font-size='9' fill='#79828a' text-anchor='middle'>管柱</text>\n<rect x='146' y='110' width='38' height='16' rx='2' fill='#41699b' opacity='0.85'/><text x='184' y='122' font-size='9' fill='#41699b'>封隔器</text>\n<line x1='165' y1='70' x2='165' y2='104' stroke='#2f7d6b' stroke-width='2' marker-end='url(#arF)'/><text x='60' y='92' font-size='9.5' fill='#2f7d6b'>① 浮重（自重−浮力）→ 拉</text>\n<line x1='165' y1='196' x2='165' y2='168' stroke='#41699b' stroke-width='2' marker-end='url(#arF)'/><text x='60' y='190' font-size='9.5' fill='#41699b'>② 活塞效应（降压）→ 拉</text>\n<line x1='196' y1='140' x2='196' y2='140' stroke='#b26a39' stroke-width='2'/><text x='204' y='144' font-size='9.5' fill='#b26a39'>③ 温度效应（升温被约束）→ 压</text>\n<text x='30' y='222' font-size='9.5' fill='#4d565b'>三者相加才是封隔器处的<tspan font-weight='600'>真实轴力</tspan>；只算自重会差出一个量级。</text>\n<rect x='352' y='28' width='332' height='200' rx='6' fill='#fbfaf6' stroke='#e2ded0'/><text x='366' y='48' font-size='10.5' fill='#4d565b'>两种失效形式，判据完全不同</text>\n<rect x='366' y='60' width='140' height='150' rx='4' fill='#efece1'/><text x='436' y='78' font-size='10' fill='#4d565b' text-anchor='middle'>拉断</text><line x1='436' y1='90' x2='436' y2='190' stroke='#41699b' stroke-width='3'/><line x1='424' y1='90' x2='424' y2='190' stroke='#41699b' stroke-width='2'/><path d='M412 140 L424 132 L412 148 Z' fill='#41699b'/><path d='M460 140 L448 132 L460 148 Z' fill='#41699b'/><text x='436' y='204' font-size='9' fill='#79828a' text-anchor='middle'>井口拉力 &gt; 接头强度</text>\n<rect x='520' y='60' width='150' height='150' rx='4' fill='#efece1'/><path d='M540 200 C 560 168, 610 200, 630 168 C 650 140, 660 160, 660 150' fill='none' stroke='#b26a39' stroke-width='2.4'/><path d='M540 200 C 556 176, 596 208, 616 180 C 636 152, 652 168, 664 156' fill='none' stroke='#c9613f' stroke-width='2.4' stroke-dasharray='5 3'/><text x='595' y='78' font-size='10' fill='#4d565b' text-anchor='middle'>屈曲</text><text x='595' y='204' font-size='9' fill='#79828a' text-anchor='middle'>压缩段 &gt; 临界载荷 → 蛇形/螺旋</text>\n<line x1='366' y1='214' x2='668' y2='214' stroke='#e2ded0'/>\n<text x='366' y='232' font-size='9.5' fill='#4d565b'>实线＝正弦屈曲，虚线＝螺旋屈曲（永久变形）。</text>\n</svg><span class='viz-cap'>三个效应叠加成封隔器处轴力；两种失效（拉断与屈曲）判据完全不同，且常常被同一个参数往相反方向推。</span></div>"
+    },
+    {
+     "no": 2,
+     "en": "INTERVENTION",
+     "title": "AI 能做什么",
+     "html": "<p>这个场景不需要黑箱模型——管柱力学本身就有相当可靠的机理模型。AI 的介入点在别处：把机理模型当成「标签生成器」，批量跑几万组工况生成数据集，训练一个<b>代理模型</b>把「工况参数 → 安全系数」映射下来；之后做两件事——</p><p>① <b>全工况扫描</b>：在秒级完成的代理模型上把整个参数空间扫一遍，把危险区划成一张图而不是几个点；② <b>可靠性评估</b>：对不确定的参数（地温梯度、流体密度、摩阻系数）撒蒙特卡洛，直接给出「失效概率」而不是单一安全系数。</p><p>被替掉的是「逐个工况打开软件、手工记录结果」这一步；人回到做判断的角色：危险区要不要通过调整参数消掉，还是接受并用材料解决。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='人工只能校核几格，代理模型可以扫全空间'>\n<rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>难的不是算一个工况，而是工况组合太多：人工只能校核其中几格</text>\n<rect x='16' y='30' width='300' height='160' rx='6' fill='#efece1' stroke='#e2ded0'/><text x='30' y='50' font-size='10.5' fill='#4d565b'>人工校核：只看得到几个点</text>\n<line x1='40' y1='170' x2='300' y2='170' stroke='#242b2e'/><line x1='40' y1='66' x2='40' y2='170' stroke='#242b2e'/>\n<text x='40' y='184' font-size='9' fill='#79828a'>生产压差 →</text><text x='34' y='62' font-size='9' fill='#79828a' text-anchor='end'>↑ 温升</text>\n<rect x='44' y='80' width='252' height='86' fill='#fbfaf6' opacity='0.55'/>\n<circle cx='90' cy='140' r='4.5' fill='#2f7d6b'/><circle cx='150' cy='110' r='4.5' fill='#2f7d6b'/><circle cx='210' cy='100' r='4.5' fill='#2f7d6b'/><circle cx='256' cy='90' r='4.5' fill='#c9613f'/>\n<text x='96' y='144' font-size='9' fill='#2f7d6b'>校核通过</text><text x='216' y='96' font-size='9' fill='#2f7d6b'>通过</text>\n<text x='16' y='200' font-size='9.5' fill='#c9613f'>4 个点都过 → 结论「设计安全」，但网格里其余几万格没人看过</text>\n<path d='M316 110 L354 110' stroke='#242b2e' stroke-width='1.2' marker-end='url(#arG)'/><defs><marker id='arG' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<rect x='354' y='30' width='330' height='160' rx='6' fill='#fbfaf6' stroke='#e2ded0'/><text x='368' y='50' font-size='10.5' fill='#4d565b'>代理模型：把整个空间都扫一遍</text>\n<line x1='378' y1='170' x2='670' y2='170' stroke='#242b2e'/><line x1='378' y1='66' x2='378' y2='170' stroke='#242b2e'/>\n<rect x='382' y='70' width='144' height='100' fill='#d7e7df'/><rect x='526' y='70' width='72' height='100' fill='#ece8d8'/><rect x='598' y='70' width='36' height='100' fill='#e2b785'/><rect x='634' y='70' width='36' height='100' fill='#c9613f'/>\n<line x1='634' y1='66' x2='670' y2='174' stroke='#c9613f' stroke-dasharray='4 3'/>\n<text x='640' y='182' font-size='9' fill='#c9613f'>危险区 11%</text>\n<circle cx='560' cy='120' r='4.5' fill='none' stroke='#242b2e' stroke-width='1.6'/><text x='568' y='124' font-size='9' fill='#242b2e'>当前工况</text>\n<text x='368' y='190' font-size='9.5' fill='#4d565b'>4.2 万组全扫 → <tspan font-weight='600'>危险区边界</tspan>被画出来，而不是被猜出来</text>\n</svg><span class='viz-cap'>左：人工校核只能覆盖几个点。右：代理模型把整个工况空间扫成一张危险区地图。</span></div><p><b>并入专项 · 管柱屈曲行为智能预测</b>：智能方法把校核变成随工况演化的预测：用工况时序（温度、压力、产量）驱动管柱轴向力演化模型，逐时步算有效轴向力，与反演出的临界屈曲载荷对比，输出沿井深的安全裕度曲线与高风险井段。输出不是「安全系数 1.4」这种静态数字，而是「按当前配产，投产后第 40—70 天在 2600—2900 m 段裕度将降到 1.05，建议届时下调产量或补加热补偿」。。</p>"
+    },
+    {
+     "no": 3,
+     "en": "DATA",
+     "title": "需要准备什么",
+     "html": "<p><b>管柱结构与材料</b>：钢级、壁厚、外径、扣型与接头抗拉/抗内压强度，下深与井身结构（套管内径决定屈曲间隙）——全部无需标注。</p><p><b>工况参数</b>：油压/套压变化、温度梯度、产量、流体密度、封隔器是否锚定。这部分决定标签空间，可批量仿真生成，一般取 2–5 万组。</p><p><b>失效案例</b>：断脱、泄漏、封隔器失封的记录，量不大（几十到上百条），用于校验代理模型的判据阈值是否与现场一致——这类样本不是用来训练的，是用来<b>标定「多危险算危险」</b>的。</p><div class='viz'><svg viewBox='0 0 700 190' role='img' aria-label='数据来源与假设留档的瓶颈'>\n<rect x='0' y='0' width='700' height='190' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>需要准备什么：力学参数不缺，缺的是「假设有没有留档」</text>\n<rect x='16' y='30' width='200' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='116' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>管材与几何</text>\n<text x='28' y='66' font-size='9' fill='#4d565b'>钢级 · 外径 · 壁厚 · 接头强度</text><text x='28' y='82' font-size='9' fill='#4d565b'>弹性模量 · 线膨胀系数</text><text x='28' y='98' font-size='9' fill='#4d565b'>套管内径（决定屈曲间隙）</text><line x1='28' y1='108' x2='204' y2='108' stroke='#d8d2c4'/><text x='28' y='124' font-size='9' fill='#79828a'>来自管材手册，结构化</text><text x='28' y='138' font-size='9' fill='#79828a'>单位统一是第一步</text>\n<rect x='228' y='30' width='200' height='112' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='328' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>工况区间</text>\n<text x='240' y='66' font-size='9' fill='#4d565b'>生产压差 · 温升 · 产量</text><text x='240' y='82' font-size='9' fill='#4d565b'>流体密度 · 含水 · 气液比</text><text x='240' y='98' font-size='9' fill='#4d565b'>开关井与压裂等瞬态</text><line x1='240' y1='108' x2='416' y2='108' stroke='#d8d2c4'/><text x='240' y='124' font-size='9' fill='#41699b'>每个参数都是区间，不是点值</text><text x='240' y='138' font-size='9' fill='#41699b'>区间怎么定要有依据</text>\n<rect x='440' y='30' width='244' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='562' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>假设与口径（最容易丢）</text>\n<text x='452' y='66' font-size='9' fill='#4d565b'>地温梯度 · 摩阻系数</text><text x='452' y='82' font-size='9' fill='#4d565b'>封隔器锚定方式</text><text x='452' y='98' font-size='9' fill='#4d565b'>浮力计算基准</text><line x1='452' y1='108' x2='672' y2='108' stroke='#d8d2c4'/><text x='452' y='124' font-size='9' fill='#c9613f'>不留档 = 换个工程师算出不同结论</text><text x='452' y='138' font-size='9' fill='#c9613f'>这是复现性失败的第一来源</text>\n<rect x='150' y='156' width='400' height='26' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='350' y='173' font-size='10' fill='#fff' text-anchor='middle'>标签由机理模型生成（4.2 万组）· 现场实测只用于校验</text>\n<path d='M116 142 L116 156' stroke='#79828a'/><path d='M328 142 L328 156' stroke='#41699b'/><path d='M562 142 L562 156' stroke='#c9613f'/>\n</svg><span class='viz-cap'>数据分层：管材与工况区间是输入，最易丢的是「假设与口径」——不留档就无法复现。</span></div>"
+    },
+    {
+     "no": 4,
+     "en": "DIFFICULTY",
+     "title": "难度与参考方向",
+     "html": "<p>难点：<b>机理模型的输入本身不确定</b>——地温梯度、实际摩阻、完井液密度都在一个范围内，单点计算给出的安全系数是假的精确；<b>屈曲属于强非线性</b>，安全系数在临界附近跳变，代理模型容易在边界上出错；<b>校核判据不统一</b>——不同单位对标定的 API 公式与折减系数处理不同，要先在内部定一个口径。</p><p>改进路线：① 先做敏感性分析（Sobol 指数）筛掉无关参数，把维度降下来；② 代理模型优先高斯过程，样本效率与不确定性估计都更好；③ 输出改成「失效概率 + 主导贡献项」，让工程师能看出危险来自温度还是压力；④ 把施工偏差（实际下深、实际液密度）也作为参数撒进去。</p><div class='viz'><svg viewBox='0 0 700 205' role='img' aria-label='边界漏判与不确定度两个难点'>\n<rect x='0' y='0' width='700' height='205' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>两个必须承认的局限：临界附近会漏判，点估计会骗人</text>\n<rect x='16' y='28' width='330' height='166' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10.5' fill='#4d565b'>① 边界漏判：代理模型把临界磨平了</text>\n<line x1='40' y1='150' x2='330' y2='150' stroke='#242b2e'/><line x1='40' y1='60' x2='40' y2='150' stroke='#242b2e'/>\n<path d='M44 70 C 90 68, 130 66, 170 100 C 200 126, 240 138, 322 142' fill='none' stroke='#41699b' stroke-width='2'/><text x='250' y='70' font-size='9' fill='#41699b'>真实（陡）</text>\n<path d='M44 72 C 110 74, 180 90, 250 116 C 290 130, 310 136, 322 140' fill='none' stroke='#c9613f' stroke-width='2' stroke-dasharray='5 3'/><text x='250' y='132' font-size='9' fill='#c9613f'>代理（平滑）</text>\n<line x1='40' y1='120' x2='330' y2='120' stroke='#b26a39' stroke-dasharray='4 3'/><text x='44' y='116' font-size='8.5' fill='#b26a39'>SF = 1 临界线</text>\n<circle cx='176' cy='106' r='4' fill='#c9613f'/><text x='184' y='110' font-size='9' fill='#c9613f'>真实已越限，代理判为安全</text>\n<text x='28' y='170' font-size='9' fill='#4d565b'>处理：对临界附近的样本加密重训，并单独统计<tspan font-weight='600'>危险区查全率</tspan></text><text x='28' y='186' font-size='9' fill='#79828a'>全局 MAE 合格 ≠ 危险区可信，两者必须分开报</text>\n<rect x='360' y='28' width='324' height='166' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='372' y='46' font-size='10.5' fill='#4d565b'>② 点估计骗人：参数其实是区间</text>\n<line x1='384' y1='150' x2='668' y2='150' stroke='#242b2e'/><line x1='384' y1='60' x2='384' y2='150' stroke='#242b2e'/>\n<line x1='384' y1='112' x2='668' y2='112' stroke='#c9613f' stroke-dasharray='4 3'/><text x='388' y='108' font-size='8.5' fill='#c9613f'>极限</text>\n<circle cx='470' cy='128' r='5' fill='#2f7d6b'/><text x='480' y='132' font-size='9' fill='#2f7d6b'>名义工况（安全）</text>\n<rect x='440' y='118' width='120' height='20' fill=\"none\" stroke='#b26a39' stroke-dasharray='3 2'/><text x='500' y='152' font-size='9' fill='#b26a39' text-anchor='middle'>参数波动范围</text>\n<circle cx='452' cy='104' r='4' fill='#c9613f'/><circle cx='556' cy='100' r='4' fill='#c9613f'/><text x='560' y='98' font-size='9' fill='#c9613f'>已越限</text>\n<text x='372' y='170' font-size='9' fill='#4d565b'>只校核名义点会得到「算着没事」；把参数当分布做<tspan font-weight='600'>失效概率</tspan>才对得上「实际断脱」。</text><text x='372' y='186' font-size='9' fill='#79828a'>现场表现：算着有余量，投产半年断脱</text>\n</svg><span class='viz-cap'>左：代理模型在临界附近会把危险磨平成安全（漏判）。右：只校核名义点会低估风险，要做失效概率。</span></div>"
+    }
+   ]
+  },
+  "workflow": {
+   "label": "案例流程",
+   "title": "一口井的管柱多工况校核流程",
+   "lead": [
+    "这个流程的核心资产不是某个算法，而是「把工况当成空间而不是清单」这个视角转换：先看危险区长什么样，再决定动在哪。",
+    "下面的示范就是这个流程的第 2–4 步：拖动工况参数，看危险区怎么移动，以及代理模型能否复现机理模型的判断。"
+   ],
+   "stats": [
+    [
+     "仿真工况",
+     "4.2 万组"
+    ],
+    [
+     "高风险占比",
+     "11%"
+    ],
+    [
+     "校核周期",
+     "1 天"
+    ],
+    [
+     "工况序列",
+     "分钟级"
+    ]
+   ],
+   "steps": [
+    {
+     "name": "管柱模型搭建与单位统一",
+     "role": "数据",
+     "do": "把油管/套管几何、钢级强度、封隔器类型、井身结构录成一表，统一 MPa / mm / kN 口径。",
+     "effect": "得到一个可重复调用的工况—受力函数，任何软件都能接进来。",
+     "trap": "不同来源的壁厚标注不一致（内径推算 vs 标称），直接套用会让安全系数偏差到 10% 以上。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='管柱模型搭建与单位统一'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>输入全部统一到 N–mm–MPa 一套单位，并记录所有假设</text><rect x='12' y='28' width='130' height='36' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='77' y='50' font-size='9.5' fill='#242b2e' text-anchor='middle'>管材手册</text><rect x='12' y='70' width='130' height='36' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='77' y='92' font-size='9.5' fill='#242b2e' text-anchor='middle'>井身结构</text><path d='M142 46 L172 58' stroke='#79828a'/><path d='M142 88 L172 66' stroke='#79828a'/><rect x='172' y='42' width='130' height='36' rx='4' fill='#41699b' opacity='0.9'/><text x='237' y='58' font-size='9.5' fill='#fff' text-anchor='middle'>单位统一</text><text x='237' y='72' font-size='9' fill='#fff' text-anchor='middle'>N · mm · MPa</text><path d='M302 60 L332 60' stroke='#242b2e' marker-end='url(#arU)'/><defs><marker id='arU' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='332' y='42' width='150' height='36' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='407' y='58' font-size='9.5' fill='#fff' text-anchor='middle'>机理模型</text><text x='407' y='72' font-size='9' fill='#fff' text-anchor='middle'>浮重+活塞+温度</text><path d='M482 60 L512 60' stroke='#242b2e' marker-end='url(#arU)'/><rect x='512' y='42' width='136' height='36' rx='4' fill='#c9613f' opacity='0.85'/><text x='580' y='58' font-size='9.5' fill='#fff' text-anchor='middle'>假设清单留档</text><text x='580' y='72' font-size='9' fill='#fff' text-anchor='middle'>地温梯度 · 摩阻</text><rect x='172' y='88' width='476' height='24' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='184' y='104' font-size='9' fill='#c9613f'>单位与假设必须一起入库：漏掉假设，同一口井换个工程师就算出不同的失效概率</text></svg>"
+    },
+    {
+     "name": "批量仿真生成标签",
+     "role": "算法",
+     "do": "在参数区间内拟随机采样几万组工况，跑机理模型，输出安全系数、屈曲状态、长度变化作为标签。",
+     "effect": "把不可枚举的人工校核变成可统计的数据分布。",
+     "trap": "采样必须覆盖边界和极端工况，只在中值附近撒点会让代理模型在危险区外推。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='批量仿真生成标签'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>机理模型当标签生成器：工况网格 4.2 万组，力学响应即标签</text><rect x='12' y='30' width='150' height='70' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='87' y='52' font-size='9.5' fill='#242b2e' text-anchor='middle'>工况网格</text><text x='87' y='70' font-size='9' fill='#79828a' text-anchor='middle'>Δp × ΔT × L × ρ</text><text x='87' y='88' font-size='9' fill='#79828a' text-anchor='middle'>× 锚定方式</text><path d='M162 65 L192 65' stroke='#242b2e' marker-end='url(#arU2)'/><defs><marker id='arU2' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='192' y='30' width='150' height='70' rx='4' fill='#41699b' opacity='0.9'/><text x='267' y='50' font-size='9.5' fill='#fff' text-anchor='middle'>批量仿真</text><text x='267' y='68' font-size='9' fill='#fff' text-anchor='middle'>单次 &lt; 10 ms</text><text x='267' y='86' font-size='9' fill='#fff' text-anchor='middle'>并行 8 路</text><path d='M342 65 L372 65' stroke='#242b2e' marker-end='url(#arU2)'/><rect x='372' y='30' width='150' height='70' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='447' y='50' font-size='9.5' fill='#fff' text-anchor='middle'>标签</text><text x='447' y='68' font-size='9' fill='#fff' text-anchor='middle'>井口拉力</text><text x='447' y='86' font-size='9' fill='#fff' text-anchor='middle'>封隔器处压缩段</text><path d='M522 65 L552 65' stroke='#242b2e' marker-end='url(#arU2)'/><rect x='552' y='38' width='96' height='54' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='600' y='58' font-size='9.5' fill='#4d565b' text-anchor='middle'>安全系数</text><text x='600' y='76' font-size='9' fill='#79828a' text-anchor='middle'>由公式导出</text></svg>"
+    },
+    {
+     "name": "训练代理模型",
+     "role": "算法",
+     "do": "用多项式 / 高斯过程拟合「工况 → 安全系数」，留出 20% 测试集，重点考察高风险区的召回而不是全局误差。",
+     "effect": "单次评估从软件的一次运行降到毫秒，全空间扫描与蒙特卡洛成为日常操作。",
+     "trap": "全局平均误差合格不代表危险区可用，必须单独统计高风险样本的查全率。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='训练代理模型与校验'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>代理模型学两个力学响应，不直接学安全系数</text><rect x='12' y='30' width='180' height='40' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='102' y='48' font-size='9.5' fill='#c9613f' text-anchor='middle'>直接拟合 SF（不推荐）</text><text x='102' y='64' font-size='9' fill='#4d565b' text-anchor='middle'>临界附近是 1/x 形状，误差爆炸</text><path d='M192 50 L222 50' stroke='#242b2e' marker-end='url(#arU3)'/><defs><marker id='arU3' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='222' y='30' width='180' height='40' rx='4' fill='#dfe6ee' stroke='#d8d2c4'/><text x='312' y='48' font-size='9.5' fill='#41699b' text-anchor='middle'>拟合力学响应（推荐）</text><text x='312' y='64' font-size='9' fill='#4d565b' text-anchor='middle'>拉力 / 压缩段，再由公式算 SF</text><path d='M402 50 L432 50' stroke='#242b2e' marker-end='url(#arU3)'/><rect x='432' y='30' width='216' height='40' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='540' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>留出集校验 + 危险区查全率</text><text x='540' y='64' font-size='9' fill='#fff' text-anchor='middle'>MAE 0.03 · 查全率 98.6%</text><rect x='12' y='80' width='636' height='32' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='24' y='96' font-size='9' fill='#4d565b'>同一个代理模型，报「全局 MAE 0.03」和报「危险区漏判 1.4%」给人的判断完全不同——后者才是工程师要的数字。</text><text x='24' y='108' font-size='9' fill='#79828a'>临界附近加密采样：把 SF ∈ [0.8, 1.3] 的样本权重提高 5 倍再重训</text></svg>"
+    },
+    {
+     "name": "全工况扫描与危险区识别",
+     "role": "算法",
+     "do": "在代理模型上扫整个工况空间，画出风险分布图，标出当前设计点落在哪。",
+     "effect": "第一次能回答「危险到底在哪」——通常只占空间的一小块，而不是遍布各处。",
+     "trap": "图上把危险区涂红容易让人误以为到处都危险，要同时给出占比数字。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='全工况扫描与危险区识别'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>把危险区画出来：色阶必须统一，否则图没人看</text><line x1='30' y1='98' x2='300' y2='98' stroke='#242b2e'/><line x1='30' y1='30' x2='30' y2='98' stroke='#242b2e'/><rect x='34' y='34' width='120' height='64' fill='#d7e7df'/><rect x='154' y='34' width='60' height='64' fill='#ece8d8'/><rect x='214' y='34' width='40' height='64' fill='#e2b785'/><rect x='254' y='34' width='42' height='64' fill='#c9613f'/><text x='34' y='112' font-size='8.5' fill='#79828a'>Δp →</text><circle cx='180' cy='66' r='5' fill='none' stroke='#242b2e' stroke-width='1.6'/><text x='190' y='70' font-size='9' fill='#242b2e'>当前工况</text><rect x='330' y='28' width='318' height='84' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='342' y='46' font-size='9.5' fill='#4d565b'>色阶固定：&lt;1 红 / 1–1.3 橙 / 1.3–1.8 米 / &gt;1.8 绿</text><text x='342' y='64' font-size='9' fill='#4d565b'>跨井对比时若按每口井自适应配色，红色占比会被夸大或掩盖</text><text x='342' y='82' font-size='9' fill='#c9613f'>结果：工程师干脆不看这张图，流程退回逐工况校核</text><text x='342' y='100' font-size='9' fill='#4d565b'>输出的是<tspan font-weight='600'>边界</tspan>（哪条线是 SF=1），不只是「有几个红格」</text></svg>"
+    },
+    {
+     "name": "参数调整与失效概率评估",
+     "role": "人工",
+     "do": "针对危险区决定是改下深、改锚定方式还是提钢级；再对不确定参数撒蒙特卡洛，给出失效概率与主导敏感参数。",
+     "effect": "设计不再按最保守工况拍脑袋，而是给出「当前设计的失效概率 < 0.5%」这类可审阅的结论。",
+     "trap": "代理模型给出的概率依赖输入分布假设，分布假设没有记录，就等于没做。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='参数调整与失效概率评估'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>从「校核一格」到「评估失效概率」：参数按分布抽样，而不是取名义值</text><rect x='12' y='30' width='130' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='77' y='48' font-size='9.5' fill='#242b2e' text-anchor='middle'>参数区间</text><text x='77' y='64' font-size='9' fill='#79828a' text-anchor='middle'>Δp ± 15% · ΔT ± 10 ℃</text><path d='M142 50 L172 50' stroke='#242b2e' marker-end='url(#arU4)'/><defs><marker id='arU4' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='172' y='30' width='130' height='40' rx='4' fill='#41699b' opacity='0.9'/><text x='237' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>蒙特卡洛抽样</text><text x='237' y='64' font-size='9' fill='#fff' text-anchor='middle'>10,000 次</text><path d='M302 50 L332 50' stroke='#242b2e' marker-end='url(#arU4)'/><rect x='332' y='30' width='130' height='40' rx='4' fill='#c9613f' opacity='0.85'/><text x='397' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>失效概率</text><text x='397' y='64' font-size='9' fill='#fff' text-anchor='middle'>P(SF &lt; 1) = 3.2%</text><path d='M462 50 L492 50' stroke='#242b2e' marker-end='url(#arU4)'/><rect x='492' y='30' width='156' height='40' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='570' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>调参后再评估</text><text x='570' y='64' font-size='9' fill='#fff' text-anchor='middle'>目标 P &lt; 0.5%</text><rect x='12' y='78' width='636' height='34' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='24' y='94' font-size='9' fill='#4d565b'>点估计给出「SF = 1.35，安全」；区间抽样给出「P(SF&lt;1) = 3.2%」——后者才能解释「算着没事、现场断脱」。</text><text x='24' y='108' font-size='9' fill='#79828a'>可接受的失效概率阈值是管理决策，不是技术参数：它要写进设计标准，而不是由模型默认</text></svg>"
+    },
+    {
+     "name": "轴向力演化计算",
+     "role": "算法",
+     "do": "按温度压力变化逐时步算有效轴向力（含活塞效应、膨胀、摩阻）。",
+     "effect": "把静态校核变成动态曲线。",
+     "trap": "忽略摩阻与屈曲的耦合会低估风险。"
+    }
+   ],
+   "metrics": {
+    "title": "怎么算“做对了”",
+    "html": "<p><b>代理模型可用性</b>：安全系数预测的平均绝对误差 ≤ 0.05；更重要的是<b>高风险工况查全率 ≥ 98%</b>（机理模型判定 SF &lt; 1 的工况，代理模型也要判出来），漏判是不可接受的。</p><p><b>与实际一致</b>：把历史失效井的工况代入，其失效概率应落在所有井的前 5%。</p><p><b>工程收益</b>：按新流程设计后，壁厚或钢级下调的井数占比——这是唯一能说服审查会的指标。</p>"
+   },
+   "fails": [
+    {
+     "name": "边界漏判",
+     "why": "屈曲是强非线性的，代理模型在临界工况附近平滑过渡，把危险工况判成安全。"
+    },
+    {
+     "name": "输入假设未记录",
+     "why": "地温梯度与摩阻系数的取值口径没留档，同一口井换个工程师算出完全不同的失效概率。"
+    },
+    {
+     "name": "不确定度被忽略",
+     "why": "只用点估计校核，参数在取值区间内波动时其实会越限，现场表现就是「算着没事、实际断脱」。"
+    },
+    {
+     "name": "危险区地图失真",
+     "why": "色阶不统一，红色占比被夸大，工程师干脆不看这张图，流程退回逐个工况校核。"
+    }
+   ]
+  },
+  "demo": {
+   "mode": "auto",
+   "html": "demo/index.html",
+   "label": "可运行示范",
+   "intro": "拖动生产压差、温升、下深与完井液密度，切换封隔器锚定方式：三张图分别给出整个工况空间的安全系数分布（危险区在哪）、封隔器处轴向力的组成（力从哪来）、以及拉伸与屈曲两个安全系数随单参数变化的交叉曲线（真正控制设计的是哪一头）。",
+   "height": 1120
+  }
+ }
+}

@@ -1,0 +1,145 @@
+{
+  "id": "completion-run-analysis",
+  "sceneId": "co34",
+  "title": "完井施工数据智能分析",
+  "version": "1.0.0",
+  "updated": "2026-10-30",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "一趟完井作业产生上万条时序数据，异常往往先出现在曲线形态上。现场靠单参数阈值报警，误报多且滞后，复合型异常（多个参数同时缓慢偏移）基本识别不出。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "施工时序",
+          "desc": "大钩载荷、泵压、排量、扭矩"
+        },
+        {
+          "label": "标注成本",
+          "value": "中",
+          "desc": "异常与处置要人工从记录里抽取"
+        },
+        {
+          "label": "可见收益",
+          "value": "快",
+          "desc": "预警直接对应现场动作"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "复合异常无固定阈值，误报代价高"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>做法是给关键参数设上下限，超限报警，数据主要用于事后复盘。</p><p>问题有三个：<b>单参数看不到复合异常</b>——泵压缓慢上升同时排量缓慢下降，两个都没超限，但实际已经在堵；<b>误报多</b>——正常工序切换（如接单根）会触发报警，久了没人看；<b>事后才有结论</b>——数据躺在系统里，等出问题才翻。</p><p><b>一趟完井作业在记录什么</b>：从下管柱、洗井、坐封到验封，全程有秒级的时序数据——大钩载荷（管柱重量）、泵压、排量、扭矩。正常工序在曲线上有固定形态：下钻时载荷随深度稳定上升，接单根时出现短暂的载荷归零，坐封时泵压有一个台阶。</p><p><b>异常长什么样</b>：一种是单参数越界（载荷突然掉、泵压飙升），更麻烦的是复合型——泵压缓慢上升的同时排量缓慢下降，两个都没超限，实际已经在堵。等人工发现，往往已经发展成事故。</p><svg viewBox='0 0 660 250' role='img' aria-label='一趟完井作业的时序形态' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='250' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>一趟完井作业的时序形态</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>工况分段后才能分辨「正常波动」与「异常」</text><rect x='54' y='40' width='130.24' height='176' fill='#7C9CC0' opacity='0.6'/><text x='119.12' y='34' font-size='9.5' fill='#6B6B66' text-anchor='middle'>下钻</text><rect x='184.24' y='40' width='71.03999999999999' height='176' fill='#8A97A6' opacity='0.35'/><text x='219.76' y='34' font-size='9.5' fill='#6B6B66' text-anchor='middle'>接单根</text><rect x='255.28' y='40' width='153.92' height='176' fill='#7FB3A5' opacity='0.6'/><text x='332.24' y='34' font-size='9.5' fill='#6B6B66' text-anchor='middle'>循环洗井</text><rect x='409.2' y='40' width='130.24000000000007' height='176' fill='#E8B444' opacity='0.35'/><text x='474.32000000000005' y='34' font-size='9.5' fill='#6B6B66' text-anchor='middle'>坐封</text><rect x='539.44' y='40' width='106.55999999999995' height='176' fill='#6B5B95' opacity='0.6'/><text x='592.72' y='34' font-size='9.5' fill='#6B6B66' text-anchor='middle'>验封</text><text x='47' y='52' font-size='9.5' fill='#6B6B66' text-anchor='end'>大钩载荷</text><line x1='54' y1='92.66666666666666' x2='646' y2='92.66666666666666' stroke='#DDD8CB'/><polyline points='54.0,76.9 60.0,76.3 66.0,75.8 71.9,75.3 77.9,75.0 83.9,74.8 89.9,74.6 95.9,74.6 101.8,74.7 107.8,74.8 113.8,74.9 119.8,75.1 125.8,75.1 131.7,75.1 137.7,74.9 143.7,74.7 149.7,74.3 155.7,73.9 161.6,73.3 167.6,72.8 173.6,72.2 179.6,71.7 185.6,71.3 191.5,84.1 197.5,83.9 203.5,83.8 209.5,83.8 215.5,83.9 221.4,84.0 227.4,84.1 233.4,84.2 239.4,84.3 245.4,84.2 251.3,84.1 257.3,70.6 263.3,70.2 269.3,69.8 275.3,69.2 281.2,68.7 287.2,68.1 293.2,67.6 299.2,67.2 305.2,66.9 311.1,66.7 317.1,66.6 323.1,66.6 329.1,66.7 335.1,66.8 341.0,67.0 347.0,67.1 353.0,67.1 359.0,67.0 364.9,66.9 370.9,66.6 376.9,66.2 382.9,65.7 388.9,65.1 394.8,64.6 400.8,64.0 406.8,63.5 412.8,63.1 418.8,62.8 424.7,62.7 430.7,62.6 436.7,62.6 442.7,62.7 448.7,62.8 454.6,63.0 460.6,63.1 466.6,63.1 472.6,63.0 478.6,62.8 484.5,62.5 490.5,62.1 496.5,61.6 502.5,61.0 508.5,60.5 514.4,59.9 520.4,59.5 526.4,59.1 532.4,58.8 538.4,58.6 544.3,58.6 550.3,58.6 556.3,58.7 562.3,58.8 568.3,59.0 574.2,59.1 580.2,59.1 586.2,59.0 592.2,58.8 598.2,58.4 604.1,58.0 610.1,57.5 616.1,57.0 622.1,56.4 628.1,55.9 634.0,55.4 640.0,55.0 646.0,54.7' fill='none' stroke='#2F567D' stroke-width='1.8'/><text x='47' y='110.66666666666666' font-size='9.5' fill='#6B6B66' text-anchor='end'>泵压</text><line x1='54' y1='151.33333333333331' x2='646' y2='151.33333333333331' stroke='#DDD8CB'/><polyline points='54.0,145.0 60.0,144.5 66.0,144.0 71.9,143.6 77.9,143.2 83.9,143.0 89.9,142.9 95.9,142.9 101.8,143.1 107.8,143.4 113.8,143.8 119.8,144.2 125.8,144.7 131.7,145.2 137.7,145.8 143.7,146.2 149.7,146.6 155.7,146.9 161.6,147.1 167.6,147.1 173.6,147.0 179.6,146.8 185.6,146.5 191.5,146.1 197.5,145.6 203.5,145.1 209.5,144.6 215.5,144.1 221.4,143.6 227.4,143.3 233.4,143.0 239.4,142.9 245.4,142.9 251.3,143.1 257.3,134.8 263.3,134.5 269.3,134.3 275.3,134.1 281.2,134.0 287.2,134.0 293.2,134.0 299.2,134.0 305.2,134.2 311.1,134.4 317.1,134.6 323.1,134.9 329.1,135.2 335.1,135.5 341.0,135.8 347.0,136.1 353.0,136.4 359.0,136.6 364.9,136.8 370.9,137.0 376.9,137.1 382.9,137.1 388.9,137.1 394.8,137.0 400.8,136.8 406.8,136.6 412.8,122.4 418.8,122.1 424.7,121.8 430.7,121.6 436.7,121.3 442.7,121.0 448.7,120.8 454.6,120.5 460.6,120.3 466.6,120.0 472.6,119.7 478.6,119.5 484.5,119.2 490.5,118.9 496.5,118.7 502.5,118.4 508.5,118.2 514.4,117.9 520.4,117.6 526.4,117.4 532.4,117.1 538.4,116.8 544.3,130.3 550.3,130.3 556.3,130.3 562.3,130.3 568.3,130.3 574.2,130.3 580.2,130.3 586.2,130.3 592.2,130.3 598.2,130.3 604.1,130.3 610.1,130.3 616.1,130.3 622.1,130.3 628.1,130.3 634.0,130.3 640.0,130.3 646.0,130.3' fill='none' stroke='#C1613F' stroke-width='1.8'/><circle cx='43862.0' cy='118.7' r='3.6' fill='#B34A3C'/><line x1='43862.0' y1='100.66666666666666' x2='43862.0' y2='151.33333333333331' stroke='#B34A3C' stroke-dasharray='3 3' opacity='0.6'/><text x='47' y='169.33333333333331' font-size='9.5' fill='#6B6B66' text-anchor='end'>排量</text><line x1='54' y1='209.99999999999997' x2='646' y2='209.99999999999997' stroke='#DDD8CB'/><polyline points='54.0,205.8 60.0,205.8 66.0,205.8 71.9,205.8 77.9,205.8 83.9,205.8 89.9,205.8 95.9,205.8 101.8,205.8 107.8,205.8 113.8,205.8 119.8,205.8 125.8,205.8 131.7,205.8 137.7,205.8 143.7,205.8 149.7,205.8 155.7,205.8 161.6,205.8 167.6,205.8 173.6,205.8 179.6,205.8 185.6,205.8 191.5,205.8 197.5,205.8 203.5,205.8 209.5,205.8 215.5,205.8 221.4,205.8 227.4,205.8 233.4,205.8 239.4,205.8 245.4,205.8 251.3,205.8 257.3,179.3 263.3,179.1 269.3,178.8 275.3,178.6 281.2,178.3 287.2,178.1 293.2,177.8 299.2,177.6 305.2,177.4 311.1,177.2 317.1,177.0 323.1,176.9 329.1,176.8 335.1,176.8 341.0,176.8 347.0,176.9 353.0,177.0 359.0,177.1 364.9,177.3 370.9,177.5 376.9,177.7 382.9,178.0 388.9,178.3 394.8,178.5 400.8,178.8 406.8,179.0 412.8,179.5 418.8,179.7 424.7,180.0 430.7,180.3 436.7,180.6 442.7,180.9 448.7,181.2 454.6,181.5 460.6,181.8 466.6,182.1 472.6,182.3 478.6,182.6 484.5,182.9 490.5,183.2 496.5,183.5 502.5,183.8 508.5,184.1 514.4,184.4 520.4,184.7 526.4,185.0 532.4,185.2 538.4,185.5 544.3,186.3 550.3,186.3 556.3,186.3 562.3,186.3 568.3,186.3 574.2,186.3 580.2,186.3 586.2,186.3 592.2,186.3 598.2,186.3 604.1,186.3 610.1,186.3 616.1,186.3 622.1,186.3 628.1,186.3 634.0,186.3 640.0,186.3 646.0,186.3' fill='none' stroke='#2F7D6B' stroke-width='1.8'/><circle cx='43862.0' cy='183.5' r='3.6' fill='#B34A3C'/><line x1='43862.0' y1='159.33333333333331' x2='43862.0' y2='209.99999999999997' stroke='#B34A3C' stroke-dasharray='3 3' opacity='0.6'/><text x='492.08' y='238' font-size='9.5' fill='#B34A3C' text-anchor='middle'>↑ 泵压升＋排量降＝堵塞前兆（单看都不超限）</text></svg><div class='viz-cap'>图：一趟完井作业的时序形态</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>智能方法做工况分段 + 形态异常检测：先按工序把时序切成段（下钻、循环、坐封、验封…），再在段内学习正常形态，检测偏离——既看单参数越界，也看多参数的协同偏移与形态变化（斜率、波动性、相关性）。</p><p>输出是「在坐封段，泵压上升斜率较历史同工况高 2.4 倍且排量同步下降，符合堵塞前兆，建议检查」这类带依据的提示，而不是一个红灯。误报控制靠工况分段——接单根这类正常切换被归到对应工况段，不再触发报警。</p><p><b>为什么单参数阈值不够</b>：正常工序切换（接单根、倒阀门）本身会造成大幅跳变，阈值一报警就是一片，久了没人看；而真正危险的复合异常各个参数都在范围内，阈值永远报不出来。</p><p><b>智能方法做什么</b>：先按参数组合把施工过程切成工序段（下钻、循环、坐封、验封……），再在段内学习正常形态——不只是取值范围，还包括斜率、波动性与参数间的相关性；偏离正常形态就报警，并给出可读依据（哪个参数、什么形态、与历史差多少）。</p><svg viewBox='0 0 660 208' role='img' aria-label='传统做法 vs 智能做法' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='208' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>传统做法 vs 智能做法</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>先分工况，再看形态</text><rect x='16' y='36' width='307' height='156' rx='8' fill='#8A97A6' opacity='0.12'/><rect x='16' y='36' width='307' height='22' rx='8' fill='#8A97A6' opacity='0.30'/><text x='28' y='51' font-size='11' font-weight='700' fill='#2A2A28'>传统：单参数阈值报警</text><circle cx='32' cy='74' r='2.6' fill='#8A97A6'/><text x='40' y='78' font-size='10.5' fill='#4A4A45'>一个上下限管全井，不分工序</text><circle cx='32' cy='96' r='2.6' fill='#8A97A6'/><text x='40' y='100' font-size='10.5' fill='#4A4A45'>正常切换（接单根）也报警，误报多</text><circle cx='32' cy='118' r='2.6' fill='#8A97A6'/><text x='40' y='122' font-size='10.5' fill='#4A4A45'>复合异常各参数都没超限，报不出</text><circle cx='32' cy='140' r='2.6' fill='#8A97A6'/><text x='40' y='144' font-size='10.5' fill='#4A4A45'>只给红灯，不给原因，现场无法判</text><rect x='337' y='36' width='307' height='156' rx='8' fill='#2F7D6B' opacity='0.12'/><rect x='337' y='36' width='307' height='22' rx='8' fill='#2F7D6B' opacity='0.30'/><text x='349' y='51' font-size='11' font-weight='700' fill='#2A2A28'>智能：工况分段 + 形态检测</text><circle cx='353' cy='74' r='2.6' fill='#2F7D6B'/><text x='361' y='78' font-size='10.5' fill='#4A4A45'>按参数组合切工序，段内比较才有意义</text><circle cx='353' cy='96' r='2.6' fill='#2F7D6B'/><text x='361' y='100' font-size='10.5' fill='#4A4A45'>正常切换归入对应工况，不再触发报警</text><circle cx='353' cy='118' r='2.6' fill='#2F7D6B'/><text x='361' y='122' font-size='10.5' fill='#4A4A45'>看协同偏移与形态变化，复合异常可识别</text><circle cx='353' cy='140' r='2.6' fill='#2F7D6B'/><text x='361' y='144' font-size='10.5' fill='#4A4A45'>报警带依据：哪个参数、什么形态、差多少</text><path d='M329 104 l12 -8 l0 16 z' fill='#2F7D6B'/></svg><div class='viz-cap'>图：传统做法 vs 智能做法</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>施工时序曲线</b>（大钩载荷、泵压、排量、扭矩，秒级）；<b>异常与处置记录</b>（异常类型、发生时间、处置措施）；<b>井筒与工况信息</b>（井身结构、流体参数、工序安排）。</p><p>时序数据量充足；异常记录往往只有几十条，主要用于验证检测规则而非训练大模型。</p><p><b>需要三类数据</b>：秒级施工时序（大钩载荷、泵压、排量、扭矩）、异常与处置记录（异常类型、发生时间、处置措施）、井筒与工况信息（井身结构、流体、工序安排）。时序数据量充足；异常记录往往只有几十条，主要用于验证规则而非训练大模型。</p><p><b>智能方法的落地路径</b>：时序清洗 → 工况自动分段 → 段内正常形态建模 → 异常检测与依据生成 → 现场处置回填。误报控制的关键在第二步；可解释性的关键在第四步。</p><svg viewBox='0 0 660 220' role='img' aria-label='从原始时序到可解释报警' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='220' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>从原始时序到可解释报警</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>工况分段是误报率下降的关键一步</text><line x1='86' y1='66' x2='244' y2='66' stroke='#C9C3B4' stroke-width='1.4'/><rect x='154.8' y='57' width='20.4' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='165' y='69' font-size='9' fill='#6B6B66' text-anchor='middle'>清洗</text><line x1='244' y1='66' x2='400' y2='66' stroke='#C9C3B4' stroke-width='1.4'/><rect x='308.7' y='57' width='26.6' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='322' y='69' font-size='9' fill='#6B6B66' text-anchor='middle'>正常带</text><line x1='400' y1='66' x2='552' y2='66' stroke='#C9C3B4' stroke-width='1.4'/><rect x='462.7' y='57' width='26.6' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='476' y='69' font-size='9' fill='#6B6B66' text-anchor='middle'>偏离度</text><line x1='552' y1='66' x2='552' y2='152' stroke='#C9C3B4' stroke-width='1.4'/><line x1='552' y1='152' x2='400' y2='152' stroke='#C9C3B4' stroke-width='1.4'/><rect x='456.5' y='143' width='39' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='476' y='155' font-size='9' fill='#6B6B66' text-anchor='middle'>容忍带调整</text><circle cx='86' cy='66' r='32' fill='#2F567D' opacity='0.28'/><circle cx='86' cy='66' r='32' fill='none' stroke='#2F567D' stroke-width='1.4'/><text x='86' y='70' font-size='10' fill='#2A2A28' text-anchor='middle'>秒级时序</text><circle cx='244' cy='66' r='34' fill='#6B5B95' opacity='0.28'/><circle cx='244' cy='66' r='34' fill='none' stroke='#6B5B95' stroke-width='1.4'/><text x='244' y='70' font-size='10' fill='#2A2A28' text-anchor='middle'>工况分段</text><circle cx='400' cy='66' r='34' fill='#2F7D6B' opacity='0.28'/><circle cx='400' cy='66' r='34' fill='none' stroke='#2F7D6B' stroke-width='1.4'/><text x='400' y='70' font-size='10' fill='#2A2A28' text-anchor='middle'>段内形态建模</text><circle cx='552' cy='66' r='32' fill='#E8B444' opacity='0.28'/><circle cx='552' cy='66' r='32' fill='none' stroke='#E8B444' stroke-width='1.4'/><text x='552' y='70' font-size='10' fill='#2A2A28' text-anchor='middle'>异常检测</text><circle cx='552' cy='152' r='32' fill='#C1613F' opacity='0.28'/><circle cx='552' cy='152' r='32' fill='none' stroke='#C1613F' stroke-width='1.4'/><text x='552' y='156' font-size='10' fill='#2A2A28' text-anchor='middle'>依据生成</text><circle cx='400' cy='152' r='30' fill='#8A97A6' opacity='0.28'/><circle cx='400' cy='152' r='30' fill='none' stroke='#8A97A6' stroke-width='1.4'/><text x='400' y='156' font-size='10' fill='#2A2A28' text-anchor='middle'>处置回填</text><text x='14' y='197' font-size='10' fill='#93938C'>误报率：62% → 14%（分工况后正常切换不再误报）</text><text x='14' y='212' font-size='10' fill='#93938C'>关键约束：报警必须给依据，否则现场直接忽略</text></svg><div class='viz-cap'>图：从原始时序到可解释报警</div><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>秒级多通道时序（大钩载荷、泵压、排量、扭矩），缺失段与采样率变化点单独标注。</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>先分工况再判异常：正常工序切换不算异常；报警需多通道协同偏离或持续时长达标。</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>工况类别 9 类；误报率从 62% 降到 14%，每条报警带偏离度、持续时长与历史相似案例。</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度中等：难在误报控制与可解释性——现场只接受「说得清原因」的报警，黑箱异常分数会被直接忽略。</p><p>可参考方向：时序异常检测、工况分段、征兆关联分析。建议先做工况分段（收益立竿见影），再做段内异常检测。</p><p><b>难在哪</b>：难在误报控制与可解释性——现场只接受说得清原因的报警，只输出异常分数的黑箱会被直接忽略。参考方向为时序异常检测、工况分段与征兆关联分析。</p><p><b>落地建议</b>：先做工况分段（收益立竿见影），再做段内异常检测；处置结果必须回填，容忍带才调得准。</p><svg viewBox='0 0 660 160' role='img' aria-label='效果对比：分工况前后的报警表现' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='160' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>效果对比：分工况前后的报警表现</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>同一批井次上的统计</text><text x='142' y='48' font-size='11' fill='#4A4A45' text-anchor='end'>误报率</text><rect x='150' y='38' width='454' height='15' rx='3' fill='#F4F1E8'/><rect x='150' y='38' width='281.48' height='15' rx='3' fill='#C1613F'/><text x='437.48' y='49.5' font-size='10.5' fill='#6B6B66'>62% → 14%</text><text x='142' y='74' font-size='11' fill='#4A4A45' text-anchor='end'>漏报率</text><rect x='150' y='64' width='454' height='15' rx='3' fill='#F4F1E8'/><rect x='150' y='64' width='127.12' height='15' rx='3' fill='#E0A188'/><text x='283.12' y='75.5' font-size='10.5' fill='#6B6B66'>28% → 11%</text><text x='142' y='100' font-size='11' fill='#4A4A45' text-anchor='end'>预警提前量</text><rect x='150' y='90' width='454' height='15' rx='3' fill='#F4F1E8'/><rect x='150' y='90' width='335.96' height='15' rx='3' fill='#2F7D6B'/><text x='491.96' y='101.5' font-size='10.5' fill='#6B6B66'>平均提前 8—15 min</text><text x='142' y='126' font-size='11' fill='#4A4A45' text-anchor='end'>复合异常识别</text><rect x='150' y='116' width='454' height='15' rx='3' fill='#F4F1E8'/><rect x='150' y='116' width='399.52' height='15' rx='3' fill='#2F567D'/><text x='555.52' y='127.5' font-size='10.5' fill='#6B6B66'>单参数阈值下为 0</text><text x='14' y='154' font-size='10' fill='#93938C'>注：数值为该场景下的示意性统计口径，用于说明可视化对比逻辑</text></svg><div class='viz-cap'>图：效果对比：分工况前后的报警表现</div>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "完井施工数据分析怎么做",
+      "lead": [
+        "核心是把「单参数阈值报警」换成「先分工况、再在段内看形态」，让复合异常也能被识别且说得清原因。",
+        "下面的示范是第 2—3 步：改变泵压上升斜率与波动，看异常指数怎么越过阈值。"
+      ],
+      "stats": [
+        [
+          "时序采样",
+          "秒级"
+        ],
+        [
+          "工况类别",
+          "9 类"
+        ],
+        [
+          "误报下降",
+          "62% → 14%"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "时序数据清洗",
+          "role": "数据",
+          "do": "把地面采集与井下存储的两路数据对齐到同一时间轴，统一采样率与量纲，剔除掉电、卡帧与超量程点并标注缺失区间。",
+          "effect": "一路可分析的施工时序：多通道对齐、缺失段有标记，后续分段与建模都基于它。",
+          "trap": "地面与井下两路采样率不同，直接对齐会把时间偏移当成异常；必须先做时钟校正再对齐。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='地面与井下两路时序时钟校正后对齐，缺失段标注'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>地面采集与井下存储两路数据：先时钟校正再对齐同一时间轴，剔除坏点、标注缺失区间</text><line x1='60' y1='34' x2='60' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='520' y2='92' stroke='#e2ded0' stroke-width='1'/><polyline points='64,70 100,66 130,72 160,60 190,64 220,58 250,66 280,54 310,62 340,58 370,64 400,56 430,62 460,58 490,64 516,60' fill='none' stroke='#41699b' stroke-width='1.5'/><polyline points='64,76 100,72 130,78 160,66 190,70 220,64 250,72 280,60 310,68 340,64 370,70 400,62 430,68 460,64 490,70 516,66' fill='none' stroke='#c9613f' stroke-width='1.5'/><rect x='282' y='34' width='26' height='58' fill='#efe4d2'/><text x='286' y='44' font-size='8' fill='#8a6a3a'>缺失 26 s</text><circle cx='430' cy='56' r='3' fill='none' stroke='#c9613f' stroke-width='1.2'/><text x='440' y='52' font-size='8' fill='#c9613f'>超量程点剔除</text><text x='64' y='104' font-size='8.5' fill='#41699b'>地面（1 Hz）</text><text x='140' y='104' font-size='8.5' fill='#c9613f'>井下存储（0.2 Hz）</text><rect x='548' y='30' width='100' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='558' y='48' font-size='8.5' fill='#4d565b'>先时钟校正</text><text x='558' y='62' font-size='8.5' fill='#4d565b'>再对齐：否则</text><text x='558' y='76' font-size='8.5' fill='#c9613f'>时间偏移会被</text><text x='558' y='90' font-size='8.5' fill='#c9613f'>当成异常</text><text x='12' y='118' font-size='8.5' fill='#79828a'>对齐后的多通道时序是一切后续分析的地基：缺失段有标记，坏点有剔除记录</text></svg>"
+        },
+        {
+          "name": "工况自动分段",
+          "role": "算法",
+          "do": "按压力、排量、悬重与位移的组合变化识别下钻、循环、坐封、替浆等工况边界，把连续时序切成带标签的段。",
+          "effect": "把一口井几小时的连续曲线切成十几段可单独分析的工况，段边界可人工拖动修正。",
+          "trap": "工况切换本身就会引起参数突变，不分段的阈值检测会把正常切换全判成异常，满屏误报。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='连续时序按工况切成带标签的段'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>按压力、排量、悬重、位移的组合变化识别工况边界 → 几小时连续曲线切成十几段可单独分析</text><line x1='60' y1='34' x2='60' y2='86' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='86' x2='520' y2='86' stroke='#e2ded0' stroke-width='1'/><polyline points='64,74 90,72 108,50 126,48 150,52 176,50 194,70 230,68 246,42 262,40 300,44 330,42 344,66 380,64 400,46 430,44 470,48 490,46 516,60' fill='none' stroke='#242b2e' stroke-width='1.4'/><rect x='108' y='34' width='86' height='52' fill='#8fa6c6' opacity='0.28'/><text x='118' y='44' font-size='8.5' fill='#2c3d57'>下钻</text><rect x='194' y='34' width='52' height='52' fill='#7fae9b' opacity='0.3'/><text x='202' y='44' font-size='8.5' fill='#2f5a4d'>循环</text><rect x='246' y='34' width='98' height='52' fill='#c9613f' opacity='0.18'/><text x='258' y='44' font-size='8.5' fill='#8a3d20'>坐封</text><rect x='344' y='34' width='56' height='52' fill='#c8a24a' opacity='0.3'/><text x='352' y='44' font-size='8.5' fill='#6d5620'>替浆</text><rect x='400' y='34' width='116' height='52' fill='#8fa6c6' opacity='0.28'/><text x='412' y='44' font-size='8.5' fill='#2c3d57'>起钻</text><circle cx='194' cy='70' r='3' fill='none' stroke='#c9613f' stroke-width='1.2'/><text x='200' y='98' font-size='8' fill='#c9613f'>工况切换本身就有参数突变：不分段的阈值检测会把正常切换全判成异常</text><text x='12' y='112' font-size='8.5' fill='#79828a'>段边界可人工拖动修正：模型切段、人微调，比纯人工快一个量级</text></svg>"
+        },
+        {
+          "name": "段内正常形态建模",
+          "role": "算法",
+          "do": "对每种工况分别建立正常形态：典型值区间、变化率上限与通道间的相关关系，用同类井的历史段估计参数。",
+          "effect": "每个工况段都有自己的正常带而不是全井一套固定阈值，同工况井之间可以直接横向比较。",
+          "trap": "样本里混进带异常的段会把正常带撑宽而掩盖真实异常，建模前必须先把已知异常段剔除。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='每种工况一个正常带，而不是全井一套固定阈值'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>对每种工况分别估计正常形态：典型区间 + 变化率上限 + 通道相关 → 同工况井可直接横向比较</text><line x1='60' y1='34' x2='60' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='340' y2='92' stroke='#e2ded0' stroke-width='1'/><path d='M64 50 C 110 42 160 40 220 46 C 270 52 310 56 336 54 L 336 74 C 300 72 260 68 210 62 C 150 56 100 58 64 62 Z' fill='#a9c9ba' opacity='0.35'/><polyline points='64,56 110,50 160,48 220,54 270,60 336,62' fill='none' stroke='#2f7d6b' stroke-width='1.6'/><text x='250' y='44' font-size='8.5' fill='#2f7d6b'>正常带（循环工况）</text><text x='120' y='84' font-size='8.5' fill='#4d565b'>实测曲线在带内 → 正常</text><line x1='360' y1='34' x2='360' y2='92' stroke='#e2ded0' stroke-width='1'/><path d='M384 44 C 420 42 450 46 470 44 C 490 42 510 48 540 46 L 540 70 C 510 68 480 66 450 66 C 420 66 400 66 384 66 Z' fill='#d9c27a' opacity='0.35'/><polyline points='384,52 430,54 470,52 540,58' fill='none' stroke='#c9613f' stroke-width='1.6'/><text x='392' y='84' font-size='8.5' fill='#8a6a3a'>样本混入异常段 → 带被撑宽</text><text x='392' y='96' font-size='8.5' fill='#c9613f'>真实异常反而被掩盖</text><text x='12' y='114' font-size='8.5' fill='#79828a'>建模前先把已知异常段剔除：正常带的宽度直接决定后面报警的灵敏度</text></svg>"
+        },
+        {
+          "name": "异常检测与依据生成",
+          "role": "算法",
+          "do": "逐点比对该段的正常形态，给出偏离度、持续时长与涉及通道，并列出最相似的几条历史案例作为依据。",
+          "effect": "报警时同时给出偏离多少、持续多久、哪几个通道一起动，以及历史上类似的几次是怎么处理的。",
+          "trap": "单通道偏离很容易由传感器漂移引起，必须要求多通道协同偏离或持续时间达标才报警。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='报警带偏离度、时长、涉及通道与历史相似案例'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>逐点比对正常形态：偏离度 + 持续时长 + 涉及通道一起看，并列出最相似的历史案例</text><line x1='60' y1='34' x2='60' y2='88' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='88' x2='400' y2='88' stroke='#e2ded0' stroke-width='1'/><path d='M64 52 L 200 46 L 260 52 L 286 54 L 306 72 L 330 50 L 396 46' fill='none' stroke='#41699b' stroke-width='1.6'/><circle cx='306' cy='72' r='4' fill='#c9613f'/><line x1='306' y1='76' x2='306' y2='88' stroke='#c9613f' stroke-width='1'/><rect x='316' y='24' width='130' height='44' fill='#f6e8da' stroke='#e8cdae'/><text x='324' y='38' font-size='8.5' fill='#8a3d20'>偏离 3.2σ · 持续 46 s</text><text x='324' y='52' font-size='8.5' fill='#8a3d20'>泵压↓ + 排量↑（协同）</text><text x='324' y='64' font-size='8' fill='#8a3d20'>相似案例：JX-2 井 #3 段</text><text x='64' y='102' font-size='8' fill='#79828a'>单通道偏离 = 多为传感器漂移 → 要求多通道协同或持续时长达标才报警</text><rect x='470' y='30' width='178' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='482' y='48' font-size='8.5' fill='#4d565b'>报警 ≠ 结论：每条报警</text><text x='482' y='62' font-size='8.5' fill='#4d565b'>自带依据与相似案例，</text><text x='482' y='76' font-size='8.5' fill='#4d565b'>工程师核对现场记录后裁决</text><text x='12' y='118' font-size='8.5' fill='#79828a'>从「数值超了」到「哪里、多久、哪几个通道一起动、历史上怎么处理」</text></svg>"
+        },
+        {
+          "name": "现场处置与回填",
+          "role": "人工",
+          "do": "工程师核对报警段落的现场记录与邻井情况，确认或推翻后填写处置结论，回填样本库用于下一轮建模。",
+          "effect": "误报率随回填次数下降，复现性异常能被沉淀成规则而不是每次靠人记。",
+          "trap": "只回填结论不回填当时的工况上下文，下次建模无法区分同参数下的正常与异常两种情形。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='报警 → 人工裁决 → 回填样本库，误报率随回填下降'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>处置闭环：确认或推翻 → 填结论 + 工况上下文 → 回填样本库 → 下一轮建模直接受益</text><rect x='20' y='40' width='130' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='58' font-size='9.5' fill='#4d565b'>报警推送</text><text x='34' y='74' font-size='8.5' fill='#79828a'>带依据 + 相似案例</text><line x1='152' y1='62' x2='184' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='184,62 178,58.5 178,65.5' fill='#8a8f80'/><rect x='186' y='40' width='130' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='200' y='58' font-size='9.5' fill='#4d565b'>现场核对</text><text x='200' y='74' font-size='8.5' fill='#79828a'>记录 + 邻井情况</text><line x1='318' y1='62' x2='350' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='350,62 344,58.5 344,65.5' fill='#8a8f80'/><rect x='352' y='40' width='130' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='366' y='58' font-size='9.5' fill='#4d565b'>结论回填</text><text x='366' y='74' font-size='8.5' fill='#79828a'>确认 / 推翻 + 上下文</text><line x1='484' y1='62' x2='516' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='516,62 510,58.5 510,65.5' fill='#8a8f80'/><rect x='518' y='40' width='122' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='532' y='58' font-size='9.5' fill='#4d565b'>规则沉淀</text><text x='532' y='74' font-size='8.5' fill='#2f7d6b'>误报率 62% → 14%</text><path d='M578 86 C 570 108 110 108 82 88' fill='none' stroke='#8a8f80' stroke-width='1.2' stroke-dasharray='4 3'/><text x='280' y='112' font-size='8' fill='#79828a'>回填闭环：复现性异常沉淀成规则，不再每次靠人记</text><rect x='20' y='92' width='620' height='16' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='32' y='104' font-size='8.5' fill='#c9613f'>只回填结论不回填工况上下文 → 下次无法区分同参数下的正常与异常</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>预警提前量</b>：相对人工发现异常的平均提前时间（分钟）。</p><p><b>误报率</b>：报警后确认为正常的比例应 ≤ 20%。</p><p><b>漏报率</b>：实际发生异常但未被预警的比例应 ≤ 15%。</p>"
+      },
+      "fails": [
+        {
+          "name": "传感器故障误判",
+          "why": "掉线零值被当成真实异常，报警刷屏导致系统被弃用。"
+        },
+        {
+          "name": "工况口径不一致",
+          "why": "分段结果与现场工序定义不同，工程师看不懂也不信任。"
+        },
+        {
+          "name": "黑箱报警",
+          "why": "只输出异常分数不给依据，现场无法判断，直接忽略。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 640,
+      "intro": "改变泵压上升斜率与波动水平，看异常指数沿施工进程怎么变化——越过阈值的区间就是需要关注的位置。",
+      "html": "demo/index.html"
+    }
+  }
+}

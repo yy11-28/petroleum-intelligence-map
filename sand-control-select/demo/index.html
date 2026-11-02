@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：出砂长期动态预测与防砂方案智能优选</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>防砂方案优选 · 时序演化预测 + 制度寻优</h1>
+  <p class="lead">储层强度决定临界压差，生产压差决定有没有越过它，防砂方式决定越界之后后果有多严重。
+  <b>三者必须放在一起算</b>：短期试产看不出方案差别，差别全在第三年之后。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>砂拱机理模型 + 时序预测</li><li>挡砂精度寻优（粒度分布）</li><li>多方案判据对比</li></ul></div><div><b>为什么起作用</b><ul><li>出砂是长期动态过程，短期试验看不出来；机理给「出不出」，时序给「多久出」</li><li>挡砂精度由粒度分布决定，是硬指标，不能拿产能损失去换</li></ul></div><div><b>在示范里怎么看</b><ul><li>改岩石强度与压差，看四种方式判据命中与长期出砂曲线</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>岩石单轴强度 <output id="out-ucs">8 MPa</output></label>
+    <input type="range" id="ucs" min="2" max="40" step="1" value="8">
+  </div>
+  <div class="ctl">
+    <label>泥质含量 <output id="out-clay">18 %</output></label>
+    <input type="range" id="clay" min="5" max="40" step="1" value="18">
+  </div>
+  <div class="ctl">
+    <label>生产压差 <output id="out-dp">6.0 MPa</output></label>
+    <input type="range" id="dp" min="1" max="14" step="0.5" value="6">
+  </div>
+  <div class="ctl">
+    <label>年提液幅度 <output id="out-ramp">8 %/年</output></label>
+    <input type="range" id="ramp" min="0" max="30" step="1" value="8">
+  </div>
+  <div class="ctl">
+    <label>射孔孔密 <output id="out-perf">16 孔/m</output></label>
+    <input type="range" id="perf" min="8" max="32" step="1" value="16">
+  </div>
+  <div class="ctl">
+    <label>预测年限 <output id="out-yr">6 年</output></label>
+    <input type="range" id="yr" min="3" max="10" step="1" value="6">
+  </div>
+
+  <svg id="kg" viewBox="0 0 720 240" role="img" aria-label="四种防砂方式的判据命中矩阵"></svg>
+
+  <svg id="evo" viewBox="0 0 720 230" role="img" aria-label="各方案累计出砂量随时间的演化"></svg>
+
+  <svg id="pf" viewBox="0 0 720 230" role="img" aria-label="方案与压差组合的净收益与出砂量前沿"></svg>
+
+  <div class="legend">
+    <span><i style="background:#2f7d6b"></i>判据通过</span>
+    <span><i style="background:#b9c6cf"></i>软判据（降权）</span>
+    <span><i style="background:#c9613f"></i>硬判据（不可用）</span>
+    <span><i style="background:#41699b"></i>前沿</span>
+    <span><i style="background:#242b2e"></i>当前设定</span>
+  </div>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">推荐方案 / 压差</span><b id="ro-pick">—</b></div>
+    <div class="ro"><span class="k">累计产油（相对）</span><b id="ro-oil">—</b></div>
+    <div class="ro"><span class="k">首次冲砂时间</span><b id="ro-first">—</b></div>
+    <div class="ro"><span class="k">判据命中</span><b id="ro-chk">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

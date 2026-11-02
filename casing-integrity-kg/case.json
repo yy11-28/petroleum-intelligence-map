@@ -1,0 +1,157 @@
+{
+  "id": "casing-integrity-kg",
+  "sceneId": "co19",
+  "methods": [
+    "kg"
+  ],
+  "title": "套管完整性监测：失效模式识别与处置方案推荐",
+  "version": "1.0.0",
+  "updated": "2026-10-25",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "套管是井的「骨架」，也是最容易「带病工作」的部分：腐蚀让壁厚一年薄过一年，泥岩蠕滑把管子挤成椭圆，出砂把射孔段冲出沟槽。这些征兆散落在井径、压力与生产数据里。知识图谱把「征兆 → 失效模式 → 处置手段」连成一条可追溯的推理链——结论重要，依据更重要。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "测井时序 + 记录",
+          "desc": "多臂井径曲线为主，井史与工况做佐证"
+        },
+        {
+          "label": "标注成本",
+          "value": "中",
+          "desc": "失效模式靠少量确诊井标注，多数征兆靠机理规则"
+        },
+        {
+          "label": "可见收益",
+          "value": "中—高",
+          "desc": "征兆到处置的推理链秒级给出，依据可追溯"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "难在征兆关联与模式区分，不在单点检测"
+        }
+      ],
+      "sections": [
+        {
+          "no": 1,
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>常规做法：每隔几年做一次多臂井径或电磁探伤，工程师对着曲线找异常段，凭经验判断「是腐蚀还是变形」，再翻手册定处置。一个井区的完整性评估报告要做几周，而征兆在两次检测之间一直在生长。</p><p>问题有三个：<b>征兆孤立</b>——减薄、变形、漏压数据分散在不同报告里，人很难同时关联；<b>经验断层</b>——「椭圆度超 12% 会错断」这类判断只在老师傅脑子里，年轻工程师接不住；<b>处置错配</b>——把冲蚀漏点当腐蚀补了缓蚀剂，钱花了井还在漏。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='套管四种截面状态与对应征兆'>\n<rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>同一根套管的四种截面：失效模式不同，井径曲线上的「长相」完全不同</text>\n<circle cx='98' cy='95' r='46' fill='none' stroke='#242b2e' stroke-width='7'/><circle cx='98' cy='95' r='33' fill='#fbfaf6' stroke='none'/>\n<text x='98' y='164' font-size='9.5' fill='#242b2e' text-anchor='middle'>正常</text><text x='98' y='179' font-size='8.5' fill='#79828a' text-anchor='middle'>壁厚 10 mm · 双臂重合</text>\n<circle cx='262' cy='95' r='46' fill='none' stroke='#41699b' stroke-width='4'/><circle cx='262' cy='95' r='35' fill='none' stroke='#41699b' stroke-width='1' stroke-dasharray='3 2'/>\n<text x='262' y='164' font-size='9.5' fill='#41699b' text-anchor='middle'>CO₂/H₂S 腐蚀减薄</text><text x='262' y='179' font-size='8.5' fill='#79828a' text-anchor='middle'>壁厚均匀变薄 · 全井段</text><text x='262' y='193' font-size='8.5' fill='#c9613f' text-anchor='middle'>减薄 30% → 补贴，以下 → 缓蚀剂</text>\n<ellipse cx='426' cy='95' rx='50' ry='38' fill='none' stroke='#41699b' stroke-width='7'/><ellipse cx='426' cy='95' rx='36' ry='26' fill='#fbfaf6' stroke='none'/>\n<path d='M426 38 L426 24' stroke='#c9613f' marker-end='url(#kgP1)'/><path d='M426 152 L426 166' stroke='#c9613f' marker-end='url(#kgP1)'/>\n<defs><marker id='kgP1' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0 0 L6 3 L0 6 Z' fill='#c9613f'/></marker></defs>\n<text x='426' y='164' font-size='9.5' fill='#41699b' text-anchor='middle'>泥岩挤压变形</text><text x='426' y='179' font-size='8.5' fill='#79828a' text-anchor='middle'>双臂分叉 · 椭圆度升高</text><text x='426' y='193' font-size='8.5' fill='#c9613f' text-anchor='middle'>椭圆度 12% = 错断警戒线</text>\n<circle cx='590' cy='95' r='46' fill='none' stroke='#242b2e' stroke-width='7'/><path d='M560 122 A 46 46 0 0 0 620 122 L 606 112 A 32 32 0 0 1 574 112 Z' fill='#c9613f' opacity='0.5'/>\n<circle cx='583' cy='132' r='1.4' fill='#c9613f'/><circle cx='592' cy='137' r='1.4' fill='#c9613f'/><circle cx='600' cy='131' r='1.4' fill='#c9613f'/>\n<text x='590' y='164' font-size='9.5' fill='#c9613f' text-anchor='middle'>出砂冲蚀</text><text x='590' y='179' font-size='8.5' fill='#79828a' text-anchor='middle'>射孔段局部骤薄 · 台阶状</text><text x='590' y='193' font-size='8.5' fill='#c9613f' text-anchor='middle'>壁厚 &lt; 6 mm → 漏失</text>\n<text x='16' y='222' font-size='9.5' fill='#4d565b'>三种模式的处置天差地别：腐蚀靠缓蚀与补贴，变形靠整形与加固，冲蚀靠封堵与防砂重置——</text>\n<text x='16' y='238' font-size='9.5' fill='#c9613f'>认错模式 = 钱花在空气里。这就是需要推理链而不是裸检测的原因。</text>\n</svg><span class='viz-cap'>四种截面状态：均匀减薄、双臂分叉、局部缺口各自指向不同失效模式与不同处置。</span></div>"
+        },
+        {
+          "no": 2,
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>分两层，各司其职。<b>征兆量化</b>：把多臂井径曲线自动分段，算出五类带数值的证据——均匀减薄率、局部加重率、椭圆度、壁厚突变、漏失判据，阈值按区块标定；<b>图谱推理</b>：征兆节点加权连接到失效模式节点，再连到处置手段节点，置信度由证据强度决定，每条边挂着机理与条款出处。</p><p>关键区别在<b>可解释</b>：不是黑箱打一个「健康分」，而是示范里这样的推理链——椭圆度 11.1%、固井质量放大外载 → 泥岩挤压变形（置信度 0.74）→ 磨铣整形 + 套管补贴。证据变了结论就变，但每一步都摆在图上，工程师审的是「证据够不够」，不是「信不信算法」。</p><div class='viz'><svg viewBox='0 0 700 220' role='img' aria-label='从征兆到处置的图谱推理链示意'>\n<rect x='0' y='0' width='700' height='220' fill='#fbfaf6'/>\n<defs><marker id='kgP2' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs>\n<text x='16' y='18' font-size='11' fill='#242b2e'>推理链怎么读：实线边＝证据成立，线宽＝置信度；灰色节点＝证据不足未点亮</text>\n<rect x='20' y='40' width='128' height='28' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='30' y='59' font-size='9.5' fill='#2f7d6b' font-weight='600'>均匀减薄 6.3%</text>\n<rect x='20' y='78' width='128' height='28' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='30' y='97' font-size='9.5' fill='#2f7d6b' font-weight='600'>椭圆度 11.1%</text>\n<rect x='20' y='116' width='128' height='28' rx='4' fill='#f2efe6' stroke='#e2ded0'/><text x='30' y='135' font-size='9.5' fill='#b0a89a'>壁厚突变 0.54 mm</text>\n<rect x='290' y='52' width='150' height='34' rx='4' fill='#b26a39' opacity='0.88'/><text x='300' y='67' font-size='9.5' fill='#fff' font-weight='600'>CO₂/H₂S 腐蚀减薄</text><text x='300' y='80' font-size='8' fill='#fff'>置信度 0.60</text>\n<rect x='290' y='104' width='150' height='34' rx='4' fill='#41699b' opacity='0.88'/><text x='300' y='119' font-size='9.5' fill='#fff' font-weight='600'>泥岩挤压变形</text><text x='300' y='132' font-size='8' fill='#fff'>置信度 0.74（主导）</text>\n<rect x='290' y='156' width='150' height='28' rx='4' fill='#f2efe6' stroke='#e2ded0'/><text x='300' y='175' font-size='9.5' fill='#b0a89a'>出砂冲蚀 0.11</text>\n<path d='M148 54 C 210 54, 230 66, 286 68' fill='none' stroke='#b26a39' stroke-width='2.2' marker-end='url(#kgP2)'/>\n<path d='M148 92 C 210 92, 230 116, 286 120' fill='none' stroke='#41699b' stroke-width='2.9' marker-end='url(#kgP2)'/>\n<path d='M148 130 C 210 130, 230 166, 286 170' fill='none' stroke='#e2ded0'/>\n<rect x='530' y='46' width='152' height='26' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='540' y='64' font-size='9.5' fill='#2f7d6b' font-weight='600'>加注缓蚀剂 + 监测</text>\n<rect x='530' y='80' width='152' height='26' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='540' y='98' font-size='9.5' fill='#2f7d6b' font-weight='600'>套管补贴（膨胀管）</text>\n<rect x='530' y='112' width='152' height='26' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='540' y='130' font-size='9.5' fill='#2f7d6b' font-weight='600'>磨铣整形 + 补贴</text>\n<path d='M440 62 C 480 62, 490 58, 526 58' fill='none' stroke='#b26a39' stroke-width='2' marker-end='url(#kgP2)'/>\n<path d='M440 118 C 480 118, 490 96, 526 92' fill='none' stroke='#41699b' stroke-width='2.4' marker-end='url(#kgP2)'/>\n<path d='M440 126 C 480 126, 490 126, 526 126' fill='none' stroke='#41699b' stroke-width='2.4' marker-end='url(#kgP2)'/>\n<text x='16' y='204' font-size='9.5' fill='#4d565b'>同一口井：椭圆度冲过 12%，链切到「下小套管」；射孔段壁厚跌破 6 mm，链切到「挤水泥封堵（紧急）」。</text>\n</svg><span class='viz-cap'>图谱推理链：征兆点亮模式、模式挂出处置，线宽即置信度，灰色即证据不足。</span></div>"
+        },
+        {
+          "no": 3,
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p><b>四类输入</b>：套管监测数据（多臂井径、电磁探伤、声呐成像——壁厚与变形的直接证据）；生产动态（产液剖面、压力与温度异常——漏失与窜流的旁证）；井史与工况（完井参数、腐蚀介质、出砂史——机理侧的背景）；处置案例库（失效模式—处置方案—实施效果，图谱的边从这里长出来）。</p><p><b>坑</b>：井径曲线必须做深度对齐与接箍补偿，否则椭圆度全是假象；案例库的每条记录要带<b>随访周期</b>——只记「做了什么」不记「效果如何」，图谱会一直把无效方案排在前面。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='四类数据汇入知识图谱'>\n<rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/>\n<defs><marker id='kgP3' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs>\n<text x='16' y='18' font-size='11' fill='#242b2e'>需要准备什么：直接证据、旁证、背景与案例，各喂图谱不同的边</text>\n<rect x='16' y='34' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='28' y='54' font-size='10' fill='#242b2e'>套管监测数据</text><text x='28' y='72' font-size='8.5' fill='#79828a'>多臂井径 · 电磁探伤（直接证据）</text>\n<rect x='216' y='34' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='228' y='54' font-size='10' fill='#242b2e'>生产动态</text><text x='228' y='72' font-size='8.5' fill='#79828a'>压力温度异常（漏失旁证）</text>\n<rect x='16' y='102' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='28' y='122' font-size='10' fill='#242b2e'>井史与工况</text><text x='28' y='140' font-size='8.5' fill='#79828a'>腐蚀介质 · 出砂史（机理背景）</text>\n<rect x='216' y='102' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='228' y='122' font-size='10' fill='#c9613f'>处置案例库</text><text x='228' y='140' font-size='8.5' fill='#c9613f'>模式—方案—效果（要带随访！）</text>\n<path d='M206 62 L266 62' stroke='#79828a' marker-end='url(#kgP3)'/><path d='M406 62 L466 78' stroke='#79828a' marker-end='url(#kgP3)'/><path d='M206 130 L266 130' stroke='#79828a' marker-end='url(#kgP3)'/><path d='M406 130 L466 116' stroke='#79828a' marker-end='url(#kgP3)'/>\n<rect x='470' y='54' width='214' height='92' rx='5' fill='#41699b' opacity='0.9'/><text x='484' y='78' font-size='10.5' fill='#fff'>知识图谱</text><text x='484' y='98' font-size='9' fill='#fff'>征兆 → 模式 → 处置</text><text x='484' y='116' font-size='9' fill='#fff'>边挂机理与条款出处</text><text x='484' y='134' font-size='9' fill='#fff'>边权随处置效果更新</text>\n<text x='16' y='186' font-size='9.5' fill='#c9613f'>坑：井径曲线深度错位 2 米，椭圆度就找错层位——预处理不过关，推理链从第一步就歪。</text>\n</svg><span class='viz-cap'>数据分工：监测给直接证据，生产给旁证，井史给机理背景，案例库长出处置的边。</span></div>"
+        },
+        {
+          "no": 4,
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难点：<b>模式混叠</b>——腐蚀与冲蚀都表现为「壁厚变薄」，靠形态（均匀坡 vs 台阶状）与位置（全井段 vs 射孔段）区分，单指标必错；<b>证据不全</b>——没做电磁探伤时壁厚只能推算，置信度要如实降权而不是硬给结论；<b>处置顺序</b>——变形段要先整形再补贴，顺序错了补贴器下不到位。</p><p>改进路线按成本从低到高：① 征兆检测从人工读图换成自动分段；② 图谱每条边挂上条款与案例出处；③ 处置后复测回填，边权随效果更新；④ 与生产数据联动，漏失判据从单点改多源。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='三个难点：模式混叠、证据降权、处置顺序'>\n<rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>三个会让人白干一场的坑</text>\n<rect x='16' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10' fill='#4d565b'>① 模式混叠：都是「变薄」</text>\n<line x1='40' y1='150' x2='216' y2='150' stroke='#242b2e'/><line x1='40' y1='60' x2='40' y2='150' stroke='#242b2e'/>\n<text x='34' y='164' font-size='8.5' fill='#79828a'>壁厚</text><text x='216' y='164' font-size='8.5' fill='#79828a' text-anchor='end'>深度 →</text>\n<path d='M46 66 L 210 96' fill='none' stroke='#41699b' stroke-width='2'/><text x='120' y='72' font-size='8.5' fill='#41699b'>腐蚀：均匀斜坡</text>\n<path d='M46 92 L 120 92 L 122 122 L 210 122' fill='none' stroke='#c9613f' stroke-width='2'/><text x='130' y='138' font-size='8.5' fill='#c9613f'>冲蚀：台阶状骤降</text>\n<text x='28' y='184' font-size='9' fill='#4d565b'>形态 + 位置双证据交叉，</text><text x='28' y='197' font-size='9' fill='#c9613f'>单看「变薄了多少」必错。</text>\n<rect x='244' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='46' font-size='10' fill='#4d565b'>② 证据不全：如实降权</text>\n<text x='256' y='70' font-size='9' fill='#4d565b'>井径 + 探伤 + 生产</text><rect x='256' y='76' width='170' height='12' rx='2' fill='#41699b'/><text x='432' y='86' font-size='9' fill='#4d565b'>0.86</text>\n<text x='256' y='106' font-size='9' fill='#4d565b'>缺电磁探伤</text><rect x='256' y='112' width='104' height='12' rx='2' fill='#41699b' opacity='0.65'/><text x='366' y='122' font-size='9' fill='#4d565b'>0.52</text>\n<text x='256' y='142' font-size='9' fill='#4d565b'>仅有径曲线</text><rect x='256' y='148' width='76' height='12' rx='2' fill='#41699b' opacity='0.45'/><text x='338' y='158' font-size='9' fill='#4d565b'>0.38</text>\n<text x='256' y='184' font-size='9' fill='#c9613f'>证据缺了就降置信度，</text><text x='256' y='197' font-size='9' fill='#4d565b'>而不是硬给一个结论。</text>\n<rect x='472' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='46' font-size='10' fill='#4d565b'>③ 处置顺序：错了下不去</text>\n<rect x='486' y='64' width='58' height='30' rx='4' fill='#41699b' opacity='0.85'/><text x='515' y='83' font-size='9.5' fill='#fff' text-anchor='middle'>① 整形</text>\n<path d='M544 79 L562 79' stroke='#242b2e' marker-end='url(#kgP4)'/><defs><marker id='kgP4' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<rect x='566' y='64' width='58' height='30' rx='4' fill='#b26a39' opacity='0.85'/><text x='595' y='83' font-size='9.5' fill='#fff' text-anchor='middle'>② 补贴</text>\n<path d='M624 79 L642 79' stroke='#242b2e' marker-end='url(#kgP4)'/>\n<rect x='486' y='104' width='58' height='30' rx='4' fill='#2f7d6b' opacity='0.85'/><text x='515' y='123' font-size='9.5' fill='#fff' text-anchor='middle'>③ 试压</text>\n<text x='484' y='158' font-size='9' fill='#c9613f'>椭圆段直接下补贴器，</text>\n<text x='484' y='172' font-size='9' fill='#c9613f'>卡在半井身进退两难。</text>\n<text x='484' y='190' font-size='8.5' fill='#79828a'>图谱边要带「前置条件」：整形是补贴的前置边。</text>\n</svg><span class='viz-cap'>三个坑：模式混叠（双证据交叉）、证据不全（如实降权）、处置顺序（前置条件挂在边上）。</span></div>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "从「读曲线」到「给依据」的落地流程",
+      "lead": [
+        "这个流程把「老师傅看曲线」换成「图谱给依据」。核心资产不是检测仪器，是那张把征兆、机理、条款与案例连起来的图谱——边挂错了依据，推荐就是精致的错误。",
+        "下面的示范用一口井的合成井径曲线演示第 2、3 步：拉年限与固井质量，看推理链怎么点亮、怎么切换。"
+      ],
+      "stats": [
+        [
+          "默认工况主导模式",
+          "泥岩挤压变形 0.74"
+        ],
+        [
+          "处置链切换点",
+          "椭圆度 12%"
+        ],
+        [
+          "推理链规模",
+          "征兆5 → 模式4 → 处置5"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "监测数据接入与曲线预处理",
+          "role": "数据",
+          "do": "多臂井径与电磁探伤按深度对齐，做接箍补偿与刻度统一，生成剩余壁厚与最大/最小井径双臂曲线。",
+          "effect": "同一深度坐标下的可比证据链，异常段定位到米。",
+          "trap": "深度没对齐，椭圆度找错层位——后面的推理全部落空。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='曲线预处理：深度对齐与接箍补偿'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>预处理三步：深度对齐 → 接箍补偿 → 双臂曲线生成</text><path d='M20 40 C 60 46, 100 40, 130 52' fill='none' stroke='#b0a89a' stroke-width='1.6' stroke-dasharray='4 2'/><text x='20' y='34' font-size='8.5' fill='#b0a89a'>原始曲线：接箍尖刺 + 深度漂移</text><path d='M20 78 C 60 80, 110 84, 150 88' fill='none' stroke='#41699b' stroke-width='2'/><text x='20' y='74' font-size='8.5' fill='#41699b'>补偿后：异常段真实浮现</text><rect x='180' y='66' width='14' height='8' fill='#c9613f' opacity='0.7'/><text x='200' y='73' font-size='8' fill='#c9613f'>变形段</text><rect x='300' y='24' width='150' height='56' rx='4' fill='#41699b' opacity='0.9'/><text x='375' y='46' font-size='9.5' fill='#fff' text-anchor='middle'>双臂曲线</text><text x='375' y='64' font-size='9' fill='#fff' text-anchor='middle'>最大 / 最小井径</text><path d='M450 52 L474 52' stroke='#242b2e' marker-end='url(#kgS1)'/><defs><marker id='kgS1' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='478' y='24' width='170' height='56' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='563' y='46' font-size='9.5' fill='#2f7d6b' text-anchor='middle'>异常段定位到米</text><text x='563' y='64' font-size='9' fill='#79828a' text-anchor='middle'>同深度坐标可比</text><text x='12' y='106' font-size='9.5' fill='#c9613f'>接箍处的假尖刺不补偿，每根套管接箍都是一 个「疑似变形段」，报告全是狼来了。</text></svg>"
+        },
+        {
+          "name": "征兆量化与阈值分层",
+          "role": "标注",
+          "do": "把曲线分段量化成五类征兆：均匀减薄、局部加重、椭圆度、壁厚突变、漏失判据，按证据强度分级。",
+          "effect": "图谱的输入从「一张图」变成「五个带数值的证据」。",
+          "trap": "阈值一刀切——腐蚀性区块与出砂区块的警戒线不同，要按区块标定。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='一条曲线量化成五类征兆'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>一条曲线 → 五个带数值的证据（示范默认工况）</text><rect x='12' y='30' width='118' height='30' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='71' y='49' font-size='9' fill='#2f7d6b' text-anchor='middle'>均匀减薄 6.3%</text><rect x='138' y='30' width='118' height='30' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='197' y='49' font-size='9' fill='#2f7d6b' text-anchor='middle'>局部加重 11.7%</text><rect x='264' y='30' width='118' height='30' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='323' y='49' font-size='9' fill='#2f7d6b' text-anchor='middle'>椭圆度 11.1%</text><rect x='390' y='30' width='118' height='30' rx='4' fill='#f2efe6' stroke='#e2ded0'/><text x='449' y='49' font-size='9' fill='#b0a89a' text-anchor='middle'>突变 0.54 mm</text><rect x='516' y='30' width='118' height='30' rx='4' fill='#f2efe6' stroke='#e2ded0'/><text x='575' y='49' font-size='9' fill='#b0a89a' text-anchor='middle'>漏失 未触发</text><rect x='12' y='72' width='290' height='30' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='91' font-size='9' fill='#4d565b'>证据分级：成立（绿）· 不足（灰）· 阈值按区块标定</text><rect x='312' y='72' width='322' height='30' rx='4' fill='#dfe6ee'/><text x='324' y='91' font-size='9' fill='#41699b'>输出：证据向量 [0.63, 1.17, 11.1, 0.54, 否] → 进图谱</text><text x='12' y='116' font-size='9.5' fill='#c9613f'>腐蚀性区块减薄 15% 就该亮灯，出砂区块 20% 才算异常——全网一套阈值必然误报漏报各一半。</text></svg>"
+        },
+        {
+          "name": "图谱推理：征兆到失效模式",
+          "role": "算法",
+          "do": "按图谱加权匹配征兆组合，算出各失效模式的置信度，用形态与位置双证据区分混叠模式。",
+          "effect": "主导模式与次要模式同屏呈现，每个置信度可解释。",
+          "trap": "单证据定案——减薄既可能是腐蚀也可能是冲蚀，必须两条证据交叉。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='征兆加权匹配失效模式'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='kgS3' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs><text x='12' y='18' font-size='10' fill='#4d565b'>加权匹配：征兆 × 边权 → 模式置信度（示范默认工况）</text><rect x='12' y='32' width='104' height='28' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='64' y='50' font-size='8.5' fill='#2f7d6b' text-anchor='middle'>减薄 6.3%</text><rect x='12' y='68' width='104' height='28' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='64' y='86' font-size='8.5' fill='#2f7d6b' text-anchor='middle'>加重 11.7%</text><path d='M116 46 C 160 46, 180 60, 224 62' fill='none' stroke='#b26a39' stroke-width='2.2' marker-end='url(#kgS3)'/><path d='M116 82 C 160 82, 180 72, 224 68' fill='none' stroke='#b26a39' stroke-width='2' marker-end='url(#kgS3)'/><rect x='228' y='44' width='140' height='36' rx='4' fill='#b26a39' opacity='0.88'/><text x='298' y='60' font-size='9.5' fill='#fff' text-anchor='middle'>腐蚀减薄</text><text x='298' y='74' font-size='8' fill='#fff' text-anchor='middle'>置信度 0.60</text><rect x='228' y='4' width='0' height='0' fill='none'/><rect x='420' y='44' width='228' height='36' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='432' y='60' font-size='9' fill='#4d565b'>双证据交叉：均匀坡（形态）</text><text x='432' y='74' font-size='9' fill='#4d565b'>+ 全井段（位置）→ 排除冲蚀</text><rect x='12' y='104' width='0' height='0' fill='none'/><text x='12' y='116' font-size='9.5' fill='#c9613f'>单证据定案的下场：把冲蚀漏点当腐蚀，补一年缓蚀剂，井还在漏。</text></svg>"
+        },
+        {
+          "name": "处置匹配与方案排序",
+          "role": "算法",
+          "do": "沿图谱边把失效模式连到处置手段，按置信度、费用与工期排序，输出带依据的方案卡。",
+          "effect": "每条推荐带条款出处、费用区间与预期有效期。",
+          "trap": "只按费用排序——紧急漏失和计划检修不是一个优先级。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='处置方案卡与排序'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>方案卡按「置信度 × 优先级」排序，费用与依据随行</text><rect x='12' y='30' width='200' height='56' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='24' y='50' font-size='9.5' fill='#2f7d6b' font-weight='600'>磨铣整形 + 套管补贴</text><text x='24' y='66' font-size='8.5' fill='#4d565b'>依据：椭圆度 11.1% · 泥岩段</text><text x='24' y='79' font-size='8.5' fill='#79828a'>60—90 万 + 80—120 万 · 计划检修</text><rect x='228' y='30' width='200' height='56' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='240' y='50' font-size='9.5' fill='#2f7d6b' font-weight='600'>加注缓蚀剂 + 年度监测</text><text x='240' y='66' font-size='8.5' fill='#4d565b'>依据：均匀减薄 6.3% &lt; 30% 补贴线</text><text x='240' y='79' font-size='8.5' fill='#79828a'>25 万/年 · 常规措施</text><rect x='444' y='30' width='204' height='56' rx='4' fill='#f2efe6' stroke='#e2ded0'/><text x='456' y='50' font-size='9.5' fill='#b0a89a'>挤水泥封堵（未点亮）</text><text x='456' y='66' font-size='8.5' fill='#b0a89a'>触发条件：壁厚 &lt; 6 mm 漏失</text><text x='456' y='79' font-size='8.5' fill='#b0a89a'>当前最薄 8.6 mm · 未达线</text><rect x='12' y='96' width='636' height='18' rx='3' fill='#dfe6ee'/><text x='24' y='109' font-size='9' fill='#41699b'>排序规则：漏失（紧急）&gt; 错断风险 &gt; 腐蚀控制 &gt; 观察监测——费用只在同级里比。</text></svg>"
+        },
+        {
+          "name": "处置实施与效果回填",
+          "role": "人工",
+          "do": "工程师审定方案并实施，处置后 6 个月内复测井径，把效果回填案例库更新边权。",
+          "effect": "图谱越用越准：有效方案的边权上升，无效方案被降权。",
+          "trap": "只记做了什么不记效果如何，图谱会一直推荐无效方案。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='处置回填闭环'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='kgS5' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='12' y='30' width='110' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='67' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>方案审定</text><path d='M122 47 L152 47' stroke='#242b2e' marker-end='url(#kgS5)'/><rect x='156' y='30' width='110' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='211' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>处置实施</text><path d='M266 47 L296 47' stroke='#242b2e' marker-end='url(#kgS5)'/><rect x='300' y='30' width='110' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='355' y='51' font-size='9.5' fill='#242b2e' text-anchor='middle'>6 个月内复测</text><path d='M410 47 L440 47' stroke='#242b2e' marker-end='url(#kgS5)'/><rect x='444' y='30' width='110' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='499' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>效果回填</text><path d='M554 47 C 600 47, 610 80, 560 88 C 480 98, 180 98, 90 82' fill='none' stroke='#79828a' stroke-dasharray='4 3' marker-end='url(#kgS5)'/><text x='330' y='112' font-size='9' fill='#79828a' text-anchor='middle'>闭环：效果好的边权 +，无效方案降权——图谱的「经验」从这里长出来</text><text x='12' y='24' font-size='9.5' fill='#4d565b'>回填的不是「做了什么」，是「6 个月后井径曲线怎么说」。</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>征兆检出率</b>：对已确诊井做回测，主导失效模式识别命中率应大于 85%，错判为相邻模式的算半对。</p><p><b>置信度可靠性</b>：置信度 0.7 以上的推荐，现场确认率应大于 90%——置信度要「说到做到」，否则数字没有意义。</p><p><b>依据可追溯率</b>：100% 的推荐能展示证据链与条款出处；无法追溯的推荐一律不发。</p><p><b>回填闭环率</b>：处置后 6 个月内完成复测回填的井占比应大于 80%——没有回填，图谱的边权就是摆设。</p>"
+      },
+      "fails": [
+        {
+          "name": "深度没对齐",
+          "why": "井径曲线深度错位 2 米，椭圆度就找错层位，推理链从第一步就歪。"
+        },
+        {
+          "name": "单证据定案",
+          "why": "减薄既可能是腐蚀也可能是冲蚀，处置天差地别；单指标定案的推荐一半是错的。"
+        },
+        {
+          "name": "阈值一刀切",
+          "why": "腐蚀性区块与出砂区块的警戒线不同，全网一套阈值必然误报漏报各一半。"
+        },
+        {
+          "name": "只记方案不记效果",
+          "why": "案例库没有随访，无效方案永远不会被降权，图谱会一直把它排在前面。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "html": "demo/index.html",
+      "label": "可运行示范",
+      "intro": "拖动滑杆改变服役年限、腐蚀介质、出砂强度与固井质量，看多臂井径曲线上的三种异常怎么生长、征兆量化怎么打分、图谱推理链怎么点亮与切换；每个推荐都带着证据与条款出处。",
+      "height": 1250
+    }
+  }
+}

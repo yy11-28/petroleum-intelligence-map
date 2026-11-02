@@ -1,0 +1,39 @@
+<!-- 整页示范：套管完整性智能监测与处置推荐（运行在沙箱 iframe 里） -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：套管完整性智能监测与失效处置推荐</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>套管完整性监测与处置推荐</h1>
+  <p class="lead">套管是井的「骨架」。多臂井径测井会给出一条<b>剩余壁厚曲线</b>：均匀减薄指向腐蚀、最大最小井径分叉指向挤压变形、局部骤薄指向出砂冲蚀。
+  知识图谱把「<b>征兆 → 失效模式 → 处置手段</b>」的对应关系连成推理链——每一条推荐都能指着证据说清为什么，而不是黑箱打分。
+  拉动滑杆改变服役年限、腐蚀介质、出砂强度与固井质量，看征兆怎么长出来、推理链怎么点亮。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>知识图谱：征兆 → 失效模式 → 处置</li><li>多征兆量化关联</li></ul></div><div><b>为什么起作用</b><ul><li>套管失效看不见，只能靠井径、压力、产量的间接征兆；单一征兆易误判，组合证据才可靠</li><li>图谱把专家关系显式化，处置建议沿推理链给出，不是拍脑袋</li></ul></div><div><b>在示范里怎么看</b><ul><li>同时拉高腐蚀与出砂，看井径曲线异常生长和推荐处置同步切换</li></ul></div></div></div>
+
+  <div class="ctl"><label>服役年限 <output id="out-yr">9 年</output></label><input type="range" id="yr" min="1" max="20" step="1" value="9"></div>
+  <div class="ctl"><label>腐蚀性介质（CO₂ / H₂S） <output id="out-cor">0.50</output></label><input type="range" id="cor" min="0" max="1" step="0.02" value="0.5"></div>
+  <div class="ctl"><label>出砂强度 <output id="out-sand">0.40</output></label><input type="range" id="sand" min="0" max="1" step="0.02" value="0.4"></div>
+  <div class="ctl"><label>固井质量 <output id="out-cem">0.70</output></label><input type="range" id="cem" min="0" max="1" step="0.02" value="0.7"></div>
+
+  <svg id="cal" viewBox="0 0 720 235" role="img" aria-label="多臂井径曲线与异常段识别"></svg>
+  <svg id="detect" viewBox="0 0 720 150" role="img" aria-label="征兆量化与预警阈值"></svg>
+  <svg id="kg" viewBox="0 0 720 250" role="img" aria-label="征兆到失效模式到处置的图谱推理链"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">完整性等级</span><b id="ro-grade">—</b></div>
+    <div class="ro"><span class="k">最薄剩余壁厚</span><b id="ro-min">—</b></div>
+    <div class="ro"><span class="k">主导失效模式</span><b id="ro-mode">—</b></div>
+    <div class="ro"><span class="k">推荐处置</span><b id="ro-act">—</b></div>
+  </div>
+
+  <table class="tbl" id="tbl"></table>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

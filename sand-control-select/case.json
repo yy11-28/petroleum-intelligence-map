@@ -1,0 +1,174 @@
+{
+ "id": "sand-control-select",
+ "sceneId": "co9",
+ "methods": [
+  "kg",
+  "opt"
+ ],
+ "title": "出砂长期动态预测与防砂方案智能优选",
+ "version": "1.0.0",
+ "updated": "2026-10-23",
+ "tabs": {
+  "background": {
+   "label": "专业背景",
+   "lede": "弱胶结储层投产后会逐渐出砂。初期只是含砂偏高，后期可能是砂埋、卡泵、套损。难点在于两件事：一是出砂是<b>随时间演化</b>的，短期试产看不出方案差别；二是防砂方式一旦下入就很难更换，决策窗口只有完井这一次。",
+   "judge": [
+    {
+     "label": "任务",
+     "value": "方案匹配 + 时序预测",
+     "desc": "先匹配候选方式，再预测多年出砂演化"
+    },
+    {
+     "label": "数据形态",
+     "value": "岩心/测井 + 生产时序",
+     "desc": "时序全量记录，出砂标签稀疏"
+    },
+    {
+     "label": "标注成本",
+     "value": "高",
+     "desc": "出砂真值靠含砂监测与冲砂记录，井少且间断"
+    },
+    {
+     "label": "可见收益",
+     "value": "中高",
+     "desc": "一次完井决策影响整个生产期"
+    },
+    {
+     "label": "难度",
+     "value": "中",
+     "desc": "机理清楚，难在长期演化标定与样本稀疏"
+    }
+   ],
+   "sections": [
+    {
+     "no": 1,
+     "en": "PROBLEM",
+     "title": "当前做法与问题",
+     "html": "<p>常规做法：防砂方式按区块习惯选定——本区块一直用砾石充填就继续用砾石充填；生产压差按配产需要给定，要增产就直接提液。这两件事通常是分开做的：<b>完井时定方案，投产后定制度，中间没有人把两者放在一起算。</b></p><p>问题有三。<b>决策窗口只有一次</b>——防砂管柱下入之后很难更换，投产两年发现出砂严重，能做的只有限产和冲砂。<b>短期看不出差别</b>——同一个储层，两种方案在第一年的产量与含砂可能几乎一样，差别出现在第三年之后，而那时已经没有回头路。<b>制度与方案是耦合的</b>——砾石充填能扛住更高的压差，筛管就不行；反过来，出砂风险低的井装砾石充填，白白损失产能（充填带来的附加表皮）。<b>下图是出砂的临界压差概念</b>：低于临界值时孔道周围能形成稳定砂拱，超过之后砂拱反复坍塌，出砂会被自己加速。</p><div class='viz'><svg viewBox='0 0 700 230' role='img' aria-label='临界压差与砂拱稳定的示意'><rect x='0' y='0' width='700' height='230' fill='#fbfaf6'/><rect x='24' y='30' width='300' height='150' rx='6' fill='#efece1' stroke='#e2ded0'/><text x='174' y='52' font-size='11' fill='#2f7d6b' text-anchor='middle'>压差 &lt; 临界值：砂拱稳定</text><rect x='150' y='70' width='120' height='60' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><path d='M150 70 L270 70 L270 130 L150 130 Z' fill='none' stroke='#2f7d6b' stroke-width='1.2'/><circle cx='176' cy='96' r='4' fill='#41699b'/><circle cx='200' cy='108' r='4' fill='#41699b'/><circle cx='224' cy='94' r='4' fill='#41699b'/><circle cx='248' cy='108' r='4' fill='#41699b'/><path d='M162 130 Q 210 88 258 130' fill='none' stroke='#2f7d6b' stroke-width='1.6'/><text x='210' y='86' font-size='9.5' fill='#2f7d6b' text-anchor='middle'>稳定拱</text><text x='174' y='154' font-size='10' fill='#4d565b' text-anchor='middle'>孔道周围颗粒互相支撑，少量出砂后自稳</text><text x='174' y='170' font-size='10' fill='#4d565b' text-anchor='middle'>含砂率低且随时间不增长</text><rect x='376' y='30' width='300' height='150' rx='6' fill='#f6e2da' stroke='#c9613f'/><text x='526' y='52' font-size='11' fill='#c9613f' text-anchor='middle'>压差 &gt; 临界值：拱塌、出砂自加速</text><rect x='502' y='70' width='120' height='60' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><path d='M502 70 L622 70 L622 130 L502 130 Z' fill='none' stroke='#c9613f' stroke-width='1.2'/><circle cx='528' cy='120' r='3.6' fill='#c9613f'/><circle cx='552' cy='126' r='3.6' fill='#c9613f'/><circle cx='576' cy='118' r='3.6' fill='#c9613f'/><circle cx='600' cy='128' r='3.6' fill='#c9613f'/><path d='M514 130 Q 562 100 610 130' fill='none' stroke='#c9613f' stroke-width='1.6' stroke-dasharray='4 3'/><text x='562' y='98' font-size='9.5' fill='#c9613f' text-anchor='middle'>拱反复坍塌</text><text x='526' y='154' font-size='10' fill='#4d565b' text-anchor='middle'>通道扩大 → 流速集中 → 携砂量上升</text><text x='526' y='170' font-size='10' fill='#c9613f' text-anchor='middle'>出砂会被自己放大，这是长期预测的重点</text><path d='M330 105 L366 105' stroke='#242b2e' stroke-width='1.4' marker-end='url(#arS)'/><defs><marker id='arS' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><text x='348' y='98' font-size='9.5' fill='#4d565b' text-anchor='middle'>提液</text><text x='24' y='204' font-size='10.5' fill='#4d565b'>同样的储层，压差跨过临界值之后行为完全不同：临界值由岩石强度、地应力与孔道几何共同决定，不是一个固定数字。</text><text x='24' y='220' font-size='10.5' fill='#79828a'>这也是为什么「先试一年看看」这个办法在出砂问题上不可靠——第一年通常都在临界值以下。</text></svg><span class='viz-cap'>出砂的临界压差概念：低于临界值时砂拱自稳，超过之后出砂会自我加速。</span></div>"
+    },
+    {
+     "no": 2,
+     "en": "INTERVENTION",
+     "title": "AI 能做什么",
+     "html": "<p><b>第一层：知识图谱负责匹配。</b>把储层强度、粒度与泥质含量、井段长度、井斜、射孔参数与历史成败组织成可查询的规则，先筛出候选方式（独立筛管、砾石充填、化学固砂、压裂充填、或者干脆不防砂），并给出每条判据的来源。<b>这一层的价值一半在「推荐什么」，一半在「为什么不推荐别的」。</b></p><p><b>第二层：时序演化模型负责推算未来。</b>用一个随生产时间推进的出砂模型，把「当前制度下第 1 年、第 3 年、第 5 年各会出多少砂」算出来。这一步是人工做不到的：经验能判断现在出不出砂，判断不了三年后。</p><p><b>第三层：寻优把方案与制度一起定。</b>防砂方式带来附加表皮（砾石充填最大、筛管次之、化学固砂最小），而出砂风险又随压差上升——同一个方案，制度不同结论就不同。把两者放在同一个目标里搜索，才能回答「装了砾石充填之后能不能把压差提上去」这类问题。</p><p>被替掉的是「按习惯选方式 + 按配产定压差」这两步。<b>被留下的：含砂监测的校核、以及方案一旦下入就不可逆这个事实本身</b>——模型只能把不确定性摊开，不能替工程师承担决策后果。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='匹配、时序预测与制度寻优三层'><rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/><rect x='18' y='28' width='150' height='52' rx='6' fill='#41699b' opacity='0.9'/><text x='93' y='50' font-size='11.5' fill='#fff' text-anchor='middle'>知识图谱匹配</text><text x='93' y='68' font-size='9.5' fill='#fff' text-anchor='middle'>候选方式 + 排除理由</text><path d='M168 54 L214 54' stroke='#242b2e' stroke-width='1.3' marker-end='url(#arT)'/><defs><marker id='arT' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='214' y='28' width='158' height='52' rx='6' fill='#c9613f' opacity='0.85'/><text x='293' y='50' font-size='11.5' fill='#fff' text-anchor='middle'>出砂演化时序预测</text><text x='293' y='68' font-size='9.5' fill='#fff' text-anchor='middle'>第 1 / 3 / 5 年各出多少</text><path d='M372 54 L418 54' stroke='#242b2e' stroke-width='1.3' marker-end='url(#arT)'/><rect x='418' y='28' width='150' height='52' rx='6' fill='#2f7d6b' opacity='0.9'/><text x='493' y='50' font-size='11.5' fill='#fff' text-anchor='middle'>方案 × 制度寻优</text><text x='493' y='68' font-size='9.5' fill='#fff' text-anchor='middle'>累产 vs 出砂处置成本</text><path d='M568 54 L614 54' stroke='#242b2e' stroke-width='1.3' marker-end='url(#arT)'/><rect x='614' y='28' width='68' height='52' rx='6' fill='#e9e4d8' stroke='#d8d2c4'/><text x='648' y='50' font-size='11' fill='#242b2e' text-anchor='middle'>方案</text><text x='648' y='68' font-size='9.5' fill='#79828a' text-anchor='middle'>+ 制度</text><rect x='18' y='110' width='664' height='82' rx='6' fill='#efece1' stroke='#e2ded0'/><text x='34' y='130' font-size='10.5' fill='#4d565b'>为什么必须有时序这一层：两套方案在第 1 年的含砂率可能只差 0.1‰，到第 4 年差 3‰——</text><text x='34' y='148' font-size='10.5' fill='#4d565b'>而第 4 年已经无法更换管柱。短期试产看不出差别，正是这个场景必须建模的原因。</text><line x1='34' y1='170' x2='666' y2='170' stroke='#d8d2c4'/><path d='M60 188 C 160 176, 260 168, 360 150 C 460 132, 560 116, 650 112' fill='none' stroke='#41699b' stroke-width='1.6'/><path d='M60 190 C 160 184, 260 176, 360 158 C 460 132, 560 108, 650 96' fill='none' stroke='#c9613f' stroke-width='1.6'/><text x='60' y='204' font-size='9.5' fill='#41699b'>方案 A（低风险）</text><text x='560' y='204' font-size='9.5' fill='#c9613f'>方案 B（高风险，累计出砂量上翘）</text></svg><span class='viz-cap'>三层结构：匹配给出候选，时序预测把未来算出来，寻优把方案与制度一起定。</span></div><p><b>并入专项 · 筛管类型智能选型</b>：智能方法把选型变成双向约束下的寻优：用粒度分布（含均匀系数、泥质含量）预测各筛管类型在各挡砂精度下的出砂量与堵塞时间，再用产能模型算对应产能代价，输出「出砂可控 + 堵塞可控 + 产能损失可接受」的可行区间。价值是把两头风险放在一张图上：例如「该层 d50=120 μm、均匀系数 4.8、泥质 12%，推荐绕丝筛管 80 μm（金属棉在泥质下堵塞风险高）；若要求产能最大化可放宽至 100 μm，但出砂概率从 8% 升至 22%」。。</p>"
+    },
+    {
+     "no": 3,
+     "en": "DATA",
+     "title": "需要准备什么",
+     "html": "<p><b>岩石强度与粒度</b>：单轴抗压强度、粒度中值与分选、泥质含量与胶结类型——来自岩心与测井计算。<b>这是决定出砂的第一层输入</b>，也是最容易缺的一项：很多区块只有几口井有岩心，其余靠测井经验公式外推。</p><p><b>完井与射孔参数</b>：孔密、孔径、相位、穿透深度、筛管规格与挡砂精度、充填砂粒径。<b>作为输入，无需标注</b>，但要和实际的完井记录对得上。</p><p><b>生产时序</b>：产液量、含水、流压/压差、提液与限产的时间点。全量记录、无需标注，是演化模型的骨架。</p><p><b>出砂监测</b>：含砂率（间断取样或在线监测）、冲砂周期与砂面高度、检泵时的砂卡判识。<b>这是唯一能标定模型的标签</b>，而且往往是稀疏、口径不统一的——不同厂家的含砂仪读数不能直接合并。</p><div class='viz'><svg viewBox='0 0 700 190' role='img' aria-label='四类数据的分层与瓶颈'><rect x='0' y='0' width='700' height='190' fill='#fbfaf6'/><rect x='20' y='24' width='150' height='42' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='95' y='42' font-size='11' fill='#242b2e' text-anchor='middle'>岩石强度 / 粒度</text><text x='95' y='58' font-size='9.5' fill='#79828a' text-anchor='middle'>岩心少，多为测井外推</text><rect x='20' y='74' width='150' height='42' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='95' y='92' font-size='11' fill='#242b2e' text-anchor='middle'>完井与射孔参数</text><text x='95' y='108' font-size='9.5' fill='#79828a' text-anchor='middle'>结构化 · 无需标注</text><rect x='20' y='124' width='150' height='42' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='95' y='142' font-size='11' fill='#242b2e' text-anchor='middle'>生产时序</text><text x='95' y='158' font-size='9.5' fill='#79828a' text-anchor='middle'>全量 · 无需标注</text><rect x='360' y='124' width='150' height='42' rx='5' fill='#f6e2da' stroke='#c9613f'/><text x='435' y='142' font-size='11' fill='#242b2e' text-anchor='middle'>含砂监测 / 冲砂</text><text x='435' y='158' font-size='9.5' fill='#c9613f' text-anchor='middle'>稀疏 · 口径不统一</text><path d='M170 45 L250 45 L250 90' stroke='#79828a' fill='none'/><path d='M170 95 L250 95 L250 90' stroke='#79828a' fill='none'/><path d='M170 145 L250 145 L250 120' stroke='#79828a' fill='none'/><path d='M510 145 L560 145 L560 120' stroke='#c9613f' fill='none'/><rect x='250' y='76' width='130' height='28' rx='5' fill='#41699b' opacity='0.85'/><text x='315' y='94' font-size='10.5' fill='#fff' text-anchor='middle'>临界压差估计</text><rect x='250' y='112' width='130' height='28' rx='5' fill='#c9613f' opacity='0.8'/><text x='315' y='130' font-size='10.5' fill='#fff' text-anchor='middle'>演化模型标定</text><path d='M380 90 L470 90' stroke='#79828a' fill='none'/><path d='M380 126 L470 104' stroke='#c9613f' fill='none'/><rect x='470' y='76' width='160' height='28' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='550' y='94' font-size='10.5' fill='#fff' text-anchor='middle'>方案 × 制度寻优</text><rect x='470' y='112' width='160' height='28' rx='5' fill='#2f7d6b' opacity='0.55'/><text x='550' y='130' font-size='10.5' fill='#fff' text-anchor='middle'>目标：累产 − 处置成本</text><text x='250' y='176' font-size='10.5' fill='#79828a'>橙色链路是瓶颈：含砂监测稀疏且口径不统一，演化模型只能按区块粗标定，不能指望单井精度。</text></svg><span class='viz-cap'>数据分层：多数输入无需标注，唯一的瓶颈是含砂监测——它决定了演化模型能标定到什么程度。</span></div>"
+    },
+    {
+     "no": 4,
+     "en": "DIFFICULTY",
+     "title": "难度与参考方向",
+     "html": "<p>难点：<b>演化模型的验证周期等于生产周期</b>——预测第 5 年的出砂，要等 5 年才知道对不对，而区块开发等不了。<b>防砂方式的效果与制度耦合</b>——同一个筛管，压差 3 MPa 和 8 MPa 下的寿命差几倍，脱离制度谈方案没有意义。<b>不可逆</b>——方案下入之后只能限产，这个不对称性让「保守一点」总是显得更安全，但过度防砂会以产能为代价。</p><p>改进路线：① 用<b>同类井的类比</b>补样本——把已生产 5 年的老井按强度与制度分组，用它来标定新井的演化曲线；② 输出<b>区间与失效时间分位数</b>，而不是「第 4 年会出砂」这种点预测；③ 把产能损失（附加表皮）显式算进目标，避免永远选最保守的方案；④ 每次冲砂与含砂数据回写，重标定衰减系数；⑤ 制度侧给出<b>压差上限建议</b>而不是固定值，让现场知道安全边界在哪。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='附加表皮与出砂风险的取舍'><rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/><line x1='70' y1='170' x2='660' y2='170' stroke='#242b2e' stroke-width='1.2'/><line x1='70' y1='24' x2='70' y2='170' stroke='#242b2e' stroke-width='1.2'/><text x='70' y='186' font-size='10' fill='#79828a'>防砂强度（挡砂能力 / 附加表皮）→</text><text x='66' y='30' font-size='10' fill='#79828a' text-anchor='end'>相对产能</text><path d='M90 44 C 200 52, 320 70, 430 96 C 520 118, 600 146, 650 162' fill='none' stroke='#41699b' stroke-width='2'/><text x='640' y='158' font-size='9.5' fill='#41699b' text-anchor='end'>附加表皮越大产量越低</text><path d='M90 160 C 200 152, 320 130, 430 100 C 520 76, 600 52, 650 40' fill='none' stroke='#c9613f' stroke-width='2'/><text x='640' y='36' font-size='9.5' fill='#c9613f' text-anchor='end'>出砂风险越低</text><circle cx='400' cy='99' r='5' fill='#2f7d6b'/><text x='410' y='92' font-size='9.5' fill='#2f7d6b'>合理的取点</text><rect x='430' y='104' width='230' height='62' rx='6' fill='#efece1' stroke='#e2ded0'/><text x='444' y='122' font-size='10.5' fill='#4d565b'>两条线交叉意味着：没有「最优」，只有取舍</text><text x='444' y='140' font-size='10.5' fill='#4d565b'>· 过度防砂：产能白损失，出砂本来也不严重</text><text x='444' y='158' font-size='10.5' fill='#4d565b'>· 防砂不足：前两年好看，第三年起冲砂不断</text></svg><span class='viz-cap'>附加表皮与出砂风险反向：防砂越重产能越低。模型要做的就是把这条取舍曲线算出来。</span></div>"
+    }
+   ]
+  },
+  "workflow": {
+   "label": "案例流程",
+   "title": "一口弱胶结井的防砂方式优选与制度寻优",
+   "lead": [
+    "这个场景的顺序不能颠倒：先匹配候选方式，再预测演化，最后才谈制度。跳过时序那一层，得到的一定是「选最保守的」这个答案。",
+    "下面的示范把这三层都跑通了：改储层强度、泥质含量、生产压差、提液幅度与孔密，看候选方式怎么变，看未来若干年的累计出砂曲线，以及方案与制度一起寻优之后能多拿多少累计产油。"
+   ],
+   "stats": [
+    [
+     "候选防砂方式",
+     "4 种"
+    ],
+    [
+     "方案 × 制度网格",
+     "180 组"
+    ],
+    [
+     "历史含砂井次",
+     "54 口"
+    ],
+    [
+     "样本井次",
+     "280"
+    ]
+   ],
+   "steps": [
+    {
+     "name": "强度剖面与粒度评价",
+     "role": "数据",
+     "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='沿井段的强度剖面与临界压差'><rect x='0' y='0' width='660' height='130' fill='#fbfaf6'/><rect x='90' y='16' width='40' height='20' fill='#e9e4d8'/><rect x='90' y='36' width='40' height='20' fill='#e9e4d8'/><rect x='90' y='56' width='40' height='20' fill='#e9e4d8'/><rect x='90' y='76' width='40' height='20' fill='#e9e4d8'/><rect x='90' y='96' width='40' height='20' fill='#e9e4d8'/><text x='110' y='30' font-size='9' fill='#4d565b' text-anchor='middle'>A</text><text x='110' y='50' font-size='9' fill='#4d565b' text-anchor='middle'>B</text><text x='110' y='70' font-size='9' fill='#4d565b' text-anchor='middle'>C</text><text x='110' y='90' font-size='9' fill='#4d565b' text-anchor='middle'>D</text><text x='110' y='110' font-size='9' fill='#4d565b' text-anchor='middle'>E</text><rect x='140' y='16' width='240' height='20' rx='3' fill='#efece1'/><rect x='140' y='16' width='70' height='20' rx='3' fill='#c9613f' opacity='0.75'/><text x='386' y='30' font-size='9.5' fill='#c9613f'>3.5 MPa（极弱）</text><rect x='140' y='36' width='240' height='20' rx='3' fill='#efece1'/><rect x='140' y='36' width='112' height='20' rx='3' fill='#c9613f' opacity='0.55'/><text x='386' y='50' font-size='9.5' fill='#4d565b'>6.0 MPa（弱）</text><rect x='140' y='56' width='240' height='20' rx='3' fill='#efece1'/><rect x='140' y='56' width='190' height='20' rx='3' fill='#2f7d6b' opacity='0.7'/><text x='386' y='70' font-size='9.5' fill='#2f7d6b'>11 MPa（中等）</text><rect x='140' y='76' width='240' height='20' rx='3' fill='#efece1'/><rect x='140' y='76' width='224' height='20' rx='3' fill='#2f7d6b' opacity='0.7'/><text x='386' y='90' font-size='9.5' fill='#2f7d6b'>13 MPa（中等）</text><rect x='140' y='96' width='240' height='20' rx='3' fill='#efece1'/><rect x='140' y='96' width='60' height='20' rx='3' fill='#c9613f' opacity='0.75'/><text x='386' y='110' font-size='9.5' fill='#c9613f'>3.0 MPa（极弱，泥岩夹层）</text><text x='14' y='30' font-size='9.5' fill='#79828a'>强度剖面</text><text x='440' y='30' font-size='9.5' fill='#79828a'>临界压差 ≈ 强度 / 6</text><text x='440' y='48' font-size='9.5' fill='#79828a'>同一口井不同层段差别很大</text><text x='440' y='66' font-size='9.5' fill='#79828a'>取最弱一段作为设计控制点</text><text x='14' y='124' font-size='10' fill='#79828a'>出砂不是全井一致：控制点是最弱的那一小段，这也是强度剖面必须逐段评价的原因。</text></svg>",
+     "do": "用岩心与测井计算沿井段的强度剖面、粒度与泥质含量，取最弱一段作为临界压差的控制点。",
+     "effect": "后面的临界压差有了分层依据，不会用全井平均值掩盖最弱的一段。",
+     "trap": "用全井平均强度代替最弱段。控制点永远是最弱的一小段，平均值会让设计偏乐观。"
+    },
+    {
+     "name": "防砂方式规则匹配",
+     "role": "算法",
+     "viz": "<svg viewBox='0 0 660 150' role='img' aria-label='防砂方式判据矩阵'><rect x='0' y='0' width='660' height='150' fill='#fbfaf6'/><text x='128' y='20' font-size='9.5' fill='#4d565b' text-anchor='middle'>不防砂</text><text x='248' y='20' font-size='9.5' fill='#4d565b' text-anchor='middle'>独立筛管</text><text x='368' y='20' font-size='9.5' fill='#4d565b' text-anchor='middle'>砾石充填</text><text x='488' y='20' font-size='9.5' fill='#4d565b' text-anchor='middle'>化学固砂</text><text x='570' y='20' font-size='9' fill='#79828a' text-anchor='middle'>证据</text><text x='14' y='44' font-size='10' fill='#4d565b'>岩石强度</text><rect x='92' y='32' width='72' height='18' rx='3' fill='#c9613f' opacity='0.85'/><text x='128' y='45' font-size='9.5' fill='#fff' text-anchor='middle'>不可用</text><rect x='212' y='32' width='72' height='18' rx='3' fill='#2f7d6b' opacity='0.75'/><text x='248' y='45' font-size='9.5' fill='#fff' text-anchor='middle'>通过</text><rect x='332' y='32' width='72' height='18' rx='3' fill='#2f7d6b' opacity='0.75'/><text x='368' y='45' font-size='9.5' fill='#fff' text-anchor='middle'>通过</text><rect x='452' y='32' width='72' height='18' rx='3' fill='#2f7d6b' opacity='0.75'/><text x='488' y='45' font-size='9.5' fill='#fff' text-anchor='middle'>通过</text><text x='570' y='45' font-size='9' fill='#79828a'>强度剖面</text><text x='14' y='70' font-size='10' fill='#4d565b'>泥质含量</text><rect x='92' y='58' width='72' height='18' rx='3' fill='#b9c6cf'/><text x='128' y='71' font-size='9.5' fill='#242b2e' text-anchor='middle'>受限</text><rect x='212' y='58' width='72' height='18' rx='3' fill='#b9c6cf'/><text x='248' y='71' font-size='9.5' fill='#242b2e' text-anchor='middle'>堵塞</text><rect x='332' y='58' width='72' height='18' rx='3' fill='#2f7d6b' opacity='0.75'/><text x='368' y='71' font-size='9.5' fill='#fff' text-anchor='middle'>通过</text><rect x='452' y='58' width='72' height='18' rx='3' fill='#c9613f' opacity='0.7'/><text x='488' y='71' font-size='9.5' fill='#fff' text-anchor='middle'>胶结差</text><text x='570' y='71' font-size='9' fill='#79828a'>化验 31 样</text><text x='14' y='96' font-size='10' fill='#4d565b'>压差水平</text><rect x='92' y='84' width='72' height='18' rx='3' fill='#c9613f' opacity='0.85'/><text x='128' y='97' font-size='9.5' fill='#fff' text-anchor='middle'>不可用</text><rect x='212' y='84' width='72' height='18' rx='3' fill='#b9c6cf'/><text x='248' y='97' font-size='9.5' fill='#242b2e' text-anchor='middle'>接近上限</text><rect x='332' y='84' width='72' height='18' rx='3' fill='#2f7d6b' opacity='0.75'/><text x='368' y='97' font-size='9.5' fill='#fff' text-anchor='middle'>通过</text><rect x='452' y='84' width='72' height='18' rx='3' fill='#b9c6cf'/><text x='488' y='97' font-size='9.5' fill='#242b2e' text-anchor='middle'>随老化降</text><text x='570' y='97' font-size='9' fill='#79828a'>12 井次</text><text x='14' y='122' font-size='10' fill='#4d565b'>射孔参数</text><rect x='92' y='110' width='72' height='18' rx='3' fill='#2f7d6b' opacity='0.75'/><text x='128' y='123' font-size='9.5' fill='#fff' text-anchor='middle'>通过</text><rect x='212' y='110' width='72' height='18' rx='3' fill='#2f7d6b' opacity='0.75'/><text x='248' y='123' font-size='9.5' fill='#fff' text-anchor='middle'>通过</text><rect x='332' y='110' width='72' height='18' rx='3' fill='#2f7d6b' opacity='0.75'/><text x='368' y='123' font-size='9.5' fill='#fff' text-anchor='middle'>通过</text><rect x='452' y='110' width='72' height='18' rx='3' fill='#2f7d6b' opacity='0.75'/><text x='488' y='123' font-size='9.5' fill='#fff' text-anchor='middle'>通过</text><text x='570' y='123' font-size='9' fill='#79828a'>完井记录</text><text x='14' y='144' font-size='10' fill='#79828a'>硬判据否决、软判据降权；每条都标了证据来源，工程师可以按条复核。</text></svg>",
+     "do": "把强度、泥质、压差水平、射孔参数逐条对上四种方式的硬软判据，输出候选与排除理由。",
+     "effect": "候选从「本区块一直在用的那一种」变成两三种有依据的选项，且排除理由可复核。",
+     "trap": "把泥质含量这类软判据写成否决。高泥质对化学固砂是硬伤，对筛管只是堵塞风险，不能一刀切。"
+    },
+    {
+     "name": "出砂演化时序预测",
+     "role": "算法",
+     "viz": "<svg viewBox='0 0 660 150' role='img' aria-label='累计出砂量随时间的演化曲线'><rect x='0' y='0' width='660' height='150' fill='#fbfaf6'/><line x1='62' y1='118' x2='620' y2='118' stroke='#242b2e' stroke-width='1.1'/><line x1='62' y1='18' x2='62' y2='118' stroke='#242b2e' stroke-width='1.1'/><line x1='62' y1='52' x2='620' y2='52' stroke='#c9613f' stroke-width='1' stroke-dasharray='5 3'/><text x='624' y='55' font-size='9' fill='#c9613f'>处置阈值</text><path d='M62 116 C 140 112, 220 106, 300 92 C 380 78, 460 58, 620 40' fill='none' stroke='#c9613f' stroke-width='1.8'/><path d='M62 117 C 160 115, 260 112, 360 108 C 460 104, 540 100, 620 96' fill='none' stroke='#41699b' stroke-width='1.8'/><path d='M62 117 C 160 116, 260 114, 360 111 C 460 106, 540 100, 620 92' fill='none' stroke='#2f7d6b' stroke-width='1.8'/><circle cx='392' cy='52' r='4' fill='#c9613f'/><text x='400' y='46' font-size='9.5' fill='#c9613f'>第 3.1 年越过阈值</text><circle cx='470' cy='92' r='4' fill='#41699b'/><text x='478' y='88' font-size='9.5' fill='#41699b'>第 5.4 年</text><text x='62' y='134' font-size='9.5' fill='#79828a'>生产时间（年）→</text><text x='66' y='134' font-size='9' fill='#79828a'>累计出砂量 ↑</text><text x='120' y='30' font-size='10' fill='#c9613f'>化学固砂（老化后失效）</text><text x='300' y='30' font-size='10' fill='#41699b'>独立筛管</text><text x='470' y='30' font-size='10' fill='#2f7d6b'>砾石充填</text><text x='120' y='146' font-size='10' fill='#79828a'>曲线的形状比数值重要：前两年三种方案几乎重合，差别全在后面——这就是要做时序预测的原因。</text></svg>",
+     "do": "以临界压差为门槛、以通道扩展为正反馈，按生产时间推进算出各方案的出砂速率与累计出砂量，并给出越过处置阈值的时间。",
+     "effect": "「第几年会出问题」第一次有了可比较的数字，而不是凭经验说「应该注意出砂」。",
+     "trap": "把出砂速率当常数。出砂一旦形成通道就会自我加速，常数模型会系统性低估后期风险。"
+    },
+    {
+     "name": "方案与制度联合寻优",
+     "role": "算法",
+     "viz": "<svg viewBox='0 0 660 150' role='img' aria-label='累计产油与累计出砂的取舍前沿'><rect x='0' y='0' width='660' height='150' fill='#fbfaf6'/><line x1='62' y1='122' x2='620' y2='122' stroke='#242b2e' stroke-width='1.1'/><line x1='62' y1='18' x2='62' y2='122' stroke='#242b2e' stroke-width='1.1'/><path d='M96 108 C 180 62, 280 36, 380 30 C 470 26, 540 34, 596 50' fill='none' stroke='#41699b' stroke-width='1.8'/><circle cx='150' cy='86' r='3' fill='#b9c6cf'/><circle cx='240' cy='58' r='3' fill='#b9c6cf'/><circle cx='330' cy='40' r='3' fill='#b9c6cf'/><circle cx='420' cy='32' r='4.5' fill='#41699b'/><circle cx='520' cy='34' r='3' fill='#b9c6cf'/><circle cx='596' cy='50' r='3' fill='#b9c6cf'/><rect x='466' y='72' width='9' height='9' fill='#242b2e'/><text x='482' y='80' font-size='9.5' fill='#242b2e'>现场制度（压差 8 MPa）</text><text x='62' y='138' font-size='9.5' fill='#79828a'>累计出砂量（风险）→</text><text x='58' y='26' font-size='9.5' fill='#79828a' text-anchor='end'>累计产油</text><text x='120' y='18' font-size='10' fill='#4d565b'>前沿上是「同样产油没有更少出砂」的组合；方案与制度在这条线上是同一个决策</text></svg>",
+     "do": "把附加表皮带来的产能损失与出砂处置成本放进同一目标，在「方案 × 生产压差」上搜索，给出前沿与压差上限建议。",
+     "effect": "回答了「装了砾石充填能不能把压差提上去」这类耦合问题；输出的是压差上限而不是固定值。",
+     "trap": "只按产量选方案。最保守的方案产能损失常年存在，而出砂未必真的发生——过度防砂是有代价的。"
+    },
+    {
+     "name": "含砂监测回填与重标定",
+     "role": "人工",
+     "viz": "<svg viewBox='0 0 660 128' role='img' aria-label='含砂监测回写演化模型的闭环'><rect x='0' y='0' width='660' height='128' fill='#fbfaf6'/><rect x='24' y='30' width='112' height='40' rx='6' fill='#2f7d6b' opacity='0.85'/><text x='80' y='48' font-size='11' fill='#fff' text-anchor='middle'>投产运行</text><text x='80' y='64' font-size='9.5' fill='#fff' text-anchor='middle'>按建议压差</text><path d='M136 50 L188 50' stroke='#79828a' fill='none' marker-end='url(#arU)'/><defs><marker id='arU' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs><rect x='188' y='30' width='128' height='40' rx='6' fill='#c9613f' opacity='0.8'/><text x='252' y='48' font-size='11' fill='#fff' text-anchor='middle'>含砂监测 / 冲砂</text><text x='252' y='64' font-size='9.5' fill='#fff' text-anchor='middle'>稀疏、口径要统一</text><path d='M316 50 L368 50' stroke='#79828a' fill='none' marker-end='url(#arU)'/><rect x='368' y='30' width='136' height='40' rx='6' fill='#41699b' opacity='0.85'/><text x='436' y='48' font-size='11' fill='#fff' text-anchor='middle'>重标定衰减系数</text><text x='436' y='64' font-size='9.5' fill='#fff' text-anchor='middle'>按区块分组</text><path d='M504 50 L556 50' stroke='#79828a' fill='none' marker-end='url(#arU)'/><rect x='556' y='30' width='92' height='40' rx='6' fill='#e9e4d8' stroke='#d8d2c4'/><text x='602' y='48' font-size='11' fill='#242b2e' text-anchor='middle'>下一口井</text><text x='602' y='64' font-size='9.5' fill='#79828a' text-anchor='middle'>演化曲线</text><text x='330' y='96' font-size='10' fill='#2f7d6b' text-anchor='middle'>闭环：老井的生产史就是新井的训练样本，这是唯一能补上「要等 5 年」的办法</text><text x='330' y='114' font-size='9.5' fill='#79828a' text-anchor='middle'>不同厂家的含砂仪读数不能直接合并，先做口径统一再回填</text></svg>",
+     "do": "把含砂率、冲砂周期与砂面高度统一口径后回写，按区块分组重标定演化模型的衰减系数。",
+     "effect": "老井的生产史成为新井的样本，预测不用真的等五年才有反馈。",
+     "trap": "直接合并不同来源的含砂数据。口径不统一会让标定结果指向仪器而不是储层。"
+    },
+    {
+     "name": "出砂风险预测",
+     "role": "算法",
+     "do": "按粒度与挡砂精度预测出砂量与出砂概率。",
+     "effect": "量化「挡太粗」的后果。",
+     "trap": "泥质含量高时会加剧堵塞，只看出砂会选错。"
+    }
+   ],
+   "metrics": {
+    "title": "怎么算“做对了”",
+    "html": "<p><b>失效时间排序能力</b>：预测的「越过处置阈值时间」与实际首次冲砂时间的排序相关性（Spearman）显著即可，不要求绝对月份准。</p><p><b>方案匹配的可复核性</b>：被否决的方式在历史井上确实出现过对应问题（堵塞、砂卡、冲砂频繁）的比例 ≥ 70%；同时候选不能长期只剩一种。</p><p><b>产能代价的可见性</b>：推荐方案必须同时给出附加表皮带来的产能损失估计，不能只报出砂风险。</p><p><b>一票否决项</b>：推荐方案中出现明显超出挡砂能力（粒度不匹配）或超出筛管压差上限的组合，比例必须为 0。</p><div class='viz'><svg viewBox='0 0 660 140' role='img' aria-label='两类指标与一票否决项'><rect x='0' y='0' width='660' height='140' fill='#fbfaf6'/><rect x='20' y='22' width='190' height='86' rx='6' fill='#e9e4d8' stroke='#d8d2c4'/><text x='115' y='44' font-size='11' fill='#242b2e' text-anchor='middle'>匹配层</text><text x='115' y='64' font-size='10' fill='#4d565b' text-anchor='middle'>否决准确率 ≥ 70%</text><text x='115' y='84' font-size='10' fill='#4d565b' text-anchor='middle'>候选 ≥ 2 种</text><rect x='235' y='22' width='190' height='86' rx='6' fill='#2f7d6b' opacity='0.14' stroke='#2f7d6b'/><text x='330' y='44' font-size='11' fill='#242b2e' text-anchor='middle'>演化层</text><text x='330' y='64' font-size='10' fill='#4d565b' text-anchor='middle'>失效时间排序相关</text><text x='330' y='84' font-size='10' fill='#4d565b' text-anchor='middle'>不考核绝对月份</text><rect x='450' y='22' width='190' height='86' rx='6' fill='#c9613f' opacity='0.12' stroke='#c9613f'/><text x='545' y='44' font-size='11' fill='#242b2e' text-anchor='middle'>一票否决</text><text x='545' y='64' font-size='10' fill='#4d565b' text-anchor='middle'>挡砂精度不匹配</text><text x='545' y='84' font-size='10' fill='#4d565b' text-anchor='middle'>超筛管压差上限 = 0</text><text x='20' y='126' font-size='10' fill='#79828a'>演化层只要求排序能力：样本稀疏决定了它给不出精确的月份，硬报精确月份就是自欺。</text></svg></div>"
+   },
+   "fails": [
+    {
+     "name": "只看短期试产",
+     "why": "前两年各方案差别很小，等差别显现时管柱已经换不了。"
+    },
+    {
+     "name": "出砂速率当常数",
+     "why": "通道形成后出砂会自我加速，常数模型系统性低估后期风险。"
+    },
+    {
+     "name": "过度防砂",
+     "why": "只按出砂风险选，附加表皮造成的产能损失常年存在，而风险未必真的发生。"
+    },
+    {
+     "name": "含砂数据直接合并",
+     "why": "不同仪器口径不一致，标定结果指向仪器而不是储层。"
+    }
+   ]
+  },
+  "demo": {
+   "mode": "auto",
+   "html": "demo/index.html",
+   "label": "可运行示范",
+   "intro": "改岩石强度、泥质含量、生产压差、提液幅度与孔密：看四种防砂方式的判据命中（哪条通过、哪条越界、依据来自多少井次），看未来若干年累计出砂曲线的分化，以及把方案与生产压差放在一起寻优之后能多拿多少累计产油。",
+   "height": 1180
+  }
+ }
+}

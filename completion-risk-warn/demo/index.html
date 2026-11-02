@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：完井作业施工风险预警</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>完井作业施工风险智能预警 · 工况推荐</h1>
+  <p class="lead">完井施工的每个动作（下入 / 坐封 / 射孔）都会留下大钩载荷、扭矩、张力与循环压力四条 1 s 曲线。
+  这里按工单把曲线切成工序，用历史正常井建立「这一工序的正常基线带」，再在滑窗里算三个特征：窗内均值偏离多少 σ、
+  上升斜率多大、振荡放大了几倍——三者合成一个 0–1 的异常分。越过阈值后，把当前的异常形态拿去知识图谱里检索形态最像的历史事故，
+  输出<b>风险等级 + 事故类别 + 三条证据 + 推荐工况</b>，而不是单纯一个报警灯。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>工序分割 + ±2σ 时序异常检测</li><li>摩阻扭矩反演</li><li>图谱处置推荐</li></ul></div><div><b>为什么起作用</b><ul><li>施工分工序，整段建基线会把正常的工序切换误判成异常</li><li>单参数越界说不清原因，反演摩阻才能区分「操作激进」与「真实遇阻」</li></ul></div><div><b>在示范里怎么看</b><ul><li>调摩阻系数与狗腿度，看异常分与处置建议怎么变</li></ul></div></div></div>
+
+  <div class="btnrow" role="group" aria-label="选择工序">
+    <button data-p="run" class="on">管柱下入</button>
+    <button data-p="set">封隔器坐封</button>
+    <button data-p="perf">射孔起爆</button>
+  </div>
+
+  <div class="ctl">
+    <label>摩阻系数 <output id="out-f">0.06</output></label>
+    <input type="range" id="fric" min="0.02" max="0.16" step="0.005" value="0.06">
+  </div>
+  <div class="ctl">
+    <label>狗腿度 <output id="out-dogleg">4.0 °/30m</output></label>
+    <input type="range" id="dogleg" min="0" max="12" step="0.2" value="4">
+  </div>
+  <div class="ctl">
+    <label>操作激进程度 <output id="out-aggr">0.35</output></label>
+    <input type="range" id="aggr" min="0" max="1" step="0.02" value="0.35">
+  </div>
+  <div class="ctl">
+    <label>报警阈值 <output id="out-thr">0.55</output></label>
+    <input type="range" id="thr" min="0.3" max="0.9" step="0.01" value="0.55">
+  </div>
+
+  <svg id="curve" viewBox="0 0 720 215" role="img" aria-label="工序曲线与历史基线带"></svg>
+  <svg id="score" viewBox="0 0 720 195" role="img" aria-label="异常分曲线与阈值"></svg>
+  <svg id="kg" viewBox="0 0 720 200" role="img" aria-label="知识图谱检索到的相似事故"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">风险等级</span><b id="ro-lv">—</b></div>
+    <div class="ro"><span class="k">预警提前量</span><b id="ro-lead">—</b></div>
+    <div class="ro"><span class="k">命中事故</span><b id="ro-hit">—</b></div>
+    <div class="ro"><span class="k">推荐工况</span><b id="ro-fix" style="font-family:inherit;font-size:12px">—</b></div>
+  </div>
+
+  <table class="tbl" id="topk"></table>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

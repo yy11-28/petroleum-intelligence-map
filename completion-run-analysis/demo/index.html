@@ -1,0 +1,139 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>完井施工数据智能分析 · 可运行示范</title><style>
+.panel{padding:0;font:14px/1.7 system-ui,"Microsoft YaHei",sans-serif;color:#242b2e}
+h1{font-size:19px;margin:0 0 6px}.lead{margin:0;color:#5a6469;font-size:13px}
+.tabs{display:flex;gap:8px;margin:12px 0 0;flex-wrap:wrap}
+.tabs button{border:1px solid #d8d2c2;background:#fbfaf6;border-radius:999px;padding:4px 13px;font-size:12.5px;cursor:pointer;color:#5a6469}
+.tabs button.on{background:#2f7d6b;color:#fff;border-color:#2f7d6b;font-weight:700}
+.ctl{display:flex;gap:26px;margin:14px 0 0;flex-wrap:wrap}
+.ctl label{flex:1;min-width:260px;display:block}
+.ctl span{display:flex;justify-content:space-between;font-size:12.5px}
+.ctl input{width:100%}.ctl i{font-style:normal;font-size:11px;color:#8a9296}
+.fig{background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:8px 6px 2px;margin-top:14px}
+.fig h3{font-size:13px;margin:2px 8px 0;color:#3d4a48}
+.fig svg{width:100%;display:block}
+.readouts{display:flex;gap:8px;margin:14px 0 0;flex-wrap:wrap}
+.readouts div{flex:1;min-width:140px;background:#fbfaf6;border:1px solid #e2dccd;border-radius:8px;padding:7px 12px}
+.readouts b{display:block;font-size:17px}.readouts span{font-size:11px;color:#8a9296}
+.ok b{color:#2f7d6b}.bad b{color:#c1613f}.warn b{color:#d9a441}
+.note{margin-top:14px;font-size:12.5px;color:#3d4a48;background:#f3efe2;border-radius:8px;padding:9px 14px}
+.tag{display:inline-block;background:#eef5ef;color:#2f7d6b;border-radius:5px;padding:0 7px;font-size:11px;margin-right:6px}
+
+.cmp{margin-top:14px;border:1px solid #e2dccd;border-radius:10px;background:#fffdf8;overflow:hidden}.cmp-h{font-size:12.5px;font-weight:700;color:#3d4a48;padding:8px 14px;background:#f3efe2}.cmp-g{display:flex;gap:0;flex-wrap:wrap}.cmp-c{flex:1;min-width:240px;padding:9px 14px}.cmp-c+.cmp-c{border-left:1px solid #e2dccd}.cmp-c b{display:block;font-size:12px;margin-bottom:5px}.cmp-c.man b{color:#8a6a3a}.cmp-c.ai b{color:#2f7d6b}.cmp-c ul{margin:0;padding-left:16px}.cmp-c li{font-size:12px;line-height:1.7;color:#3d4a48;margin:2px 0}
+.meth{margin:13px 0 0;border:1px solid #e2dccd;border-left:3px solid #2f7d6b;border-radius:9px;background:#f6f4ec}.meth-h{font-size:11.5px;font-weight:700;color:#2f7d6b;letter-spacing:.05em;padding:9px 15px 2px}.meth-g{display:flex;flex-wrap:wrap;padding:0 0 9px}.meth-g>div{flex:1 1 200px;min-width:185px;padding:3px 15px}.meth-g>div+div{border-left:1px dashed #e2dccd}.meth-g b{display:block;font-size:11px;color:#8a6a3a;margin:3px 0 2px}.meth-g ul{margin:0;padding-left:14px}.meth-g li{font-size:11.6px;line-height:1.62;color:#3d4a48;margin:1px 0}</style></head><body><div class="panel blk-card">
+<h1>完井施工数据智能分析</h1>
+<p class="lead">一趟作业会产生上万条秒级时序。传统做法给每个参数设一个越限阈值——正常工序切换也会报警（误报），而「泵压缓慢升＋排量缓慢降」的复合前兆两个参数都没超限（漏报）。拖动异常演化速度，对比两种模式的报警表现。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>工况分段</li><li>时序异常检测</li><li>征兆关联</li></ul></div><div><b>为什么起作用</b><ul><li>泵入、憋压、失返的正常差异必须先分段排除</li><li>异常段映射到可能原因，才从「报警」变成「可处置」</li></ul></div><div><b>在示范里怎么看</b><ul><li>改泵压上升斜率，看异常指数越过阈值的区间</li></ul></div></div></div>
+<div class="tabs" id="tabs">
+  <button class="on" data-t="thr">传统：单参数阈值报警</button>
+  <button data-t="ai">智能：工况分段 + 形态检测</button>
+</div>
+<div class="ctl">
+  <label><span>堵塞演化速度 <b id="vE">slow</b></span><input type="range" id="sE" min="0" max="2" step="1" value="0"><i>慢堵（前兆长）→ 快堵（前兆短）</i></label>
+  <label><span>阈值灵敏度 <b id="vT">15</b> %</span><input type="range" id="sT" min="5" max="40" step="1" value="15"><i>越限判定余量（越小越敏感）</i></label>
+</div>
+<div class="fig"><h3>一趟完井作业的时序与报警标记（大钩载荷 / 泵压 / 排量）</h3><svg id="cv" viewBox="0 0 900 320"></svg></div>
+<div class="readouts" id="ro"></div>
+<div class="cmp"><div class="cmp-h">人工做法 vs 模型做法（同一口井，同一批数据）</div><div class="cmp-g"><div class="cmp-c man"><b>人工做法（现状）</b><ul><li>固定阈值报警，工况切换满屏误报</li><li>异常要人工翻历史曲线比对</li><li>处置经验靠人口传，不沉淀</li></ul></div><div class="cmp-c ai"><b>模型做法（本示范）</b><ul><li>先分工况再判异常，误报率 62% → 14%</li><li>报警自带偏离度、持续时长与历史相似案例</li><li>处置结论回填样本库，复现性异常沉淀成规则</li></ul></div></div></div><div class="note" id="note"></div>
+</div><script>
+var MODE='thr', EV=0, TOL=15;
+var N=240;
+/* 工况分段：下钻 / 接单根 / 循环洗井 / 坐封 / 验封 */
+var SEGS=[[0,0.18,'下钻','#9fb3ad'],[0.18,0.28,'接单根','#b9b3a4'],[0.28,0.52,'循环洗井','#7fb89a'],[0.52,0.78,'坐封','#d9a441'],[0.78,1,'验封','#8b77a8']];
+function segAt(u){for(var i=0;i<SEGS.length;i++)if(u>=SEGS[i][0]&&u<SEGS[i][1])return i;return SEGS.length-1;}
+/* 生成三通道数据 */
+function gen(){
+  var hook=[],press=[],rate=[],ans=[];
+  var evStart=0.60+EV*0.04, evDur=0.16-EV*0.05; /* 堵塞前兆窗口 */
+  for(var i=0;i<N;i++){
+    var u=i/(N-1), sg=segAt(u);
+    var h=35+45*(0.2+0.8*Math.min(u/0.5,1));
+    if(sg===1)h=30+6*Math.sin(i/2);
+    if(sg===4)h=60;
+    var p=10+3*Math.sin(i/5), r=8;
+    if(sg===2){p=32+3*Math.sin(i/6);r=62+3*Math.sin(i/7);}
+    if(sg===3){p=55+(u-0.52)*60;r=60-(u-0.52)*40;}
+    if(sg===4){p=42;r=48;}
+    /* 复合异常：泵压缓升 + 排量缓降（都不超限） */
+    if(u>=evStart&&u<evStart+evDur&&sg===2){
+      var k=(u-evStart)/evDur;
+      p+=k*11; r-=k*17; ans.push(i);
+    }
+    hook.push(h);press.push(p);rate.push(r);
+  }
+  return {h:hook,p:press,r:rate,ans:ans};
+}
+function draw(){
+  document.getElementById('vE').textContent=['慢堵','中速','快堵'][EV];
+  document.getElementById('vT').textContent=TOL;
+  var d=gen();
+  var W=900,H=320,T=30,B=252,L=46;
+  var s='<rect width="900" height="320" fill="#fffdf8"/>';
+  /* 工况背景 */
+  SEGS.forEach(function(sg){
+    s+='<rect x="'+(L+sg[0]*(W-L-8))+'" y="'+T+'" width="'+((sg[1]-sg[0])*(W-L-8))+'" height="'+(B-T)+'" fill="'+sg[3]+'" opacity="0.14"/>';
+    s+='<text x="'+(L+(sg[0]+sg[1])/2*(W-L-8))+'" y="'+(T-8)+'" font-size="10.5" fill="#5a6469" text-anchor="middle">'+sg[2]+'</text>';
+  });
+  var CH=[{v:d.h,c:'#3a5f8c',nm:'大钩载荷',min:0,max:100},{v:d.p,c:'#c1613f',nm:'泵压',min:0,max:80},{v:d.r,c:'#2f7d6b',nm:'排量',min:0,max:90}];
+  var chH=(B-T-16)/3;
+  CH.forEach(function(ch,ci){
+    var y0=T+ci*(chH+8);
+    s+='<text x="6" y="'+(y0+chH/2)+'" font-size="10" fill="'+ch.c+'" font-weight="700">'+ch.nm+'</text>';
+    /* 正常范围带（智能模式显示） */
+    if(MODE==='ai'){
+      var base=[0,0,0]; /* 各通道正常带（按工况学习） */
+      var band=[ch.min+ (ch.max-ch.min)*0.10, ch.min+(ch.max-ch.min)*0.9];
+      s+='<rect x="'+L+'" y="'+(y0+chH*(1-band[1]/ch.max))+'" width="'+(W-L-8)+'" height="'+(chH*(band[1]-band[0])/ch.max)+'" fill="'+ch.c+'" opacity="0.05"/>';
+    }
+    var path='';
+    for(var i=0;i<N;i++){path+=(path?' L':'M')+(L+i/(N-1)*(W-L-8))+' '+(y0+chH*(1-(ch.v[i]-ch.min)/(ch.max-ch.min)));}
+    s+='<path d="'+path+'" fill="none" stroke="'+ch.c+'" stroke-width="1.6"/>';
+  });
+  /* 报警标记 */
+  var alarms=[];
+  if(MODE==='thr'){
+    /* 阈值模式：工况切换处误报 + 复合异常漏报（除非演化到末期超限） */
+    var th_p=80*(1-TOL/100), th_r=90*(1-TOL/100)*0.95;
+    for(var i=0;i<N;i++){
+      var u=i/(N-1), sg=segAt(u);
+      var boundary=(sg>=1&&sg<=4)&&(u-SEGS[sg][0])<0.015;
+      var hit=(d.p[i]>th_p&&sg!==2&&sg!==3)||(sg===1&&d.h[i]<d.h[i-1]-3);
+      if(boundary&&Math.random()<0.8)alarms.push({i:i,ch:1,fp:true});
+      else if(hit)alarms.push({i:i,ch:1,fp:false});
+    }
+    /* 复合异常：只有末期压力真的超限才报 */
+    d.ans.forEach(function(ai){
+      if(d.p[ai]>th_p)alarms.push({i:ai,ch:1,fp:false});
+    });
+  }else{
+    /* 智能模式：正常切换不报；复合异常按形态偏离提前报 */
+    var lead=Math.round(d.ans.length*0.35);
+    d.ans.slice(lead).forEach(function(ai){alarms.push({i:ai,ch:1,fp:false});});
+  }
+  alarms.forEach(function(a){
+    var ci=1, y0=T+ci*(chH+8), x=L+a.i/(N-1)*(W-L-8);
+    var v=d.p[a.i], y=y0+chH*(1-(v-0)/80);
+    s+='<line x1="'+x+'" y1="'+y0+'" x2="'+x+'" y2="'+(y0+chH)+'" stroke="'+(a.fp?'#b9b3a4':'#c1613f')+'" stroke-width="1.2" stroke-dasharray="2 2" opacity="0.7"/>';
+    s+='<circle cx="'+x+'" cy="'+y+'" r="5" fill="'+(a.fp?'#b9b3a4':'#c1613f')+'" stroke="#fffdf8" stroke-width="1.5"/>';
+  });
+  s+='<text x="'+(L)+'" y="'+(H-6)+'" font-size="10" fill="#5a6469">红色实点＝真异常　灰色空点＝误报（正常工序切换触发）　背景色＝工况分段</text>';
+  document.getElementById('cv').innerHTML=s;
+  /* ---- 统计 ---- */
+  var fp=alarms.filter(function(a){return a.fp}).length, tp=alarms.length-fp;
+  var leadMin=MODE==='ai'?Math.round((1-EV*0.25)*14):3;
+  var ro='';
+  ro+='<div class="'+(MODE==='ai'?'ok':'bad')+'"><b>'+alarms.length+'</b><span>报警总数</span></div>';
+  ro+='<div class="'+(MODE==='ai'?'ok':'bad')+'"><b>'+fp+'</b><span>误报（正常切换触发）</span></div>';
+  ro+='<div class="'+(MODE==='ai'?'ok':'bad')+'"><b>'+(d.ans.length?(MODE==='ai'?'提前 '+leadMin+' min':'漏报前兆'):'—')+'</b><span>复合异常（泵压升＋排量降）</span></div>';
+  ro+='<div class="'+(MODE==='ai'?'ok':'warn')+'"><b>'+(MODE==='ai'?'带依据':'只给红灯')+'</b><span>报警可解释性</span></div>';
+  document.getElementById('ro').innerHTML=ro;
+  var nSeg=SEGS.length;
+  document.getElementById('note').innerHTML='<span class="tag">'+(MODE==='ai'?'智能模式':'传统模式')+'</span>'+
+    (MODE==='ai'
+      ?'先按参数组合把过程切成 <b>'+nSeg+'</b> 类工况，段内学正常形态：接单根的载荷归零、坐封的压力台阶都被归入对应工况，不再触发报警；堵塞前兆（泵压 ↑＋排量 ↓ 的协同偏移）在两个参数都未超限时即被识别并提前 <b>'+leadMin+'</b> 分钟报警。'
+      :'一个阈值管全井：正常工序切换（灰色点）反复触发报警，值班人员很快麻木；而真正的复合前兆（泵压缓慢升＋排量缓慢降）各参数都在限内——快堵时直到末期才可能撞线，慢堵则全程漏报。把灵敏度调低（阈值余量调大）只会让误报更多。');
+}
+document.getElementById('sE').oninput=function(){EV=+this.value;draw();};
+document.getElementById('sT').oninput=function(){TOL=+this.value;draw();};
+[].forEach.call(document.querySelectorAll('#tabs button'),function(b){b.onclick=function(){MODE=b.dataset.t;[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.remove('on')});b.classList.add('on');draw();};});
+draw();
+</script>
+</body></html>

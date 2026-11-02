@@ -1,0 +1,120 @@
+/* =========================================================
+   数据资产页 #/data 与 我的工作区 #/mine
+   ---------------------------------------------------------
+   沿用全站设计变量（--card / --line-2 / --navy / --blue 等），
+   深色模式与中英切换自动跟随。
+   ========================================================= */
+
+/* ---------- 数据资产页 ---------- */
+.dc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:13px;margin:2px 0 6px}
+.dc-card{
+  display:flex;flex-direction:column;gap:7px;text-align:left;cursor:pointer;
+  border:1px solid var(--line-2);border-radius:var(--r-m);background:var(--card);
+  padding:14px 15px 12px;box-shadow:var(--sh-1);transition:all .15s;
+}
+.dc-card:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--blue-2)}
+.dc-card.on{border-color:var(--blue);box-shadow:0 0 0 2px rgba(26,71,121,.12)}
+.dc-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dc-id{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-4);
+  border:1px solid var(--line-2);border-radius:5px;padding:1px 6px;
+}
+.dc-id.big{font-size:11px;padding:3px 9px;color:var(--blue);border-color:var(--blue-2)}
+.dc-n{font-family:var(--mono);font-size:10.5px;color:var(--blue)}
+.dc-name{font-size:14.5px;color:var(--ink);font-weight:600;line-height:1.45}
+.dc-desc{margin:0;font-size:11.5px;color:var(--ink-3);line-height:1.65;min-height:38px}
+.dc-kw{display:flex;flex-wrap:wrap;gap:4px}
+.dc-kw span{font-size:10.5px;color:var(--ink-4);background:var(--paper-2);border-radius:100px;padding:2px 8px}
+.dc-bar{position:relative;height:16px;margin-top:2px}
+.dc-bar i{position:absolute;left:0;top:7px;height:4px;background:var(--blue);border-radius:2px;opacity:.75}
+.dc-bar em{position:absolute;right:0;top:0;font-style:normal;font-family:var(--mono);font-size:9.5px;color:var(--ink-4)}
+
+/* 类别详情 */
+.dc-detail{margin:26px 0 8px;border:1px solid var(--line-2);border-radius:var(--r-m);background:var(--card);box-shadow:var(--sh-1);overflow:hidden}
+.dc-back{margin:12px 18px 0;display:inline-flex}
+.dc-d-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--paper-2)}
+.dc-d-h h3{font-size:16px;margin:0}
+.dc-d-acts{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.dc-d-note{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--line)}
+.dc-d-note>div{background:var(--card);padding:13px 18px}
+.dc-d-note b{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--ink-4);margin-bottom:6px}
+.dc-d-note p{margin:0;font-size:12px;color:var(--ink-2);line-height:1.75}
+.dc-d-stat{display:flex;flex-wrap:wrap;gap:30px;padding:14px 18px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.dc-d-stat b{display:block;font-family:var(--mono);font-size:18px;color:var(--blue);font-weight:600}
+.dc-d-stat span{display:block;margin-top:2px;font-size:10.5px;color:var(--ink-4)}
+.dc-lv{font-size:11px;padding:1px 8px;border-radius:100px}
+.dc-lv.need{background:rgba(26,71,121,.1);color:var(--blue)}
+.dc-lv.opt{background:var(--paper-2);color:var(--ink-4)}
+
+/* 环节 × 数据口径矩阵 */
+.dc-mat table{border-collapse:collapse;width:100%;font-size:11.5px}
+.dc-mat th,.dc-mat td{border:1px solid var(--line);padding:6px 8px;text-align:center}
+.dc-mrh{text-align:left !important;white-space:nowrap;color:var(--ink-2);font-weight:500;background:var(--card);font-size:11px}
+.dc-mth{cursor:pointer;background:var(--paper-2);color:var(--ink-3);font-weight:500;transition:all .15s}
+.dc-mth:hover{color:var(--blue);background:var(--blue-l,rgba(26,71,121,.06))}
+.dc-mth.on{background:var(--navy);color:#fff}
+.dc-mc{font-family:var(--mono);color:var(--ink-4)}
+.dc-mc.has{color:#fff;font-weight:600}
+
+/* ---------- 两栏：左数据资产 / 右侧精简选题面板 ---------- */
+.dc-layout{display:grid;grid-template-columns:minmax(0,1fr) 336px;gap:22px;align-items:start;margin-top:2px}
+.dc-main{min-width:0}
+.dc-side{position:sticky;top:14px;min-width:0}
+@media (max-width:1180px){
+  .dc-layout{grid-template-columns:minmax(0,1fr)}
+  .dc-side{position:static;order:-1;margin-bottom:4px}
+}
+
+/* ---------- 我的工作区 ---------- */
+.wk-sec{margin:0 0 38px}
+.wk-sec-h{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid var(--line);
+}
+.wk-sec-h h3{font-size:15.5px;margin:0}
+.wk-sec-h .wk-acts{margin-left:auto}
+.wk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:13px}
+.wk-card{
+  display:flex;flex-direction:column;gap:7px;padding:15px 16px 13px;
+  border:1px solid var(--line-2);border-radius:var(--r-m);background:var(--card);box-shadow:var(--sh-1);
+}
+.wk-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.wk-stage{font-size:11px;color:var(--ink-4)}
+.wk-id{font-family:var(--mono);font-size:10px;color:var(--ink-4);border:1px solid var(--line-2);border-radius:5px;padding:1px 6px}
+.wk-name{font-size:14.5px;font-weight:600;color:var(--ink);text-decoration:none;line-height:1.45}
+.wk-name:hover{color:var(--blue)}
+.wk-meta{font-size:11px;color:var(--ink-4)}
+.wk-acts{display:flex;gap:8px;flex-wrap:wrap}
+.wk-acts .btn{padding:4px 10px;font-size:11.5px}
+
+/* 学习进度 */
+.wk-prog-total{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.wk-bar{flex:1;height:7px;background:var(--line-2);border-radius:4px;overflow:hidden}
+.wk-bar.big{height:9px;max-width:420px}
+.wk-bar i{display:block;height:100%;background:var(--blue);border-radius:4px;transition:width .4s}
+.wk-prog-total b{font-family:var(--mono);font-size:16px;color:var(--blue)}
+.wk-prog-total span{font-size:11.5px;color:var(--ink-4)}
+.wk-prog-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px 22px}
+.wk-prog-row{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--ink-3)}
+.wk-pr-n{width:96px;flex:none;color:var(--ink-2)}
+.wk-pr-bar{flex:1;height:5px;background:var(--line-2);border-radius:3px;overflow:hidden}
+.wk-pr-bar i{display:block;height:100%;background:var(--jade);border-radius:3px}
+.wk-pr-v{width:44px;flex:none;text-align:right;font-family:var(--mono);font-size:10.5px;color:var(--ink-4)}
+
+/* 对比托盘与导出 */
+.wk-cmp-list{display:flex;flex-wrap:wrap;gap:8px}
+.wk-cmp-item{
+  display:inline-flex;align-items:center;gap:8px;font-size:12px;padding:6px 12px;
+  border:1px solid var(--blue-2);border-radius:100px;background:rgba(26,71,121,.06);color:var(--ink-2);
+}
+.wk-cmp-item button{
+  border:0;background:transparent;cursor:pointer;color:var(--ink-4);font-size:14px;line-height:1;padding:0;
+}
+.wk-cmp-item button:hover{color:var(--clay,var(--bad))}
+.wk-export{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.wk-ex-hint{font-size:11.5px;color:var(--ink-4);max-width:560px;line-height:1.7}
+
+@media (max-width:900px){
+  .dc-grid,.wk-grid{grid-template-columns:1fr}
+  .wk-pr-n{width:78px}
+}

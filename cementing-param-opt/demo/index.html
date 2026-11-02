@@ -1,0 +1,133 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>固井施工参数智能优化 · 可运行示范</title><style>
+.panel{padding:0;font:14px/1.7 system-ui,"Microsoft YaHei",sans-serif;color:#242b2e}
+h1{font-size:19px;margin:0 0 6px}.lead{margin:0;color:#5a6469;font-size:13px}
+.tabs{display:flex;gap:8px;margin:12px 0 0;flex-wrap:wrap}
+.tabs button{border:1px solid #d8d2c2;background:#fbfaf6;border-radius:999px;padding:4px 13px;font-size:12.5px;cursor:pointer;color:#5a6469}
+.tabs button.on{background:#2f7d6b;color:#fff;border-color:#2f7d6b;font-weight:700}
+.ctl{display:flex;gap:26px;margin:14px 0 0;flex-wrap:wrap}
+.ctl label{flex:1;min-width:200px;display:block}
+.ctl span{display:flex;justify-content:space-between;font-size:12.5px}
+.ctl input{width:100%}.ctl i{font-style:normal;font-size:11px;color:#8a9296}
+.grid{display:flex;gap:14px;margin:14px 0 0;flex-wrap:wrap}
+.fig{flex:1;min-width:300px;background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:8px 6px 2px}
+.fig h3{font-size:13px;margin:2px 8px 0;color:#3d4a48}
+.fig svg{width:100%;display:block}
+.readouts{display:flex;gap:8px;margin:14px 0 0;flex-wrap:wrap}
+.readouts div{flex:1;min-width:130px;background:#fbfaf6;border:1px solid #e2dccd;border-radius:8px;padding:7px 12px}
+.readouts b{display:block;font-size:17px}.readouts span{font-size:11px;color:#8a9296}
+.ok b{color:#2f7d6b}.bad b{color:#c1613f}
+.note{margin-top:14px;font-size:12.5px;color:#3d4a48;background:#f3efe2;border-radius:8px;padding:9px 14px}
+.tag{display:inline-block;background:#eef5ef;color:#2f7d6b;border-radius:5px;padding:0 7px;font-size:11px;margin-right:6px}
+
+.cmp{margin-top:14px;border:1px solid #e2dccd;border-radius:10px;background:#fffdf8;overflow:hidden}.cmp-h{font-size:12.5px;font-weight:700;color:#3d4a48;padding:8px 14px;background:#f3efe2}.cmp-g{display:flex;gap:0;flex-wrap:wrap}.cmp-c{flex:1;min-width:240px;padding:9px 14px}.cmp-c+.cmp-c{border-left:1px solid #e2dccd}.cmp-c b{display:block;font-size:12px;margin-bottom:5px}.cmp-c.man b{color:#8a6a3a}.cmp-c.ai b{color:#2f7d6b}.cmp-c ul{margin:0;padding-left:16px}.cmp-c li{font-size:12px;line-height:1.7;color:#3d4a48;margin:2px 0}
+.meth{margin:13px 0 0;border:1px solid #e2dccd;border-left:3px solid #2f7d6b;border-radius:9px;background:#f6f4ec}.meth-h{font-size:11.5px;font-weight:700;color:#2f7d6b;letter-spacing:.05em;padding:9px 15px 2px}.meth-g{display:flex;flex-wrap:wrap;padding:0 0 9px}.meth-g>div{flex:1 1 200px;min-width:185px;padding:3px 15px}.meth-g>div+div{border-left:1px dashed #e2dccd}.meth-g b{display:block;font-size:11px;color:#8a6a3a;margin:3px 0 2px}.meth-g ul{margin:0;padding-left:14px}.meth-g li{font-size:11.6px;line-height:1.62;color:#3d4a48;margin:1px 0}</style></head><body><div class="panel blk-card">
+<h1>固井施工参数智能优化</h1>
+<p class="lead">排量越大顶替越干净，但环空压耗随之上升——一旦越过薄弱层的承压能力就压漏。模型把两条曲线画在同一张剖面上，在「不压漏」硬约束内逐段找可行排量区间。切换井况、拖参数，看风险段在哪。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>顶替效率模拟</li><li>排量寻优</li><li>压漏风险约束（沿井深水力计算）</li></ul></div><div><b>为什么起作用</b><ul><li>排量大顶替干净但压耗高，压漏窗口由地层破裂压力决定，两者必须耦合算</li><li>逐点算压耗才能定位「会压漏的那一段」，而不是给全井一个结论</li></ul></div><div><b>在示范里怎么看</b><ul><li>调排量与环空间隙，看压耗曲线越过阈值线的深度区间</li></ul></div></div></div>
+<div class="tabs" id="tabs">
+  <button class="on" data-t="n">常规固井</button>
+  <button data-t="l">长裸眼段</button>
+  <button data-t="t">小间隙尾管</button>
+</div>
+<div class="ctl">
+  <label><span>施工排量 <b id="vQ">1.6</b> m³/min</span><input type="range" id="sQ" min="0.5" max="3" step="0.05" value="1.6"><i>全井统一排量（现场常用做法）</i></label>
+  <label><span>环空间隙 <b id="vG">22</b> mm</span><input type="range" id="sG" min="10" max="40" step="1" value="22"><i>由井径与套管尺寸决定</i></label>
+  <label><span>薄弱层漏失压力 <b id="vP">1.75</b> g/cm³ 当量</span><input type="range" id="sP" min="1.3" max="2.2" step="0.05" value="1.75"><i>来自邻井漏失记录</i></label>
+</div>
+<div class="grid">
+  <div class="fig"><h3>环空压耗沿井深 vs 地层承压能力</h3><svg id="cv" viewBox="0 0 460 300"></svg></div>
+  <div class="fig"><h3>顶替效率沿井深（间隙小→偏心滞留）</h3><svg id="ef" viewBox="0 0 460 300"></svg></div>
+</div>
+<div class="readouts" id="ro"></div>
+<div class="cmp"><div class="cmp-h">人工做法 vs 模型做法（同一口井，同一批数据）</div><div class="cmp-g"><div class="cmp-c man"><b>人工做法（现状）</b><ul><li>全井一个经验排量窗口</li><li>滞留段等固井后看 CBL 才知道</li><li>扶正器间距按经验布置</li></ul></div><div class="cmp-c ai"><b>模型做法（本示范）</b><ul><li>逐段算压耗并对漏失压力给出排量上限，越界段着色</li><li>施工前定位滞留段在多少米、滞留多厚</li><li>按顶替效率寻优间距，并同步校核下入阻力</li></ul></div></div></div><div class="note" id="note"></div>
+</div><script>
+var MODE='n', Q=1.6, G=22, P=1.75;
+var DMAX=3000, KLEN=1800; /* KLEN：薄弱层位置 */
+function allow(d){ /* 地层承压能力：漏失当量 − 静液柱，随深度略降 */
+  var hydro=P-1.10;
+  return hydro*24*(1-0.30*d/DMAX);
+}
+function dp(d){ /* 环空压耗累计：层流近似 ∝ q^1.8 / gap^2.5，长裸眼段摩阻更大 */
+  var f=MODE==='l'?1.5:(MODE==='t'?1.25:1);
+  var unit=Math.pow(Q,1.8)/Math.pow(G/22,2.5)*f*0.9;
+  return unit*(d/DMAX)*5.5; /* MPa 井口到 d */
+}
+function eff(d){ /* 顶替效率：间隙小→偏心滞留，排量大→效率高 */
+  var g=G/22, base=0.52+0.45*(1-Math.exp(-Q/0.85));
+  var dip=MODE==='t'?0.30:(MODE==='l'?0.16:0.08);
+  return Math.max(0.35,Math.min(0.99,base-dip*Math.exp(-Math.pow((g-0.55)/0.55,2))-dip*0.4*(d/DMAX)));
+}
+function feasibleQ(){ /* 逐段找可行排量：η≥85% 且 dp(dmax)<allow(dmax) */
+  var lo=0.5,hi=3,okQ=-1;
+  for(var q=0.5;q<=3;q+=0.05){
+    var bad=false;
+    for(var d=200;d<=DMAX;d+=200){if(dp(d)>allow(d)){bad=true;break;}}
+    if(!bad)okQ=q;
+  }
+  return okQ;
+}
+function draw(){
+  document.getElementById('vQ').textContent=Q.toFixed(2);
+  document.getElementById('vG').textContent=G;
+  document.getElementById('vP').textContent=P.toFixed(2);
+  /* ---- 压耗剖面 ---- */
+  var W=460,H=300,L=52,R=430,T=22,B=258;
+  function Y(d){return T+(d/DMAX)*(B-T);}
+  var pmax=30;
+  function X(p){return L+p/pmax*(R-L);}
+  var s='<rect width="460" height="300" fill="#fffdf8"/>';
+  for(var gy=0;gy<=DMAX;gy+=1000){s+='<line x1="'+L+'" y1="'+Y(gy)+'" x2="'+R+'" y2="'+Y(gy)+'" stroke="#eee7d8" stroke-dasharray="3 3"/><text x="'+(L-5)+'" y="'+(Y(gy)+3)+'" font-size="9" fill="#8a9296" text-anchor="end">'+gy+'</text>';}
+  for(var gp=0;gp<=pmax;gp+=10){s+='<line x1="'+X(gp)+'" y1="'+T+'" x2="'+X(gp)+'" y2="'+B+'" stroke="#eee7d8"/><text x="'+X(gp)+'" y="'+(B+13)+'" font-size="9" fill="#8a9296" text-anchor="middle">'+gp+'</text>';}
+  /* 超限区段着色 */
+  var over='';
+  for(var d=0;d<=DMAX;d+=25){var a=allow(d),p=dp(d);if(p>a){over+=(over?' L':'M')+X(p)+' '+Y(d);}else{if(over){over+=' L'+X(dp(Math.min(d,DMAX)))+' '+Y(d)+' Z';s+='<path d="'+over+'" fill="#c1613f" opacity="0.25"/>';over='';}}}
+  if(over){over+=' L'+X(dp(DMAX))+' '+Y(DMAX)+' Z';s+='<path d="'+over+'" fill="#c1613f" opacity="0.25"/>';}
+  function curve(f,c,w,dash){var p='';for(var d=0;d<=DMAX;d+=25){p+=(p?' L':'M')+X(Math.min(f(d),pmax))+' '+Y(d);}s+='<path d="'+p+'" fill="none" stroke="'+c+'" stroke-width="'+(w||1.8)+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>';}
+  curve(allow,'#2f7d6b',2,'6 3');
+  curve(dp,'#3a5f8c',2.2);
+  var pNow=dp(DMAX), aNow=allow(DMAX);
+  s+='<circle cx="'+X(Math.min(pNow,pmax))+'" cy="'+Y(DMAX)+'" r="4.5" fill="'+(pNow>aNow?'#c1613f':'#2f7d6b')+'"/>';
+  s+='<text x="'+(R-4)+'" y="'+(T+10)+'" font-size="9.5" fill="#2f7d6b" text-anchor="end">地层承压能力（不压漏红线）</text>';
+  s+='<text x="'+(R-4)+'" y="'+(T+22)+'" font-size="9.5" fill="#3a5f8c" text-anchor="end">环空压耗 @'+Q.toFixed(2)+' m³/min</text>';
+  if(pNow>aNow){s+='<text x="'+(L+6)+'" y="'+(T+38)+'" font-size="10.5" font-weight="700" fill="#c1613f">⚠ 红色区段：压耗已越过承压线 → 有压漏风险</text>';}
+  s+='<text x="'+((L+R)/2)+'" y="'+(H-4)+'" font-size="9" fill="#8a9296" text-anchor="middle">环空压耗 (MPa) →　井深 (m) ↓</text>';
+  document.getElementById('cv').innerHTML=s;
+  /* ---- 顶替效率 ---- */
+  var W2=460,ef='';
+  ef+='<rect width="460" height="300" fill="#fffdf8"/>';
+  for(gy=0;gy<=DMAX;gy+=1000){ef+='<line x1="'+L+'" y1="'+Y(gy)+'" x2="'+R+'" y2="'+Y(gy)+'" stroke="#eee7d8" stroke-dasharray="3 3"/><text x="'+(L-5)+'" y="'+(Y(gy)+3)+'" font-size="9" fill="#8a9296" text-anchor="end">'+gy+'</text>';}
+  var ex0=L+40,ex1=R-8;
+  function EX(v){return ex0+v*(ex1-ex0);}
+  ef+='<line x1="'+EX(0.85)+'" y1="'+T+'" x2="'+EX(0.85)+'" y2="'+B+'" stroke="#2f7d6b" stroke-dasharray="4 3"/>';
+  ef+='<text x="'+(EX(0.85)+4)+'" y="'+(B-8)+'" font-size="9.5" fill="#2f7d6b">85% 合格线</text>';
+  /* 30 段效率条 */
+  for(var i=0;i<30;i++){
+    var d0=i/30*DMAX, e=eff(d0+DMAX/60);
+    var col=e>=0.85?'#2f7d6b':(e>=0.7?'#d9a441':'#c1613f');
+    ef+='<rect x="'+L+'" y="'+Y(d0)+'" width="'+(EX(Math.min(e,0.99))-L)+'" height="'+((B-T)/30-1.2)+'" fill="'+col+'" opacity="'+(0.35+0.6*(e-0.3)/0.7)+'"/>';
+  }
+  ef+='<text x="'+(R-4)+'" y="'+(T+10)+'" font-size="9.5" fill="#5a6469" text-anchor="end">绿≥85%　黄 70—85%　红＜70%（滞留）</text>';
+  var eAvg=0;for(i=0;i<30;i++)eAvg+=eff(i/30*DMAX+DMAX/60);eAvg/=30;
+  ef+='<text x="'+((L+R)/2)+'" y="'+(H-4)+'" font-size="9" fill="#8a9296" text-anchor="middle">顶替效率 →　井深 (m) ↓　平均 '+eAvg.toFixed(0)+'%</text>';
+  document.getElementById('ef').innerHTML=ef;
+  /* ---- 读数 ---- */
+  var qBest=feasibleQ();
+  var ro='';
+  ro+='<div class="'+(eAvg>=0.85?'ok':'bad')+'"><b>'+(eAvg*100).toFixed(0)+'%</b><span>平均顶替效率（目标 ≥85%）</span></div>';
+  ro+='<div class="'+(pNow<=aNow?'ok':'bad')+'"><b>'+(aNow-pNow).toFixed(1)+' MPa</b><span>井底压漏裕度（≥0 才安全）</span></div>';
+  ro+='<div class="ok"><b>'+(qBest>0?qBest.toFixed(2):'—')+' m³/min</b><span>模型推荐排量上限（两约束同时满足）</span></div>';
+  ro+='<div class="'+(Q<=qBest+0.01?'ok':'bad')+'"><b>'+(Q<=qBest+0.01?'可行':'超限')+'</b><span>当前排量 '+Q.toFixed(2)+' 的判定</span></div>';
+  document.getElementById('ro').innerHTML=ro;
+  /* ---- 结论 ---- */
+  var gapN=G<16, lean='';
+  if(qBest<=0)lean='当前井况下任何排量都无法同时满足两个约束——需要先堵漏或调整浆体流变，而不是调排量。';
+  else if(gapN)lean='间隙过小（'+G+'mm），窄边滞留严重：模型建议在封隔段加密扶正器并提高排量至 '+qBest.toFixed(2)+' m³/min 上限。';
+  else lean='把排量推到 '+qBest.toFixed(2)+' m³/min 可以在不压漏的前提下把效率顶到最高——这就是约束内寻优，而不是取经验中值。';
+  document.getElementById('note').innerHTML='<span class="tag">优化结果</span>'+lean;
+}
+document.getElementById('sQ').oninput=function(){Q=+this.value;draw();};
+document.getElementById('sG').oninput=function(){G=+this.value;draw();};
+document.getElementById('sP').oninput=function(){P=+this.value;draw();};
+[].forEach.call(document.querySelectorAll('#tabs button'),function(b){b.onclick=function(){MODE=b.dataset.t;[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.remove('on')});b.classList.add('on');draw();};});
+draw();
+</script>
+</body></html>

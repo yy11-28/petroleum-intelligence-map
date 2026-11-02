@@ -1,0 +1,122 @@
+{
+  "id": "old-well-recompletion",
+  "sceneId": "co16",
+  "methods": ["kg", "opt"],
+  "title": "老井复产 / 侧钻完井改造方案智能设计",
+  "version": "1.0.0",
+  "updated": "2026-10-25",
+
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "老井复产面对的是「井还在、资料不全、预算有限」的局面：套管可能变形，剩余油分布靠推断，而一次侧钻或重完井的投入常常接近一口新井的零头。值不值得改、怎么改，决策往往要求在几天内给出，而判断依据散在十几年份的作业总结里。",
+      "judge": [
+        { "label": "数据形态", "value": "个案为主 + 少量先例", "desc": "井史资料不全，每口井的条件都不重复" },
+        { "label": "标注成本", "value": "高", "desc": "一口井只能改一次，无法重复试验" },
+        { "label": "可见收益", "value": "中", "desc": "改写下来是几百万元的投资取舍" },
+        { "label": "难度", "value": "高", "desc": "必须在资料不确定下给出可执行方案" }
+      ],
+      "sections": [
+        {
+          "no": 1,
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p><b>现在的做法</b>：找油藏与完井的几位专家坐在一起，看套管检测、产液剖面和近几年产量，凭经验给一套方案。<b>三个问题</b>：<b>① 资料不全</b>——十几年前的作业记录常常只有结论没有数据，套管状况靠最近一次检测推断；<b>② 每口井都是一次性个案</b>——井筒条件各不相同，历史经验难以直接套用；<b>③ 成功经验被记住、失败教训被忘掉</b>——历史库里几乎全是「改造后增产」的总结，导致每年都在重复当年赔钱的那类投入。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='同一口老井不同专家给出不同方案'><rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/><text x='16' y='17' font-size='11' fill='#242b2e'>同一口井、同一份资料：三个方案，三个量级的投入</text><rect x='16' y='30' width='660' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='30' y='52' font-size='9.5' fill='#4d565b'>已知条件：套管完好度 0.70　剩余储量中等　近井污染偏重　预算 260 万</text><rect x='16' y='76' width='212' height='86' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='96' font-size='10' fill='#242b2e'>方案 A（采油出身）</text><text x='28' y='116' font-size='9' fill='#4d565b'>先检泵换管再说</text><text x='28' y='132' font-size='9' fill='#79828a'>投入 42 万，增量有限</text><text x='28' y='152' font-size='9' fill='#c9613f'>但会浪费掉余下的产能</text><rect x='244' y='76' width='212' height='86' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='96' font-size='10' fill='#242b2e'>方案 B（改造出身）</text><text x='256' y='116' font-size='9' fill='#4d565b'>直接压裂</text><text x='256' y='132' font-size='9' fill='#79828a'>投入 210 万，潜在收益最大</text><text x='256' y='152' font-size='9' fill='#c9613f'>套管再差一点就不能做</text><rect x='472' y='76' width='204' height='86' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='96' font-size='10' fill='#242b2e'>方案 C（资深旁观）</text><text x='484' y='116' font-size='9' fill='#4d565b'>开窗侧钻重完井</text><text x='484' y='132' font-size='9' fill='#79828a'>投入 430 万，超预算</text><text x='484' y='152' font-size='9' fill='#c9613f'>有效期最长但回收慢</text><line x1='16' y1='180' x2='684' y2='180' stroke='#e2ded0'/><text x='16' y='200' font-size='9.5' fill='#242b2e'>问题不在哪个方案对，而在没有统一的口径去比较</text><text x='16' y='218' font-size='9' fill='#4d565b'>每个人都从自己熟悉的那一类措施出发：增量、投入、成功率、回收期各说一段，会议结束时靠资历收敛。</text><text x='16' y='236' font-size='9' fill='#c9613f'>更麻烦的是：这口井只能改一次，谁也不知道没选的那个选项本来会更好还是更差。</text><text x='440' y='236' font-size='9' fill='#79828a'>示范里会用同一口径把这三种偏好一起摊开。</text></svg><span class='viz-cap'>同一口老井的三个方案：差别在投入与回收节奏，缺的是统一的比较口径。</span></div>"
+        },
+        {
+          "no": 2,
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>两层：<b>知识图谱</b>先把「井筒条件 → 技术可行性」写成硬约束（套管完好度不够就不能压裂、套管极差时只能侧钻、侧钻与井筒内措施互斥），再把历史上条件相近的老井找出来，用它们的真实结果去<b>修正每条措施的成功率先验</b>。<b>多目标寻优</b>随后在剩下的组合上算三年累计增油、净现值与回收期。</p><p>输出是三件事：<b>推荐组合 + 投入/工期/回收期</b>、<b>每一条被剔除措施的理由</b>、<b>油价下行时的敏感度</b>。特别需要说明的是：当所有组合的 NPV 都为负时，正确结论是<b>「这口井不值得改」</b>——把钱留给别的井同样是一个有价值的结论，而不是模型失效。</p><div class='viz'><svg viewBox='0 0 700 215' role='img' aria-label='两层结构：硬约束加历史先验，再算经济寻优'><rect x='0' y='0' width='700' height='215' fill='#fbfaf6'/><text x='16' y='18' font-size='11' fill='#242b2e'>先问能不能装，再问历史上像不像，最后才算钱</text><defs><marker id='owA' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='16' y='32' width='106' height='52' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='69' y='52' font-size='9.5' fill='#242b2e' text-anchor='middle'>井筒条件</text><text x='69' y='68' font-size='8.5' fill='#79828a' text-anchor='middle'>套管 / 剩余 / 污染</text><path d='M122 58 L150 58' stroke='#242b2e' marker-end='url(#owA)'/><rect x='150' y='32' width='112' height='52' rx='5' fill='#41699b' opacity='0.9'/><text x='206' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>图谱硬约束</text><text x='206' y='68' font-size='8.5' fill='#fff' text-anchor='middle'>剔除不可行措施</text><path d='M262 58 L290 58' stroke='#242b2e' marker-end='url(#owA)'/><rect x='290' y='32' width='112' height='52' rx='5' fill='#b26a39' opacity='0.85'/><text x='346' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>历史先验</text><text x='346' y='68' font-size='8.5' fill='#fff' text-anchor='middle'>修正成功率</text><path d='M402 58 L430 58' stroke='#242b2e' marker-end='url(#owA)'/><rect x='430' y='32' width='112' height='52' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='486' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>组合经济寻优</text><text x='486' y='68' font-size='8.5' fill='#cfe4dc' text-anchor='middle'>NPV / 回收期</text><path d='M542 58 L570 58' stroke='#242b2e' marker-end='url(#owA)'/><rect x='570' y='26' width='114' height='64' rx='5' fill='#fbfaf6' stroke='#e2ded0'/><text x='627' y='44' font-size='9' fill='#4d565b' text-anchor='middle'>输出</text><text x='627' y='60' font-size='8.5' fill='#79828a' text-anchor='middle'>推荐组合</text><text x='627' y='74' font-size='8.5' fill='#79828a' text-anchor='middle'>剔除理由</text><text x='627' y='86' font-size='8.5' fill='#79828a' text-anchor='middle'>油价敏感度</text><rect x='16' y='104' width='326' height='94' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='122' font-size='9.5' fill='#242b2e'>先验为什么重要</text><text x='28' y='140' font-size='9' fill='#4d565b'>机理能给出「套管完好 → 压裂大概率可行」的粗估，</text><text x='28' y='156' font-size='9' fill='#4d565b'>但真实成功率取决于本区块地层对这种措施的响应。</text><text x='28' y='172' font-size='9' fill='#4d565b'>融合方式：p = 0.5 × 机理估计 + 0.5 × 历史先验</text><text x='28' y='188' font-size='9' fill='#c9613f'>失败案例必须入图谱，否则先验永远偏乐观。</text><rect x='358' y='104' width='326' height='94' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='370' y='122' font-size='9.5' fill='#242b2e'>「不值得改」也是结论</text><text x='370' y='140' font-size='9' fill='#4d565b'>当所有组合的三年净现值为负，模型应当直接输出</text><text x='370' y='156' font-size='9' fill='#4d565b'>「建议列入观察 / 报废候选」，而不是硬凑一个便宜</text><text x='370' y='172' font-size='9' fill='#4d565b'>方案——凑出来的投入同样是钱，而且更难被承认。</text><text x='370' y='188' font-size='9' fill='#41699b'>示范里把投资上限拉到 60 万就能看到这种输出。</text><text x='16' y='210' font-size='8.5' fill='#79828a'>尺度提醒：措施只有 5 类、组合 31 个以内，是典型的「约束 + 枚举」，不需要训练模型。</text></svg><span class='viz-cap'>图谱层给硬约束与历史先验，优化层算组合的经济账；NPV 全负时输出「不值得改」。</span></div>"
+        },
+        {
+          "no": 3,
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p><b>① 井筒完整性资料</b>：套管检测、固井质量、历次作业事故与修井记录——决定技术上能做什么。<b>② 剩余油与储层现状</b>：测井、产液剖面、压力资料，用来估计还有多少可采。<b>③ 历史改造先例</b>：措施类型、投入、增产幅度、有效期与最终结果（含失败）。<b>④ 地面与经济约束</b>：设备能力、工期窗口、油价与贴现口径。</p><p><b>量级</b>：历史先例 50–100 口才有稳定的先验；<b>坑</b>：套管状况往往只有最近一次检测结果，缺少早年基线与历次修井后的复检。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='四类输入数据与各自的难点'><rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/><text x='16' y='18' font-size='11' fill='#242b2e'>四类输入：前两类决定能不能改，第三类决定值不值，第四类决定批不批</text><rect x='16' y='30' width='160' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='96' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>井筒完整性</text><text x='28' y='68' font-size='9' fill='#4d565b'>套管检测 / 固井</text><text x='28' y='84' font-size='9' fill='#4d565b'>历次作业事故</text><line x1='28' y1='94' x2='164' y2='94' stroke='#d8d2c4'/><text x='28' y='110' font-size='9' fill='#79828a'>决定技术可行性</text><text x='28' y='126' font-size='9' fill='#c9613f'>坑：缺早年基线</text><rect x='188' y='30' width='160' height='112' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='268' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>剩余油现状</text><text x='200' y='68' font-size='9' fill='#4d565b'>产液剖面 · 压力</text><text x='200' y='84' font-size='9' fill='#4d565b'>测井 / 饱和度</text><line x1='200' y1='94' x2='336' y2='94' stroke='#d8d2c4'/><text x='200' y='110' font-size='9' fill='#41699b'>多数是推断值</text><text x='200' y='126' font-size='9' fill='#c9613f'>坑：不确定性不写进记录</text><rect x='360' y='30' width='160' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='440' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>历史改造先例</text><text x='372' y='68' font-size='9' fill='#4d565b'>措施 · 投入 · 效果</text><text x='372' y='84' font-size='9' fill='#4d565b'>有效期 · 失败记录</text><line x1='372' y1='94' x2='508' y2='94' stroke='#d8d2c4'/><text x='372' y='110' font-size='9' fill='#79828a'>50–100 口才有稳定先验</text><text x='372' y='126' font-size='9' fill='#c9613f'>坑：只留成功案例</text><rect x='532' y='30' width='152' height='112' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='608' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>经济与地面</text><text x='544' y='68' font-size='9' fill='#4d565b'>油价 · 操作成本</text><text x='544' y='84' font-size='9' fill='#4d565b'>工期 · 设备能力</text><line x1='544' y1='94' x2='672' y2='94' stroke='#e2ded0'/><text x='544' y='110' font-size='9' fill='#79828a'>决定能不能批</text><text x='544' y='126' font-size='9' fill='#79828a'>常常比技术更能定案</text><rect x='16' y='156' width='668' height='34' rx='5' fill='#fbfaf6' stroke='#e2ded0'/><text x='30' y='174' font-size='9.5' fill='#4d565b'>最难的一件事：把「当年为什么失败」也写进去——没有失败记录的先例库，会把每一口井都推上一轮乐观的投入。</text><text x='30' y='186' font-size='9' fill='#79828a'>建议：先例表强制三列——井筒条件 / 实际做了什么 / 结果与有效期（无论好坏）。</text></svg><span class='viz-cap'>四类输入：井筒完整性、剩余油、历史先例、经济约束，失败案例必须入库。</span></div>"
+        },
+        {
+          "no": 4,
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p><b>难点一：样本不可复用。</b>一口井只能改一次，永远没有「如果不改会怎样」的对照，因此关键在于把若干口井的条件对齐后做统计，而不是把某一口井的故事讲圆。</p><p><b>难点二：成功率是分布不是点。</b>给一个 78% 的数字，决策者感受不到风险；给「七成把握能回本、三成可能血本无归」才有意义，所以输出必须是<b>收益分布</b>而不是单点。<b>难点三：非技术约束常常决定结果。</b>投资上限、工期窗口、平台检修安排，经常比技术方案更能左右最终选择，必须把它们作為一等输入。</p><p><b>参考顺序</b>：① 先做可行性规则库 + 先例表；② 用先例标定各措施产出模型；③ 以 NPV 与回收期为主排序，输出 Top-3；④ 施工后回填实际增油与有效期，逐年替换先验。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='三个难点：样本不可重复、成功率是分布、非技术约束'><rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/><text x='16' y='17' font-size='11' fill='#242b2e'>三个难点：反事实缺失、点估计掩盖风险、非技术约束决定结果</text><rect x='16' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10' fill='#242b2e'>① 样本不可复用</text><line x1='40' y1='130' x2='204' y2='130' stroke='#242b2e'/><line x1='40' y1='60' x2='40' y2='130' stroke='#242b2e'/><path d='M46 126 C 74 116, 96 110, 118 106' fill='none' stroke='#41699b' stroke-width='1.8'/><circle cx='118' cy='106' r='4' fill='#2f7d6b'/><path d='M122 106 C 150 112, 176 118, 198 122' fill='none' stroke='#2f7d6b' stroke-width='1.8'/><path d='M122 106 C 150 96, 176 86, 198 78' fill='none' stroke='#c9613f' stroke-dasharray='4 3'/><text x='150' y='72' font-size='8.5' fill='#c9613f'>如果不改会怎样？（永远看不到）</text><text x='28' y='152' font-size='9' fill='#4d565b'>只能用「条件相近的别人」做对照，</text><text x='28' y='166' font-size='9' fill='#4d565b'>所以先例表必须公开发布对齐后的条件。</text><text x='28' y='184' font-size='8.5' fill='#79828a'>单井故事讲得再圆，也不是证据。</text><rect x='244' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='46' font-size='10' fill='#242b2e'>② 成功率是分布</text><line x1='262' y1='140' x2='438' y2='140' stroke='#242b2e'/><path d='M266 138 C 290 120, 310 96, 330 96 C 350 96, 368 118, 392 138' fill='none' stroke='#41699b' stroke-width='1.8'/><path d='M330 96 L330 138' stroke='#79828a' stroke-dasharray='3 3'/><text x='286' y='104' font-size='8.5' fill='#41699b'>点估计 78%</text><rect x='342' y='118' width='92' height='16' fill='#c9613f' opacity='0.15'/><text x='348' y='131' font-size='8.5' fill='#c9613f'>左侧尾部＝亏本</text><text x='256' y='162' font-size='9' fill='#4d565b'>同一个期望值，尾部形状不同，</text><text x='256' y='176' font-size='9' fill='#4d565b'>决策完全可以相反。</text><text x='256' y='192' font-size='8.5' fill='#79828a'>至少要给出「亏本概率」这一栏。</text><rect x='472' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='46' font-size='10' fill='#242b2e'>③ 非技术约束决定结果</text><text x='490' y='70' font-size='9' fill='#4d565b'>NPV 最高的方案</text><rect x='490' y='76' width='180' height='12' rx='2' fill='#2f7d6b'/><text x='490' y='100' font-size='9' fill='#4d565b'>投资上限 260 万</text><rect x='490' y='106' width='78' height='12' rx='2' fill='#c9613f'/><text x='490' y='130' font-size='9' fill='#4d565b'>工期窗口 30 天</text><rect x='490' y='136' width='132' height='12' rx='2' fill='#41699b'/><text x='484' y='164' font-size='9' fill='#c9613f'>最终方案由最短的那一块决定，</text><text x='484' y='178' font-size='9' fill='#c9613f'>而不是由 NPV 最高的那个决定。</text><text x='484' y='194' font-size='8.5' fill='#79828a'>因此这些约束必须写成一等输入，不能事后再算。</text></svg><span class='viz-cap'>难点：没有反事实对照、成功率为点估计掩盖尾部风险、投资与工期等约束直接决定结果。</span></div>"
+        }
+      ]
+    },
+
+    "workflow": {
+      "label": "案例流程",
+      "title": "从井筒条件到投资方案的决策流程",
+      "lead": [
+        "这条流程的重点不是预测某一口井能增产多少——那永远不准。重点是让每一次投入都有可追溯的依据：为什么这条措施可行、历史上同类条件的结果如何、按当前油价多久能回本、油价跌两成之后还剩多少安全边际。",
+        "下面的示范演示第 1 到第 4 步：拖动套管完好度、剩余储量、近井污染、油价与投资上限，看硬约束怎么变化删掉某些措施、历史先验怎么修正成功率，以及最终推荐的是哪一种组合、回收期多少个月。"
+      ],
+      "stats": [
+        ["老井先例", "112 口"],
+        ["措施库", "5 类"],
+        ["方案设计周期", "9 天 → 2 天"]
+      ],
+      "steps": [
+        {
+          "name": "井筒条件结构化与可行性判定",
+          "role": "数据",
+          "do": "把套管检测、固井质量、剩余油估计与历次作业记录落成结构化字段，并按图谱规则判定哪些措施技术上可行。",
+          "effect": "进入经济评价的措施都是装得进去的，后面的组合不会到最后才发现做不了。",
+          "trap": "把「套管极差时只能侧钻」这类约束当成建议，会让组合求解给出无法施工的方案。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='井筒条件到可行措施'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>同一个并筒条件，直接决定可选措施的集合</text><text x='12' y='42' font-size='8.5' fill='#4d565b'>套管 0.85</text><rect x='80' y='34' width='120' height='10' rx='2' fill='#efece1'/><rect x='80' y='34' width='102' height='10' rx='2' fill='#41699b'/><text x='206' y='42' font-size='8.5' fill='#41699b'>5 类措施都可选</text><text x='12' y='62' font-size='8.5' fill='#4d565b'>套管 0.50</text><rect x='80' y='54' width='120' height='10' rx='2' fill='#efece1'/><rect x='80' y='54' width='60' height='10' rx='2' fill='#41699b'/><text x='206' y='62' font-size='8.5' fill='#41699b'>压裂仍可行</text><text x='12' y='82' font-size='8.5' fill='#4d565b'>套管 0.28</text><rect x='80' y='74' width='120' height='10' rx='2' fill='#efece1'/><rect x='80' y='74' width='20' height='10' rx='2' fill='#c9613f'/><text x='206' y='82' font-size='8.5' fill='#c9613f'>只剩侧钻</text><line x1='300' y1='28' x2='300' y2='100' stroke='#e2ded0'/><rect x='318' y='26' width='330' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='330' y='44' font-size='9' fill='#242b2e'>硬约束示例</text><text x='330' y='62' font-size='8.5' fill='#4d565b'>· 套管完好度 &lt; 0.45 → 禁止压裂</text><text x='330' y='76' font-size='8.5' fill='#4d565b'>· 套管完好度 &lt; 0.30 → 只能侧钻</text><text x='330' y='90' font-size='8.5' fill='#4d565b'>· 剩余储量 &lt; 0.20 → 不做百万元以上改造</text><text x='12' y='114' font-size='8.5' fill='#79828a'>示范里把套管完好度拖到 0.30 以下，会看到只剩侧钻这一个选项。</text></svg>"
+        },
+        {
+          "name": "历史先例检索与成功率先验",
+          "role": "算法",
+          "do": "按井筒条件相似度加权，统计同类老井上每条措施的实际成功比例，作为先验。",
+          "effect": "技术成功率不再是拍脑袋的数字，而是「本区块历史上同类条件的真实结果」。",
+          "trap": "只收成功案例会让先验系统性偏乐观，从而反复推荐当年赔钱的那类投入。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='历史先验与技术成功率融合'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>成功率 = 50% 机理估计 + 50% 历史先验</text><rect x='12' y='30' width='120' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='24' y='44' font-size='8.5' fill='#fff'>机理估计</text><text x='24' y='58' font-size='8.5' fill='#fff'>0.45 + 0.35·套管 + …</text><path d='M132 47 L162 47' stroke='#242b2e'/><rect x='162' y='30' width='120' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='174' y='44' font-size='8.5' fill='#fff'>历史先验</text><text x='174' y='58' font-size='8.5' fill='#fff'>同类井加权成功比</text><path d='M282 47 L312 47' stroke='#242b2e'/><rect x='312' y='30' width='120' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='324' y='44' font-size='8.5' fill='#fff'>融合成功率</text><text x='324' y='58' font-size='8.5' fill='#cfe4dc'>p = 0.5·机理 + 0.5·先验</text><line x1='12' y1='76' x2='648' y2='76' stroke='#e2ded0'/><text x='12' y='94' font-size='8.5' fill='#c9613f'>关键：失败案例 OW-31（酸化无效）必须入库，否则酸化这条措施的成功率会一直被高估。</text><text x='12' y='110' font-size='8.5' fill='#79828a'>先例不足时（该措施在本区块没见过），只用机理估计并标注「先验不足」。</text></svg>"
+        },
+        {
+          "name": "单措施产出模型标定",
+          "role": "算法",
+          "do": "用历史先例把每条措施的增油幅度、有效期与递减形态标定出来，作为后续组合计算的基本单元。",
+          "effect": "每条措施都有可解释的产出曲线，而不是一个「大概增产一半」的说法。",
+          "trap": "用绝对增产量而不是相对倍数来建模，会在不同剩余储量井之间系统性误判。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='单措施增产曲线与有效期'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>四条措施，四种形态：峰值高的不一定长期占优</text><line x1='60' y1='96' x2='400' y2='96' stroke='#242b2e'/><line x1='60' y1='28' x2='60' y2='96' stroke='#242b2e'/><polyline points='64,92 96,70 128,66 160,72 192,80 224,86 256,90 288,92 320,93 352,94 384,95' fill='none' stroke='#41699b' stroke-width='1.8'/><text x='150' y='62' font-size='8.5' fill='#41699b'>酸化：见效快、衰减也快</text><polyline points='64,92 96,60 128,44 160,40 192,44 224,50 256,58 288,66 320,74 352,82 384,88' fill='none' stroke='#2f7d6b' stroke-width='2'/><text x='240' y='38' font-size='8.5' fill='#2f7d6b'>压裂：峰值高、有效期长</text><polyline points='64,92 96,74 128,62 160,54 192,48 224,44 256,42 288,50 320,58 352,66 384,74' fill='none' stroke='#c9613f' stroke-width='1.6'/><text x='240' y='30' font-size='8.5' fill='#c9613f'>侧钻：投产晚、但平台最稳</text><text x='60' y='110' font-size='8.5' fill='#79828a'>横轴：投产后月数；纵轴：月增产</text><rect x='420' y='28' width='228' height='82' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='432' y='46' font-size='9' fill='#4d565b'>为什么用相对倍数建模</text><text x='432' y='64' font-size='8.5' fill='#4d565b'>同样一口压裂，在剩余储量 0.8 与 0.2 的井上</text><text x='432' y='78' font-size='8.5' fill='#4d565b'>绝对增量能差三倍；倍数形式才跨井可比。</text><text x='432' y='94' font-size='8.5' fill='#c9613f'>有效期比峰值更值得看：它决定累计。</text></svg>"
+        },
+        {
+          "name": "组合枚举与经济寻优",
+          "role": "算法",
+          "do": "在满足硬约束与互斥规则的前提下枚举组合，逐月算增量产量，折成三年净现值与回收期，并按投资上限过滤。",
+          "effect": "给出按 NPV 排序的 Top-N 与每组的回收期，而不是一句「建议压裂」。",
+          "trap": "只按累计增油排序会推荐贵但不划算的组合；不设互斥规则会给出重复计费的方案。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='候选组合的净现值与回收期对比'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>同一种条件：按 NPV 排序与按增油排序，答案不一定一样</text><text x='12' y='40' font-size='8.5' fill='#4d565b'>按 NPV</text><rect x='70' y='32' width='220' height='10' rx='2' fill='#efece1'/><rect x='70' y='32' width='220' height='10' rx='2' fill='#2f7d6b'/><text x='296' y='40' font-size='8.5' fill='#2f7d6b'>压裂（210 万，回收 13 个月）</text><text x='12' y='58' font-size='8.5' fill='#4d565b'>按增油</text><rect x='70' y='50' width='220' height='10' rx='2' fill='#efece1'/><rect x='70' y='50' width='196' height='10' rx='2' fill='#41699b'/><text x='296' y='58' font-size='8.5' fill='#41699b'>压裂 + 检泵（252 万，NPV 反而更低）</text><text x='12' y='76' font-size='8.5' fill='#4d565b'>互斥规则</text><rect x='70' y='68' width='220' height='10' rx='2' fill='#efece1'/><rect x='70' y='68' width='40' height='10' rx='2' fill='#b9c6cf'/><text x='296' y='76' font-size='8.5' fill='#79828a'>互斥规则：侧钻不与井筒内措施叠加计费</text><text x='12' y='96' font-size='8.5' fill='#c9613f'>再加一条：投资上限之下无可行解时，直接输出「不值得改」，不要硬凑。</text><text x='12' y='112' font-size='8.5' fill='#79828a'>示范里把投资上限拉到 200 万、套管拖到 0.25，就能看到这种输出。</text></svg>"
+        },
+        {
+          "name": "现场裁定、施工跟踪与回填",
+          "role": "人工",
+          "do": "由地质与采油共同在 Top-N 中裁定；施工后跟踪实际产量与有效期，回填先例表。",
+          "effect": "先例库每年增加十几条真实结果，先验逐年变准，同一类错误不会年年重犯。",
+          "trap": "只在成功时回填、失败时沉默——这是先例库最常见的失效方式。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='裁定施工与回填闭环'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='28' width='112' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='68' y='49' font-size='9' fill='#fff' text-anchor='middle'>Top-N 裁定</text><path d='M124 45 L154 45' stroke='#242b2e'/><rect x='154' y='28' width='112' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='210' y='49' font-size='9' fill='#fff' text-anchor='middle'>施工并记录</text><path d='M266 45 L296 45' stroke='#242b2e'/><rect x='296' y='28' width='112' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='352' y='49' font-size='9' fill='#fff' text-anchor='middle'>跟踪实产</text><path d='M408 45 L438 45' stroke='#242b2e'/><rect x='438' y='28' width='112' height='34' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='494' y='49' font-size='9' fill='#242b2e' text-anchor='middle'>回填先例库</text><path d='M550 45 C 600 45, 606 80, 556 84 C 490 90, 60 92, 68 72' fill='none' stroke='#79828a' stroke-dasharray='4 3'/><text x='230' y='98' font-size='9' fill='#79828a'>闭环：无论成功失败都回填，先验才不会对实际会失败的那类措施一直乐观</text><line x1='12' y1='106' x2='470' y2='106' stroke='#e2ded0'/><text x='12' y='117' font-size='9' fill='#4d565b'>第 1 年：112 口先例 → 第 3 年：<tspan font-weight='600' fill='#2f7d6b'>168 口（含 34 口失败）</tspan></text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算「做对了」",
+        "html": "<p><b>预测与实际的一致性</b>：三年累计增油的预测值与实际值之比，取对数后统计中位数。超过 1.5 倍差距的井必须单独复盘——通常能挖出一条之前没写进模型的机制。</p><p><b>回收期命中率</b>：实际回本月数与预测回收期相差不超过 3 个月的比例。它比「NPV 预测准不准」更能反映该摘要钱的相关部分有没有算对。</p><p><b>正确否掉的比例</b>：模型建议「不值得改」的井中，事后证明确实投产无望（或被推迟）的比例。这项指标容易被忽略，但它是模型有没有在替企业省钱的唯一证据。</p><p><b>成功率校准</b>：把预测成功率分成十档，看实际成功率是否大致落在同一位置（校准曲线）。分数漂亮但校准偏离，说明模型过于自信。</p>"
+      },
+      "fails": [
+        { "name": "只把成功案例写进先例库", "why": "先验永久偏乐观，当年赔钱的那类投入会在不同井上一遍遍重演。" },
+        { "name": "成功率只给点估计", "why": "决策者看不到「三成可能血本无归」，会把一个期望值不错的方案当成稳妥方案。" },
+        { "name": "把投资上限与工期当后置条件", "why": "NPV 最高的方案常常超预算或错过检修窗口，最后被整份推翻，前面算的全废。" },
+        { "name": "按累计增油排序而不是按净现值", "why": "会推荐「多投入一点、多产一点」的组合，账面产量更好看，实际每万元收益更低。" }
+      ]
+    },
+
+    "demo": {
+      "mode": "auto",
+      "html": "demo/index.html",
+      "js": "demo/demo.js",
+      "label": "可运行示范",
+      "intro": "拖动套管完好度、剩余储量丰度、近井污染、油价与投资上限：看硬约束如何删掉装不进去的措施、历史先例如何修正每条措施的成功率，以及推荐组合、三年累计增油与投资回收期怎么变。",
+      "height": 1240
+    }
+  }
+}

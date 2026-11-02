@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：生产动态反演与方案复盘</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>单井完井后生产动态反演与方案复盘迭代</h1>
+  <p class="lead">一口井投产 18 个月后产量不到设计的六成，责任很难判断：是完井方式选错了，还是射孔没打开，还是后期见水。
+  这里做两件事：<b>反演</b>——把「表皮、打开程度、近井污染、水窜」四个中间变量当成可调输入，看它们的组合能否复现眼前的产量曲线；
+  <b>归因</b>——逐个把它们放回理想值，用<b>留一法</b>算每个因素对产量缺口贡献了多少。最后把这套组合拿去知识图谱里比一比历史上哪几口井最像，
+  直接给出别人当时的复盘结论与下一口井的改动建议。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>正演—反演（参数辨识）</li><li>留一法归因分解</li><li>案例检索</li></ul></div><div><b>为什么起作用</b><ul><li>产量缺口由多个中间变量共同造成，必须同时反演才能对上曲线</li><li>留一法逐项去掉变量看缺口怎么变，责任才能分摊到具体环节</li></ul></div><div><b>在示范里怎么看</b><ul><li>调表皮与孔眼打开程度，看归因条重新分配</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>反演表皮系数 <output id="out-s">6.0</output></label>
+    <input type="range" id="skin" min="0" max="20" step="0.5" value="4">
+  </div>
+  <div class="ctl">
+    <label>孔眼打开程度 <output id="out-o">0.70</output></label>
+    <input type="range" id="open" min="0.35" max="1" step="0.01" value="0.82">
+  </div>
+  <div class="ctl">
+    <label>近井污染程度 <output id="out-p">0.30</output></label>
+    <input type="range" id="poll" min="0" max="1" step="0.02" value="0.2">
+  </div>
+  <div class="ctl">
+    <label>水窜强度 <output id="out-w">0.35</output></label>
+    <input type="range" id="water" min="0" max="1" step="0.02" value="0.22">
+  </div>
+  <div class="ctl">
+    <label>对比月数 <output id="out-m">18 个月</output></label>
+    <input type="range" id="months" min="6" max="36" step="1" value="18">
+  </div>
+
+  <svg id="prod" viewBox="0 0 720 210" role="img" aria-label="设计与实际的产量、含水曲线对比"></svg>
+  <svg id="attr" viewBox="0 0 720 195" role="img" aria-label="四个因素对产量缺口的贡献分解"></svg>
+  <svg id="sim" viewBox="0 0 720 200" role="img" aria-label="图谱检索到的相似历史井与复盘结论"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">累计产量差</span><b id="ro-gap">—</b></div>
+    <div class="ro"><span class="k">主控因素</span><b id="ro-main" style="font-family:inherit;font-size:12px">—</b></div>
+    <div class="ro"><span class="k">最像的历史井</span><b id="ro-well">—</b></div>
+    <div class="ro"><span class="k">下口井建议</span><b id="ro-next" style="font-family:inherit;font-size:12px">—</b></div>
+  </div>
+
+  <table class="tbl" id="tbl"></table>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

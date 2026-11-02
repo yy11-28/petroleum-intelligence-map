@@ -1,0 +1,149 @@
+{
+  "id": "cement-sheath-coupling",
+  "sceneId": "co37",
+  "title": "套管—水泥环—地层耦合失效风险分析：从最弱环节找起",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "井筒完整性不是套管单独的事：水泥环在地应力与温压循环下会先屈服或脱黏，载荷随即转移到套管上，最终表现为套管变形或挤毁。只看套管强度，解释不了很多事故——诱因常常在水泥环或地层一侧。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "结构 + 时序",
+          "desc": "井身结构、固井质量、地应力与温压循环史"
+        },
+        {
+          "label": "标注成本",
+          "value": "中",
+          "desc": "失效样本少，可用机理模型与相似井补"
+        },
+        {
+          "label": "可见收益",
+          "value": "高",
+          "desc": "指出最弱环节，加固有据可依"
+        },
+        {
+          "label": "难度",
+          "value": "高",
+          "desc": "多体接触 + 非线性，界面参数最难取准"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>现场把三者分开评价：套管查强度（钢级、壁厚、抗挤），固井查胶结（CBL 评级），地层查蠕变（盐膏层、塑性泥岩）。三份报告并列，各说各的。</p><p>问题在于<b>载荷传递没人算</b>：水泥环一旦屈服或脱黏，原本由它承担的一部分地应力就转移到套管上，套管实际受力可能远超按均匀外挤算出的值；反过来，水泥环完好时套管余量又比报告显示的宽。等到套管变形才发现，诱因其实在水泥环或地层一侧，而此时已经无法回头验证。</p><svg viewBox='0 0 660 150' role='img' aria-label='分开评价 vs 耦合分析：载荷在三者之间传递' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='150' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>同一口井：分开评价只看各自的强度，耦合分析看的是载荷怎么在三者之间传递</text><text x='40' y='42' font-size='10' fill='#3d4a48'>分开评价（现状）</text><rect x='40' y='50' width='270' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='56' y='68' font-size='9' fill='#4d565b'>套管：抗挤强度 68 MPa → 合格</text><text x='56' y='84' font-size='9' fill='#4d565b'>水泥环：CBL 优 → 合格</text><text x='56' y='100' font-size='9' fill='#4d565b'>地层：蠕变速率中等 → 可接受</text><text x='56' y='116' font-size='9' fill='#2f7d6b'>三项各自合格 → 结论：安全</text><text x='340' y='42' font-size='10' fill='#3d4a48'>耦合分析（本方法）</text><rect x='340' y='50' width='300' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='356' y='68' font-size='9' fill='#4d565b'>水泥环屈服 → 载荷转移</text><text x='356' y='84' font-size='9' fill='#c9613f'>套管实际受力 82 MPa > 68 MPa</text><text x='356' y='100' font-size='9' fill='#c9613f'>最弱环节：水泥环（界面脱黏先发生）</text><text x='356' y='116' font-size='9' fill='#2f7d6b'>结论：需加固水泥环，而非加厚套管</text><text x='12' y='142' font-size='8.5' fill='#79828a'>差别不在算得细，而在把「三个合格」换成「找出最先失效的那个」</text></svg><div class='viz-cap'>图：分开评价 vs 耦合分析：载荷在三者之间传递</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>建立套管—水泥环—地层的耦合力学代理模型，模拟温压循环下的应力重分布，识别界面脱黏、水泥环屈服与套管挤毁三类失效模式的临界工况，并按最弱环节给出风险排序。</p><p>输出不是一句「有风险」，而是三件事：<b>最先失效的是哪一环</b>（界面 / 水泥环本体 / 套管）、<b>在什么工况下到临界</b>（多少轮次、多大压差）、<b>加固哪一项收益最大</b>。这与「分项各自校核」的差别在于：加固建议指向的是最弱环节，而不是最贵的那一环。</p><svg viewBox='0 0 660 130' role='img' aria-label='三类失效模式与耦合传递路径' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>地应力 → 地层 → 水泥环 → 套管：载荷沿这条链传递，最弱的一环先失效</text><rect x='20' y='36' width='120' height='50' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='36' y='56' font-size='10' fill='#3d4a48'>① 地层</text><text x='36' y='72' font-size='8.5' fill='#79828a'>地应力 / 蠕变</text><line x1='142' y1='60' x2='174' y2='60' stroke='#8a8f80' stroke-width='1.4'/><polygon points='174,60 168,56.5 168,63.5' fill='#8a8f80'/><rect x='176' y='36' width='130' height='50' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='192' y='56' font-size='10' fill='#3d4a48'>② 水泥环</text><text x='192' y='72' font-size='8.5' fill='#c9613f'>屈服 / 界面脱黏</text><line x1='308' y1='60' x2='340' y2='60' stroke='#8a8f80' stroke-width='1.4'/><polygon points='340,60 334,56.5 334,63.5' fill='#8a8f80'/><rect x='342' y='36' width='120' height='50' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='358' y='56' font-size='10' fill='#3d4a48'>③ 套管</text><text x='358' y='72' font-size='8.5' fill='#79828a'>变形 / 挤毁</text><text x='20' y='102' font-size='9.5' fill='#4d565b'>失效顺序：界面脱黏（最早）→ 水泥环屈服 → 套管承载骤增 → 挤毁</text><text x='20' y='118' font-size='8.5' fill='#c9613f'>只看套管：等它变形才发现，此时已无法回头验证诱因在哪一环</text><rect x='490' y='30' width='158' height='76' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='502' y='48' font-size='9' fill='#4d565b'>加固收益排序</text><text x='502' y='64' font-size='8.5' fill='#2f7d6b'>① 水泥环韧性</text><text x='502' y='80' font-size='8.5' fill='#4d565b'>② 界面胶结质量</text><text x='502' y='96' font-size='8.5' fill='#79828a'>③ 套管钢级（最贵）</text><text x='12' y='134' font-size='8.5' fill='#79828a'>排序的意义：把钱花在最弱环节上，而不是习惯性加厚套管</text></svg><div class='viz-cap'>图：三类失效模式与耦合传递路径</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>井身结构与固井资料</b>（套管程序、水泥浆性能、CBL/VDL 分段解释、顶替效率）；<b>地应力与地层参数</b>（地应力方向与量值、弹性模量、蠕变参数、盐膏层与塑性层位置）；<b>温压循环史</b>（试压、压裂、注采、吞吐的循环次数与幅值）。</p><p>固井质量分段解释齐全的井优先；界面参数（胶结强度、摩擦系数）最难取准，建议用同区块反演值并给出区间。</p><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>CBL 分段解释到米位；地应力取实测或同区块反演；温压循环按次数与幅值记录（不只是极值）</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>水泥环屈服后载荷重分布必须重算，不得沿用初始分配；界面参数按区间取值并做敏感性</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>给出三类失效的临界工况（第几轮 / 多大压差）+ 最弱环节 + 加固项收益排序</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度偏高：多体接触与材料非线性让求解成本高，而界面参数（胶结强度、摩擦系数）现场几乎取不到准值；结论还要能回答「加固哪一项收益最大」，需要在不确定条件下排序。</p><p><b>难在哪</b>：界面参数的不确定性可达数倍，而它又直接决定载荷转移比例——不能只给一个结论，必须给出「参数在什么范围内结论会变」。参考方向为耦合力学代理模型、界面本构反演与风险排序。</p><p><b>与传统做法的本质差别</b>：过去是「三项各自校核、各自合格」，现在是「算载荷在三者间怎么传、谁先到临界」——差别不在报告变厚，而在能指出加固哪一项最划算。</p>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "耦合失效风险分析怎么做",
+      "lead": [
+        "核心是把「三项分开校核」换成「算载荷在三者之间怎么传递，找出最先到临界的那一环」。",
+        "下面的示范是第 3—4 步：调整循环压差、水泥环弹性模量与界面胶结强度，看三类失效的临界工况怎么变。"
+      ],
+      "stats": [
+        [
+          "循环次数",
+          "10—60 次"
+        ],
+        [
+          "失效模式",
+          "3 类"
+        ],
+        [
+          "界面参数",
+          "区间取值"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "结构与固井资料整理",
+          "role": "数据",
+          "do": "整理套管程序、水泥浆性能与 CBL 分段解释，标出胶结差、窜槽与顶替不足的井段。",
+          "effect": "得到沿深度的结构与胶结质量剖面，薄弱段定位到米位。",
+          "trap": "CBL 只给评级不给米位就无法定位最弱段；胶结「合格」不等于界面强度足够，两者不是一回事。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='结构与固井质量沿深度剖面：薄弱段定位到米位' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>先有沿深度的质量剖面，才有后面的耦合计算：胶结差在哪一段，决定了载荷从哪里开始转移</text><line x1='60' y1='32' x2='60' y2='108' stroke='#242b2e' stroke-width='1'/><text x='40' y='38' font-size='8' fill='#4d565b'>0</text><text x='34' y='70' font-size='8' fill='#4d565b'>1500</text><text x='34' y='104' font-size='8' fill='#4d565b'>3000</text><rect x='70' y='34' width='46' height='18' fill='#7fae9b'/><text x='122' y='50' font-size='8' fill='#2f5a4d'>优</text><rect x='70' y='56' width='46' height='16' fill='#d9c27a'/><text x='122' y='70' font-size='8' fill='#8a6a3a'>合格</text><rect x='70' y='76' width='46' height='20' fill='#c9613f' opacity='0.85'/><text x='122' y='92' font-size='8' fill='#8a3d20'>差 · 1240—1310 m</text><rect x='70' y='100' width='46' height='14' fill='#7fae9b'/><line x1='140' y1='34' x2='140' y2='114' stroke='#e2ded0' stroke-width='1'/><text x='160' y='44' font-size='9' fill='#4d565b'>套管程序：表层 339.7 / 技术 244.5 / 生产 139.7</text><text x='160' y='62' font-size='9' fill='#4d565b'>水泥返高 820 m，环空未封固段 820—0 m</text><text x='160' y='80' font-size='9' fill='#c9613f'>薄弱段：1240—1310 m（顶替不足 + 窜槽）</text><text x='160' y='98' font-size='9' fill='#8a6a3a'>盐膏层 2180—2400 m（蠕变载荷源）</text><rect x='470' y='34' width='178' height='64' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='482' y='52' font-size='8.5' fill='#c9613f'>胶结「合格」≠ 界面强度够</text><text x='482' y='68' font-size='8.5' fill='#4d565b'>两者不是一回事：</text><text x='482' y='84' font-size='8.5' fill='#c9613f'>前者是声幅，后者是力学参数</text><text x='12' y='124' font-size='8.5' fill='#79828a'>剖面是耦合模型的几何输入：薄弱段定位错了，后面算得再细也没用</text></svg><div class='viz-cap'>图：结构与固井质量沿深度剖面：薄弱段定位到米位</div>"
+        },
+        {
+          "name": "地应力与地层参数",
+          "role": "数据",
+          "do": "整理地应力量值与方向、地层弹性模量与蠕变参数，标出盐膏层与塑性泥岩的位置与蠕变速率。",
+          "effect": "得到作用在水泥环外边界的载荷条件与随时间增长的蠕变载荷。",
+          "trap": "地应力靠区块经验值会带来方向性误差，套管变形常呈椭圆而非均匀，方向不能省。",
+          "viz": "<svg viewBox='0 0 660 146' role='img' aria-label='地应力与蠕变载荷：方向与随时间增长的部分' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='146' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>外边界载荷不是均匀外挤：有方向性（σH > σh），有随时间增长的部分（蠕变）</text><circle cx='140' cy='66' r='46' fill='none' stroke='#8a8f80' stroke-width='1.5'/><circle cx='140' cy='66' r='30' fill='none' stroke='#41699b' stroke-width='1.5'/><circle cx='140' cy='66' r='14' fill='#e8e4d6'/><text x='96' y='30' font-size='8.5' fill='#41699b'>σH 最大水平主应力</text><text x='96' y='118' font-size='8.5' fill='#41699b'>σh 最小水平主应力</text><line x1='60' y1='66' x2='90' y2='66' stroke='#41699b' stroke-width='1.6'/><line x1='190' y1='66' x2='224' y2='66' stroke='#41699b' stroke-width='1.2'/><text x='230' y='62' font-size='9' fill='#4d565b'>σH / σh = 1.35（非均匀）</text><line x1='300' y1='40' x2='300' y2='104' stroke='#e2ded0' stroke-width='1'/><text x='330' y='44' font-size='9.5' fill='#4d565b'>蠕变载荷随时间增长</text><line x1='330' y1='96' x2='620' y2='96' stroke='#242b2e' stroke-width='1'/><line x1='330' y1='96' x2='330' y2='52' stroke='#242b2e' stroke-width='1'/><polyline points='336,90 390,84 450,76 510,70 570,66 616,64' fill='none' stroke='#c9613f' stroke-width='1.8'/><text x='470' y='60' font-size='8.5' fill='#c9613f'>盐膏层蠕变</text><text x='340' y='108' font-size='8.5' fill='#79828a'>时间 →</text><text x='300' y='56' font-size='8.5' fill='#79828a'>载荷 ↑</text><text x='440' y='118' font-size='8.5' fill='#c9613f'>只按均匀外挤算，会漏掉椭圆变形与蠕变这两类真实失效形貌</text><text x='12' y='138' font-size='8.5' fill='#79828a'>地应力方向 + 蠕变时间效应：这两项决定失效形貌，省掉任何一项都解释不了现场看到的变形</text></svg><div class='viz-cap'>图：地应力与蠕变载荷：方向与随时间增长的部分</div>"
+        },
+        {
+          "name": "耦合模型求解",
+          "role": "算法",
+          "do": "用耦合力学代理模型模拟温压循环下的应力重分布，输出套管、水泥环与界面的应力随循环次数的变化。",
+          "effect": "每一环的应力随循环次数演化可查，载荷转移发生在第几次循环可定位。",
+          "trap": "水泥环屈服后必须重算载荷分配，沿用初始分配会系统性低估套管受力。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='耦合求解：应力随循环次数重分布' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>关键不是某一时刻的应力，而是循环过程中载荷怎么从水泥环转移到套管</text><line x1='60' y1='92' x2='380' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>循环次数 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>应力 ↑</text><polyline points='70,80 130,74 190,66 250,60 310,56 370,54' fill='none' stroke='#2f7d6b' stroke-width='1.8'/><text x='280' y='50' font-size='8.5' fill='#2f7d6b'>水泥环（先增后降 = 已屈服）</text><polyline points='70,86 130,80 190,70 250,54 310,44 370,38' fill='none' stroke='#c9613f' stroke-width='2'/><text x='260' y='34' font-size='8.5' fill='#c9613f'>套管（接管转移载荷）</text><circle cx='250' cy='60' r='7' fill='none' stroke='#41699b' stroke-width='1.5'/><text x='258' y='72' font-size='8.5' fill='#41699b'>第 24 次：载荷开始转移</text><line x1='60' y1='44' x2='380' y2='44' stroke='#41699b' stroke-width='1.2' stroke-dasharray='5 3'/><text x='300' y='40' font-size='8.5' fill='#41699b'>套管抗挤 68 MPa</text><rect x='410' y='30' width='238' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='422' y='48' font-size='8.5' fill='#c9613f'>水泥环屈服后必须重算分配</text><text x='422' y='64' font-size='8.5' fill='#c9613f'>沿用初始分配 → 低估套管受力</text><text x='422' y='84' font-size='8.5' fill='#4d565b'>代理模型替代全有限元：秒级出结果</text><text x='12' y='124' font-size='8.5' fill='#79828a'>屈服不是终点而是转折点：从这里开始，套管接管了本不属于它的载荷</text></svg><div class='viz-cap'>图：耦合求解：应力随循环次数重分布</div>"
+        },
+        {
+          "name": "临界工况与风险排序",
+          "role": "算法",
+          "do": "按界面脱黏、水泥环屈服、套管挤毁三类判据给出各自的临界工况，并按最弱环节排序风险。",
+          "effect": "输出「第 24 次循环、界面先脱黏、1240—1310 m」这类可执行结论与风险排序。",
+          "trap": "界面参数不确定可达数倍，排序结果要给出「参数在什么范围内结论会变」，不能给唯一排序。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='三类失效的临界工况与风险排序' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>排序要带条件：界面参数不确定，排序在参数区间内是否会翻转必须说明</text><line x1='60' y1='92' x2='380' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>循环次数 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>风险 ↑</text><rect x='70' y='60' width='90' height='10' fill='#c9613f' opacity='0.85'/><text x='168' y='68' font-size='8.5' fill='#8a3d20'>① 界面脱黏（第 18 次）</text><rect x='70' y='74' width='130' height='10' fill='#d9c27a' opacity='0.85'/><text x='208' y='82' font-size='8.5' fill='#8a6a3a'>② 水泥环屈服（第 24 次）</text><rect x='70' y='88' width='220' height='10' fill='#41699b' opacity='0.5'/><text x='298' y='96' font-size='8.5' fill='#41699b'>③ 套管挤毁（第 41 次）</text><text x='70' y='52' font-size='9' fill='#c9613f'>最先失效：界面（加固收益最大）</text><rect x='410' y='30' width='238' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='422' y='48' font-size='9' fill='#4d565b'>加固排序（收益 / 成本）</text><text x='422' y='64' font-size='8.5' fill='#2f7d6b'>① 界面胶结质量 ★★★</text><text x='422' y='80' font-size='8.5' fill='#4d565b'>② 水泥环韧性 ★★</text><text x='422' y='96' font-size='8.5' fill='#79828a'>③ 套管钢级 ★（最贵）</text><text x='12' y='124' font-size='8.5' fill='#79828a'>排序的价值：指出最弱环节，避免习惯性加厚套管却没解决诱因</text></svg><div class='viz-cap'>图：三类失效的临界工况与风险排序</div>"
+        },
+        {
+          "name": "加固方案与复核",
+          "role": "人工",
+          "do": "工程师按排序选择加固措施（水泥浆体系、顶替工艺、套管钢级），模型给出加固后的临界工况变化。",
+          "effect": "每项措施能换回多少次循环余量可量化，方案比选有据可依。",
+          "trap": "只加厚套管不解决界面问题，临界工况改善有限且成本最高，必须先看最弱环节。",
+          "viz": "<svg viewBox='0 0 660 140' role='img' aria-label='加固方案比选：每项措施换回多少循环余量' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='140' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>比选口径统一：同样花一笔钱，加固哪一项能把临界循环次数推后最多</text><line x1='60' y1='92' x2='380' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>措施 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>临界循环次数 ↑</text><rect x='90' y='60' width='60' height='32' fill='#c3d2e2'/><text x='96' y='56' font-size='8.5' fill='#4d565b'>基准 18</text><rect x='170' y='40' width='60' height='52' fill='#a9c9ba'/><text x='176' y='36' font-size='8.5' fill='#2f5a4d'>41</text><text x='166' y='104' font-size='8.5' fill='#4d565b'>改善界面</text><rect x='250' y='50' width='60' height='42' fill='#7fae9b'/><text x='256' y='46' font-size='8.5' fill='#2f5a4d'>32</text><text x='246' y='104' font-size='8.5' fill='#4d565b'>水泥环韧性</text><rect x='330' y='68' width='60' height='24' fill='#d9c27a'/><text x='336' y='64' font-size='8.5' fill='#8a6a3a'>23</text><text x='322' y='104' font-size='8.5' fill='#4d565b'>加厚套管</text><text x='90' y='118' font-size='8.5' fill='#c9613f'>成本由低到高：界面 < 韧性 < 加厚；收益排序正好相反</text><rect x='410' y='30' width='238' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='422' y='48' font-size='8.5' fill='#8a6a3a'>只加厚套管：+5 次循环</text><text x='422' y='64' font-size='8.5' fill='#2f7d6b'>改善界面：+23 次循环</text><text x='422' y='84' font-size='8.5' fill='#2f7d6b'>先加固最弱环节再谈钢级</text><text x='12' y='132' font-size='8.5' fill='#79828a'>模型给量化对比，人按成本与可实施性定案：可干预的措施才有讨论价值</text></svg><div class='viz-cap'>图：加固方案比选：每项措施换回多少循环余量</div>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>失效形貌吻合</b>：预测的失效模式与位置，与现场观察到的变形形貌（椭圆方向、深度）一致。</p><p><b>临界工况命中</b>：预测的临界循环次数与实际出现异常的轮次偏差 ≤ 20%。</p><p><b>排序稳健</b>：界面参数在合理区间内变化时，最弱环节的排序不翻转；若会翻转必须明确标注。</p>"
+      },
+      "fails": [
+        {
+          "name": "三项分开校核",
+          "why": "套管、固井、地层各自合格，但载荷传递没人算，实际受力超预期。"
+        },
+        {
+          "name": "沿用初始载荷分配",
+          "why": "水泥环屈服后不重算，套管受力被系统性低估。"
+        },
+        {
+          "name": "界面参数取定值",
+          "why": "胶结强度取单一值，排序结论在参数区间内会翻转却未提示。"
+        },
+        {
+          "name": "习惯性加厚套管",
+          "why": "不解决界面与水泥环问题，成本高而临界工况改善有限。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 700,
+      "intro": "拖动循环压差、水泥环弹性模量与界面胶结强度，看三类失效的临界循环次数怎么变——注意最弱环节会不会换位。",
+      "html": "demo/index.html"
+    }
+  }
+}

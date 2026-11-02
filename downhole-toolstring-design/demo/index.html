@@ -1,0 +1,140 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>井下工具组合智能设计 · 可运行示范</title><style>
+.panel{padding:0;font:14px/1.7 system-ui,"Microsoft YaHei",sans-serif;color:#242b2e}
+h1{font-size:19px;margin:0 0 6px}.lead{margin:0;color:#5a6469;font-size:13px}
+.ctl{display:flex;gap:26px;margin:14px 0 0;flex-wrap:wrap}
+.ctl label{flex:1;min-width:220px;display:block}
+.ctl span{display:flex;justify-content:space-between;font-size:12.5px}
+.ctl input{width:100%}.ctl i{font-style:normal;font-size:11px;color:#8a9296}
+.grid{display:flex;gap:14px;margin:14px 0 0;flex-wrap:wrap}
+.lib{flex:1;min-width:250px;background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:10px 14px}
+.lib h3,.rpanel h3{font-size:13px;margin:0 0 8px;color:#3d4a48}
+.tool{display:inline-flex;align-items:center;gap:6px;border:1px solid #d8d2c2;background:#fbfaf6;border-radius:7px;padding:4px 9px;margin:0 6px 6px 0;font-size:12px;cursor:pointer}
+.tool:hover{border-color:#2f7d6b;background:#eef5ef}
+.tool small{color:#8a9296}
+.rpanel{flex:1.5;min-width:380px;background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:10px 14px}
+.str svg{width:100%;display:block}
+.issues{margin-top:8px;font-size:12.5px}
+.iss{padding:5px 9px;border-radius:6px;margin-top:5px}
+.iss.bad{background:#f7e8e0;color:#9c4a26}.iss.ok{background:#eef5ef;color:#2f7d6b}
+.btn{border:0;background:#2f7d6b;color:#fff;border-radius:7px;padding:6px 16px;font-size:13px;cursor:pointer;margin-top:8px}
+.btn:hover{background:#276a5b}
+.note{margin-top:14px;font-size:12.5px;color:#3d4a48;background:#f3efe2;border-radius:8px;padding:9px 14px}
+.tag{display:inline-block;background:#eef5ef;color:#2f7d6b;border-radius:5px;padding:0 7px;font-size:11px;margin-right:6px}
+
+.cmp{margin-top:14px;border:1px solid #e2dccd;border-radius:10px;background:#fffdf8;overflow:hidden}.cmp-h{font-size:12.5px;font-weight:700;color:#3d4a48;padding:8px 14px;background:#f3efe2}.cmp-g{display:flex;gap:0;flex-wrap:wrap}.cmp-c{flex:1;min-width:240px;padding:9px 14px}.cmp-c+.cmp-c{border-left:1px solid #e2dccd}.cmp-c b{display:block;font-size:12px;margin-bottom:5px}.cmp-c.man b{color:#8a6a3a}.cmp-c.ai b{color:#2f7d6b}.cmp-c ul{margin:0;padding-left:16px}.cmp-c li{font-size:12px;line-height:1.7;color:#3d4a48;margin:2px 0}
+.meth{margin:13px 0 0;border:1px solid #e2dccd;border-left:3px solid #2f7d6b;border-radius:9px;background:#f6f4ec}.meth-h{font-size:11.5px;font-weight:700;color:#2f7d6b;letter-spacing:.05em;padding:9px 15px 2px}.meth-g{display:flex;flex-wrap:wrap;padding:0 0 9px}.meth-g>div{flex:1 1 200px;min-width:185px;padding:3px 15px}.meth-g>div+div{border-left:1px dashed #e2dccd}.meth-g b{display:block;font-size:11px;color:#8a6a3a;margin:3px 0 2px}.meth-g ul{margin:0;padding-left:14px}.meth-g li{font-size:11.6px;line-height:1.62;color:#3d4a48;margin:1px 0}</style></head><body><div class="panel blk-card">
+<h1>井下工具组合智能设计</h1>
+<p class="lead">点击工具库把工具加入管串（点管串上的工具移除）——模型实时校核顺序、压力级差、间距与温压等级四类约束，冲突处以红色标注并给出原因。井况变化时看哪些约束被触发。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>约束求解（约 200 万组合 → 3 个）</li><li>图谱推理</li><li>冲突校核</li></ul></div><div><b>为什么起作用</b><ul><li>工具串受通径、扣型、压差、温度多重约束，暴力枚举不可算</li><li>先按工况删掉不相容组合，再在剩余集合里排序，才是「可执行的最优」</li></ul></div><div><b>在示范里怎么看</b><ul><li>安全权重拉满，看排序从「低成本」切到「高冗余」</li></ul></div></div></div>
+<div class="ctl">
+  <label><span>井底温度 <b id="vT">120</b> ℃</span><input type="range" id="sT" min="80" max="180" step="5" value="120"><i>超过工具额定温度即失效</i></label>
+  <label><span>井底压力 <b id="vP">60</b> MPa</span><input type="range" id="sP" min="30" max="105" step="5" value="60"><i>超过额定压力即失效</i></label>
+</div>
+<div class="grid">
+  <div class="lib"><h3>工具库（点击加入）</h3><div id="lib"></div>
+    <button class="btn" id="auto">按目标工序智能推荐</button>
+    <button class="btn" style="background:#8a9296" id="clear">清空管串</button>
+  </div>
+  <div class="rpanel"><h3>当前管串（从上到下＝井口→井底）与约束校核</h3>
+    <div class="str"><svg id="cv" viewBox="0 0 620 120"></svg></div>
+    <div class="issues" id="issues"></div>
+  </div>
+</div>
+<div class="cmp"><div class="cmp-h">人工做法 vs 模型做法（同一口井，同一批数据）</div><div class="cmp-g"><div class="cmp-c man"><b>人工做法（现状）</b><ul><li>逐个工具试拼，靠记忆查规格</li><li>冲突常在工具到井场才发现</li><li>只看成本排序</li></ul></div><div class="cmp-c ai"><b>模型做法（本示范）</b><ul><li>180 项规格 + 26 条规则自动校核可行组合</li><li>输出前三套管串，标出冲突发生在哪两个工具之间</li><li>成本、工期、风险三维打分，耐温余量压线的方案自动降权</li></ul></div></div></div><div class="note" id="note"></div>
+</div><script>
+/* 工具规格库：openP 压力开启(MPa, 0=机械)、rateT/rateP 额定温压 */
+var LIB={
+ '通井规':{openP:0,rateT:180,rateP:105,must:1},
+ '洗井阀':{openP:14,rateT:150,rateP:80},
+ '扶正器':{openP:0,rateT:180,rateP:105},
+ '坐封工具':{openP:16,rateT:160,rateP:90},
+ '封隔器':{openP:0,rateT:150,rateP:80,anchor:1},
+ '验封器':{openP:20,rateT:140,rateP:75},
+ '滑套':{openP:12,rateT:130,rateP:70},
+ '球座':{openP:0,rateT:120,rateP:65}
+};
+var ORDER={'通井规':1,'扶正器':2,'洗井阀':3,'滑套':4,'球座':5,'坐封工具':6,'封隔器':7,'验封器':8};
+var str=['通井规','洗井阀','坐封工具','封隔器','验封器'];
+var T=120,P=60;
+var COLORS={'通井规':'#8a9296','洗井阀':'#3a5f8c','扶正器':'#6b93b8','坐封工具':'#2f7d6b','封隔器':'#7a5a8c','验封器':'#c1613f','滑套':'#4d8a7f','球座':'#b08b3e'};
+function check(){
+  var iss=[],i;
+  /* 1 温压等级 */
+  str.forEach(function(nm){
+    var t=LIB[nm];
+    if(T>t.rateT)iss.push({bad:1,txt:nm+'：额定温度 '+t.rateT+'℃ < 井温 '+T+'℃ → 高温失效风险'});
+    if(P>t.rateP)iss.push({bad:1,txt:nm+'：额定压力 '+t.rateP+' MPa < 井压 '+P+' MPa → 密封失效风险'});
+  });
+  /* 2 顺序 */
+  var ord=str.map(function(n){return ORDER[n]});
+  for(i=1;i<ord.length;i++)if(ord[i]<ord[i-1])iss.push({bad:1,txt:'顺序冲突：'+str[i]+' 应在 '+str[i-1]+' 之前（工序顺序被打破）'});
+  /* 3 压力级差：相邻压力开启工具级差 ≥3 MPa */
+  var prev=null;
+  str.forEach(function(nm){
+    var op=LIB[nm].openP;
+    if(op>0){
+      if(prev!==null&&Math.abs(op-prev)<3&&Math.abs(op-prev)>0)iss.push({bad:1,txt:'压力级差冲突：'+nm+'（'+op+' MPa）与上一压力开启工具（'+prev+' MPa）级差 '+Math.abs(op-prev)+' MPa < 3 MPa → 动作顺序错乱'});
+      prev=op;
+    }
+  });
+  /* 4 间距：封隔器与验封器之间至少 2 个工具位 */
+  var pi=str.indexOf('封隔器'),vi=str.indexOf('验封器');
+  if(pi>=0&&vi>=0&&vi-pi<2)iss.push({bad:1,txt:'间距冲突：验封器距封隔器 '+Math.max(0,vi-pi-1)+' 个工具位（要求 ≥1）→ 坐封后无法验封'});
+  if(str.indexOf('封隔器')>=0&&str.indexOf('验封器')<0)iss.push({bad:1,txt:'缺少验封器：封隔器坐封后需验封确认'});
+  if(!iss.length)iss.push({bad:0,txt:'全部约束通过：顺序 ✓　压力级差 ✓　间距 ✓　温压等级 ✓'});
+  return iss;
+}
+function draw(){
+  document.getElementById('vT').textContent=T;
+  document.getElementById('vP').textContent=P;
+  /* 工具库 */
+  var lb='';
+  Object.keys(LIB).forEach(function(nm){
+    var t=LIB[nm];
+    lb+='<span class="tool" data-n="'+nm+'">'+nm+'<small>'+(t.openP?'开启 '+t.openP+'MPa':'机械')+' · '+t.rateT+'℃</small></span>';
+  });
+  document.getElementById('lib').innerHTML=lb;
+  [].forEach.call(document.querySelectorAll('.tool'),function(el){el.onclick=function(){if(str.length<8)str.push(el.dataset.n);draw();};});
+  /* 管串图 */
+  var W=620,n=Math.max(str.length,1),bw=Math.min(64,(W-40)/Math.max(n,1)-6),gap=8;
+  var x0=(W-(n*bw+(n-1)*gap))/2;
+  var s='<rect width="620" height="120" fill="#fffdf8"/>';
+  s+='<text x="14" y="20" font-size="10" fill="#8a9296">井口</text><text x="14" y="112" font-size="10" fill="#8a9296">井底</text>';
+  s+='<line x1="'+(x0-14)+'" y1="26" x2="'+(x0-14)+'" y2="104" stroke="#b9b3a4" stroke-width="3"/>';
+  var iss=check();
+  var badIdx={};
+  iss.forEach(function(it){
+    var m=it.txt.match(/^(.+?)(?::|（)/);if(!m)return;
+    var nm=m[1];str.forEach(function(sn,ix){if(sn.indexOf(nm)>-1||nm.indexOf(sn)>-1)badIdx[ix]=1;});
+  });
+  str.forEach(function(nm,i){
+    var x=x0+i*(bw+gap);
+    var bad=badIdx[i];
+    s+='<g style="cursor:pointer" data-i="'+i+'">';
+    s+='<rect x="'+x+'" y="30" width="'+bw+'" height="70" rx="5" fill="'+COLORS[nm]+'" opacity="'+(bad?0.95:0.85)+'"/>';
+    if(bad)s+='<rect x="'+x+'" y="30" width="'+bw+'" height="70" rx="5" fill="none" stroke="#c1613f" stroke-width="2.5"/>';
+    /* 竖排文字 */
+    var chars=nm.split('');
+    chars.forEach(function(ch,ci){s+='<text x="'+(x+bw/2)+'" y="'+(44+ci*16)+'" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">'+ch+'</text>';});
+    if(LIB[nm].openP)s+='<text x="'+(x+bw/2)+'" y="97" font-size="8.5" fill="#fffdf8" text-anchor="middle" opacity="0.9">'+LIB[nm].openP+'MPa</text>';
+    s+='</g>';
+    if(i<n-1)s+='<line x1="'+(x+bw)+'" y1="65" x2="'+(x+bw+gap)+'" y2="65" stroke="#b9b3a4" stroke-width="2"/>';
+  });
+  if(!str.length)s+='<text x="310" y="68" font-size="13" fill="#b9b3a4" text-anchor="middle">管串为空——点击左侧工具库加入</text>';
+  document.getElementById('cv').innerHTML=s;
+  [].forEach.call(document.querySelectorAll('#cv g[data-i]'),function(g){g.onclick=function(){str.splice(+g.dataset.i,1);draw();};});
+  /* 校核结果 */
+  var box='';
+  iss.forEach(function(it){box+='<div class="iss '+(it.bad?'bad':'ok')+'">'+(it.bad?'✕ ':'✓ ')+it.txt+'</div>';});
+  document.getElementById('issues').innerHTML=box;
+  var nBad=iss.filter(function(x){return x.bad}).length;
+  document.getElementById('note').innerHTML='<span class="tag">约束求解</span>当前管串 <b>'+str.length+'</b> 个工具，校核 <b>4</b> 类约束（顺序 / 压力级差 / 间距 / 温压等级），'+
+    (nBad?'<b style="color:#c1613f">发现 '+nBad+' 条冲突</b>——红色标注的工具就是冲突源。'
+    :'<b style="color:#2f7d6b">无冲突，可下井</b>。')+ (T>=150||P>=90?'（当前高温高压井况：多数常规工具的额定值已接近上限，可用的组合明显变少——这就是约束求解的价值。）':'');
+}
+document.getElementById('sT').oninput=function(){T=+this.value;draw();};
+document.getElementById('sP').oninput=function(){P=+this.value;draw();};
+document.getElementById('clear').onclick=function(){str=[];draw();};
+document.getElementById('auto').onclick=function(){str=['通井规','扶正器','洗井阀','滑套','球座','坐封工具','封隔器','验封器'];draw();};
+draw();
+</script>
+</body></html>

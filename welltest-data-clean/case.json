@@ -1,0 +1,149 @@
+{
+  "id": "welltest-data-clean",
+  "sceneId": "co39",
+  "title": "完井测试异常数据智能清洗：分段上下文下的脏数据识别",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "试油与试井数据里混着仪器掉零、压力计漂移、传输丢包与人工记录错误，这些脏数据会直接改变解释出的渗透率与表皮。清洗目前基本靠人肉看图删点——同一次测试两个人清洗完，能解释出两套参数。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "时序",
+          "desc": "压力、温度、产量与工况标记的多通道时序"
+        },
+        {
+          "label": "标注成本",
+          "value": "低",
+          "desc": "脏数据类型可规则生成，异常样本易构造"
+        },
+        {
+          "label": "可见收益",
+          "value": "中",
+          "desc": "统一清洗口径，解释结论才可比"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "要区分真实响应与异常，删错代价高"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>做法是工程师逐段看曲线手动删点：把明显跳变的删掉，看着别扭的一段整段剔除，然后交给解释人员。删多删少凭手感，也不留记录。</p><p>问题有三个：<b>口径不统一</b>——同一次测试两人清洗能出两套参数，结论不可比；<b>删多了丢信息</b>——真实的边界响应与仪器异常在曲线上长得像，一刀切会把边界删掉；<b>删少了污染拟合</b>——漂移段主导拟合，解释出的渗透率与表皮系统性偏离。</p><svg viewBox='0 0 660 146' role='img' aria-label='清洗口径不统一：删多与删少都会改变解释结论' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='146' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>同一段数据三种清洗结果：删多丢掉真实边界，删少让漂移主导拟合</text><text x='50' y='44' font-size='10' fill='#3d4a48'>人工清洗（现状）</text><rect x='50' y='52' width='260' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><polyline points='64,110 100,106 130,102 160,96 190,92 220,66 250,64 280,62 310,60 290,58 300,56 340,54' fill='none' stroke='#c9613f' stroke-width='1.8'/><text x='64' y='122' font-size='8.5' fill='#4d565b'>跳变 / 漂移 / 掉零：靠手感删</text><text x='64' y='92' font-size='8.5' fill='#8a3d20'>A 工程师：删 42 点 → kh 偏差 +18%</text><text x='64' y='108' font-size='8.5' fill='#8a3d20'>B 工程师：删 15 点 → kh 偏差 −11%</text><text x='340' y='44' font-size='10' fill='#3d4a48'>上下文感知清洗（本方法）</text><rect x='340' y='52' width='290' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='356' y='70' font-size='9' fill='#4d565b'>先分工况段：流动 / 关井 / 取样 / 洗井</text><text x='356' y='86' font-size='9' fill='#4d565b'>再按段判异常：漂移、跳变、掉零、重复</text><text x='356' y='102' font-size='9' fill='#2f7d6b'>只删确属异常的点，保留关键段</text><text x='356' y='118' font-size='9' fill='#2f7d6b'>留下记录：删了哪些、为什么</text><text x='12' y='136' font-size='8.5' fill='#79828a'>差别不在删得快，而在删得可解释、可复现</text></svg><div class='viz-cap'>图：清洗口径不统一：删多与删少都会改变解释结论</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>按测试工况（流动、关井、取样、洗井）分段，然后用上下文感知的方法识别四类异常：压力计漂移、跳变、掉零与重复记录，只剔除确属异常的点并保留解释所需的关键段。</p><p>关键在于<b>先分段再判异常</b>——同一段内的变化率上限与通道关系是该工况特有的，跨段用统一阈值必然误判；以及<b>留下清洗记录</b>，删了哪些点、依据哪条规则，让下一次解释可复现、可复核。</p><svg viewBox='0 0 660 158' role='img' aria-label='先分段再判异常：四类脏数据在段内识别' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='158' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>分段是前提：不同工况的正常变化率差一个量级，统一阈值必然误判</text><text x='60' y='40' font-size='10' fill='#3d4a48'>工况分段</text><rect x='60' y='48' width='60' height='16' fill='#c3d2e2'/><text x='66' y='62' font-size='8' fill='#2c3d57'>流动</text><rect x='122' y='48' width='60' height='16' fill='#a9c9ba'/><text x='128' y='62' font-size='8' fill='#2f5a4d'>关井</text><rect x='184' y='48' width='60' height='16' fill='#d9c27a'/><text x='190' y='62' font-size='8' fill='#6d5620'>取样</text><rect x='246' y='48' width='60' height='16' fill='#c3d2e2'/><text x='252' y='62' font-size='8' fill='#2c3d57'>流动</text><rect x='308' y='48' width='60' height='16' fill='#a9c9ba'/><text x='314' y='62' font-size='8' fill='#2f5a4d'>关井</text><text x='60' y='90' font-size='10' fill='#3d4a48'>四类异常在段内判定</text><rect x='60' y='98' width='140' height='24' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='72' y='114' font-size='8.5' fill='#4d565b'>① 漂移：缓慢单向偏移</text><rect x='210' y='98' width='140' height='24' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='222' y='114' font-size='8.5' fill='#4d565b'>② 跳变：单点阶跃</text><rect x='360' y='98' width='140' height='24' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='372' y='114' font-size='8.5' fill='#4d565b'>③ 掉零：归零后恢复</text><rect x='510' y='98' width='140' height='24' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='522' y='114' font-size='8.5' fill='#4d565b'>④ 重复：记录重复帧</text><text x='60' y='138' font-size='8.5' fill='#c9613f'>只删确属异常的点：边界响应与漂移长得像，判据必须带上下文而不是阈值</text><text x='12' y='152' font-size='8.5' fill='#79828a'>清洗记录随数据一起归档：删了哪些点、依据哪条规则，下次可复现</text></svg><div class='viz-cap'>图：先分段再判异常：四类脏数据在段内识别</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>测试时序数据</b>（压力、温度、产量，含采样率与量程）；<b>工况记录</b>（开关井时间、取样、洗井、换层）；<b>仪器信息</b>（压力计型号、精度、标定记录）；<b>人工清洗记录</b>（历史删点位置与原因，作为训练与校验样本）。</p><p>有历史人工清洗记录的井最有价值：既作训练样本，也用来核对模型口径是否与经验一致。</p><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>采样 1—10 s，压力精度 0.02% FS；工况记录到分钟；标定与漂移历史随井归档</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>先分段后判异常；边界响应段禁止整段删除；漂移只做标记与修正，不直接删</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>给出删除点位置 + 依据规则 + 清洗前后解释参数对比（kh、S 的变化幅度）</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度中等：四类异常的形态本身好识别，难在真实响应与异常的边界情形——关井早期的压力恢复与漂移、边界响应与跳变在局部都很像，删错的代价是解释结论系统性偏。</p><p><b>难在哪</b>：判据一旦偏严，就会把真实的边界响应删掉，而这个错误在解释阶段无法回头发现。参考方向为时序异常检测、上下文分段与规则可解释化。</p><p><b>与传统做法的本质差别</b>：过去是「看图删点、不留记录」，现在是「按段判异常、留清洗记录、可复现」——差别不在删得准，而在结论可比、过程可查。</p>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "测试异常数据清洗怎么做",
+      "lead": [
+        "核心是把「人肉看图删点」换成「先分工况段、再按段判异常、留清洗记录」。",
+        "下面的示范是第 2—4 步：切换测试类型、调整判据严格度，看删除点位置与解释参数怎么变。"
+      ],
+      "stats": [
+        [
+          "异常类型",
+          "4 类"
+        ],
+        [
+          "工况类别",
+          "4 类"
+        ],
+        [
+          "解释偏差",
+          "±18% → ±4%"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "数据接入与元信息整理",
+          "role": "数据",
+          "do": "导入压力温度产量时序，整理采样率、量程、压力计标定记录与工况时间节点。",
+          "effect": "得到带元信息的时序：每段数据的来源、精度与所处工况都可查。",
+          "trap": "采样率变化点不标注会被当成异常；换用不同压力计的段必须分开处理，否则精度差被当成漂移。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='数据接入：元信息与采样率变化点必须随数据走' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>元信息缺失会让正常变化被判为异常：采样率变了、压力计换了，都得知道</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><text x='46' y='40' font-size='8.5' fill='#79828a'>压力</text><polyline points='64,80 100,76 140,72 180,66 220,60 260,54 300,50 340,46 380,44' fill='none' stroke='#41699b' stroke-width='2'/><line x1='180' y1='30' x2='180' y2='96' stroke='#c9613f' stroke-width='1' stroke-dasharray='4 3'/><text x='188' y='40' font-size='8' fill='#c9613f'>采样率 5s → 1s</text><line x1='300' y1='30' x2='300' y2='96' stroke='#8a6a3a' stroke-width='1' stroke-dasharray='4 3'/><text x='308' y='60' font-size='8' fill='#8a6a3a'>更换压力计</text><text x='64' y='106' font-size='8.5' fill='#c9613f'>不标注 → 这两种台阶会被当成异常删掉</text><rect x='430' y='36' width='218' height='60' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='9' fill='#4d565b'>元信息清单</text><text x='442' y='70' font-size='8.5' fill='#79828a'>采样率 / 量程 / 精度</text><text x='442' y='86' font-size='8.5' fill='#79828a'>标定记录 / 换计时间</text><text x='442' y='104' font-size='8.5' fill='#79828a'>工况节点（开关井 / 取样）</text><text x='12' y='122' font-size='8.5' fill='#79828a'>元信息是判据的上下文：没有它，模型只能靠阈值，误判不可避免</text></svg><div class='viz-cap'>图：数据接入：元信息与采样率变化点必须随数据走</div>"
+        },
+        {
+          "name": "工况自动分段",
+          "role": "算法",
+          "do": "按开关井时间、取样与洗井记录把时序切成带工况标签的段，输出段边界。",
+          "effect": "每段都有工况标签与时长，后续判据按段取不同的阈值。",
+          "trap": "工况记录缺失时靠曲线形态推断，边界会偏几十秒，关井早期的数据容易被划错段。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='工况分段：不同工况的变化率上限差一个量级' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>分段决定判据：流动段允许大波动，关井段只允许缓慢恢复——统一阈值必然误判</text><rect x='60' y='40' width='90' height='52' fill='#c3d2e2' opacity='0.5'/><text x='70' y='58' font-size='9' fill='#2c3d57'>流动</text><text x='70' y='74' font-size='8' fill='#79828a'>允许大幅波动</text><rect x='152' y='40' width='90' height='52' fill='#a9c9ba' opacity='0.5'/><text x='162' y='58' font-size='9' fill='#2f5a4d'>关井</text><text x='162' y='74' font-size='8' fill='#79828a'>缓慢恢复</text><rect x='244' y='40' width='70' height='52' fill='#d9c27a' opacity='0.5'/><text x='254' y='58' font-size='9' fill='#6d5620'>取样</text><text x='254' y='74' font-size='8' fill='#79828a'>短时扰动</text><rect x='316' y='40' width='90' height='52' fill='#a9c9ba' opacity='0.5'/><text x='326' y='58' font-size='9' fill='#2f5a4d'>关井</text><text x='326' y='74' font-size='8' fill='#79828a'>边界响应</text><text x='60' y='110' font-size='8.5' fill='#c9613f'>关井早期恢复（真实）与漂移（异常）在局部形态相似：分段后才能用段内判据区分</text><rect x='430' y='36' width='218' height='60' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#4d565b'>段边界偏差几十秒</text><text x='442' y='70' font-size='8.5' fill='#c9613f'>→ 关井早期被划错段</text><text x='442' y='88' font-size='8.5' fill='#c9613f'>→ 真实边界响应被判异常</text><text x='12' y='126' font-size='8.5' fill='#79828a'>分段的精度直接决定清洗的精度：这里错一步，后面全是错的</text></svg><div class='viz-cap'>图：工况分段：不同工况的变化率上限差一个量级</div>"
+        },
+        {
+          "name": "四类异常识别",
+          "role": "算法",
+          "do": "在各段内识别漂移、跳变、掉零与重复记录，输出异常点位置与类型标签。",
+          "effect": "每个被标记的点都有类型与依据，可逐条复核。",
+          "trap": "判据偏严会把真实边界响应删掉，这个错误在解释阶段无法回头发现，宁可多标慎删。",
+          "viz": "<svg viewBox='0 0 660 146' role='img' aria-label='四类异常在段内的典型形态与判据' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='146' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>四类形态：每类都有独立的判据，且都要求「段内上下文」参与判断</text><rect x='20' y='32' width='150' height='46' rx='4' fill='#efece1' stroke='#e2ded0'/><polyline points='32,70 60,68 90,64 120,60 150,56' fill='none' stroke='#c9613f' stroke-width='1.6'/><text x='32' y='46' font-size='9.5' fill='#4d565b'>① 漂移</text><text x='32' y='74' font-size='8' fill='#79828a'>单向缓慢偏移</text><rect x='180' y='32' width='150' height='46' rx='4' fill='#efece1' stroke='#e2ded0'/><polyline points='192,66 220,64 240,64 244,44 270,42 300,40' fill='none' stroke='#41699b' stroke-width='1.8'/><text x='192' y='46' font-size='9.5' fill='#4d565b'>② 跳变</text><text x='192' y='74' font-size='8' fill='#79828a'>单点阶跃后归位</text><rect x='340' y='32' width='150' height='46' rx='4' fill='#efece1' stroke='#e2ded0'/><polyline points='352,52 380,50 400,50 404,70 430,68 460,50 480,48' fill='none' stroke='#2f7d6b' stroke-width='1.8'/><text x='352' y='46' font-size='9.5' fill='#4d565b'>③ 掉零</text><text x='352' y='74' font-size='8' fill='#79828a'>归零后恢复</text><rect x='500' y='32' width='148' height='46' rx='4' fill='#efece1' stroke='#e2ded0'/><polyline points='512,60 540,58 560,58 580,58 610,56' fill='none' stroke='#8a6a3a' stroke-width='1.6'/><text x='512' y='46' font-size='9.5' fill='#4d565b'>④ 重复</text><text x='512' y='74' font-size='8' fill='#79828a'>连续等值帧</text><text x='20' y='96' font-size='9' fill='#4d565b'>判据：漂移看段内单向趋势；跳变看单帧差分；掉零看归零与恢复；重复看等值连续帧</text><text x='20' y='114' font-size='8.5' fill='#c9613f'>宁可多标慎删：可疑点先标记后由人裁定，删错的代价远大于漏删</text><rect x='20' y='122' width='628' height='18' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='32' y='135' font-size='8.5' fill='#c9613f'>边界响应与跳变长得像：判据必须带段内上下文，纯阈值方法在这里必然出错</text></svg><div class='viz-cap'>图：四类异常在段内的典型形态与判据</div>"
+        },
+        {
+          "name": "关键段保护与剔除",
+          "role": "算法",
+          "do": "对解释所需的关键段（关井早期、边界响应段）做保护，只在确属异常时剔除并留记录。",
+          "effect": "清洗记录随数据归档：删了哪些点、依据哪条规则，可复现可复核。",
+          "trap": "关键段整段删除是常见误操作：看起来别扭的一段往往正是边界响应，删了就没有解释依据。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='关键段保护：可疑点标记，确属异常才剔除' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>关键段内的点默认保护：先标记，人裁定后再决定是否剔除</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='30' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>时间 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>压力</text><polyline points='70,84 110,80 150,74 190,66 230,58 270,52 310,48 350,46 385,45' fill='none' stroke='#41699b' stroke-width='2'/><rect x='230' y='40' width='120' height='52' fill='#a9c9ba' opacity='0.3'/><text x='240' y='54' font-size='8.5' fill='#2f5a4d'>关键段：边界响应</text><circle cx='310' cy='48' r='6' fill='none' stroke='#c9613f' stroke-width='1.5'/><text x='318' y='42' font-size='8.5' fill='#c9613f'>可疑点（标记待裁定）</text><circle cx='150' cy='74' r='6' fill='#c9613f'/><text x='158' y='68' font-size='8.5' fill='#c9613f'>确认异常（剔除）</text><rect x='430' y='36' width='218' height='60' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='9' fill='#4d565b'>保护规则</text><text x='442' y='70' font-size='8.5' fill='#2f7d6b'>关井早期 / 边界段：默认保留</text><text x='442' y='88' font-size='8.5' fill='#c9613f'>确属异常才删，且留依据</text><text x='12' y='124' font-size='8.5' fill='#79828a'>清洗记录 = 解释结论的可追溯性：删了什么、为什么，下一次能查</text></svg><div class='viz-cap'>图：关键段保护：可疑点标记，确属异常才剔除</div>"
+        },
+        {
+          "name": "清洗后解释与复核",
+          "role": "人工",
+          "do": "解释人员对清洗后的数据做解释，对比清洗前后的 kh 与表皮变化，人工裁定可疑点后回填记录。",
+          "effect": "给出清洗前后解释参数对比，偏差幅度可查；可疑点经人工裁定后沉淀为判据。",
+          "trap": "不做前后对比就不知道清洗的影响有多大：kh 偏差可达 ±18%，不对比等于默认接受。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='清洗前后解释参数对比与人工裁定回填' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>清洗的影响必须量化：kh 与表皮的变化幅度不对比就看不见</text><rect x='30' y='36' width='170' height='60' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='46' y='56' font-size='9.5' fill='#4d565b'>清洗前解释</text><text x='46' y='74' font-size='8.5' fill='#c9613f'>kh 偏差 +18%</text><text x='46' y='90' font-size='8.5' fill='#c9613f'>S 偏差 −0.8</text><line x1='202' y1='66' x2='234' y2='66' stroke='#8a8f80' stroke-width='1.4'/><polygon points='234,66 228,62.5 228,69.5' fill='#8a8f80'/><rect x='236' y='36' width='170' height='60' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='252' y='56' font-size='9.5' fill='#4d565b'>清洗后解释</text><text x='252' y='74' font-size='8.5' fill='#2f7d6b'>kh 偏差 +4%</text><text x='252' y='90' font-size='8.5' fill='#2f7d6b'>S 偏差 −0.2</text><line x1='408' y1='66' x2='440' y2='66' stroke='#8a8f80' stroke-width='1.4'/><polygon points='440,66 434,62.5 434,69.5' fill='#8a8f80'/><rect x='442' y='36' width='196' height='60' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='458' y='56' font-size='9.5' fill='#4d565b'>人工裁定 + 回填</text><text x='458' y='74' font-size='8.5' fill='#79828a'>可疑点裁定结果入判据库</text><text x='458' y='90' font-size='8.5' fill='#2f7d6b'>下次同类点自动判</text><text x='30' y='116' font-size='8.5' fill='#c9613f'>不对比 = 默认接受清洗带来的偏差，而它可能就是 kh 差 14% 的原因</text><text x='30' y='132' font-size='8.5' fill='#79828a'>裁定记录是判据库的来源：每口井都在让下一次清洗更准</text></svg><div class='viz-cap'>图：清洗前后解释参数对比与人工裁定回填</div>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>解释一致性</b>：同一批数据由不同人复核，清洗后的 kh 与 S 偏差 ≤ 5%。</p><p><b>关键段保全率</b>：关井早期与边界响应段的保留比例 ≥ 95%，不得整段删除。</p><p><b>可复现性</b>：清洗记录完整（删除点位置 + 依据规则），按记录重跑得到相同结果。</p>"
+      },
+      "fails": [
+        {
+          "name": "统一阈值跨段判异常",
+          "why": "流动段与关井段变化率差一个量级，统一阈值必然误判。"
+        },
+        {
+          "name": "关键段整段删除",
+          "why": "看着别扭的一段常是边界响应，删掉后解释无依据。"
+        },
+        {
+          "name": "采样率变化未标注",
+          "why": "台阶被当成异常删除，真实数据被误删。"
+        },
+        {
+          "name": "不做清洗前后对比",
+          "why": "默认接受清洗带来的 kh 偏差，结论不可比。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 700,
+      "intro": "切换测试类型与判据严格度，看四类异常的标记位置与解释参数偏差怎么变——把严格度拉满，注意关键段里的可疑点。",
+      "html": "demo/index.html"
+    }
+  }
+}

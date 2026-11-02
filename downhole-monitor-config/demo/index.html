@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：井下监测仪器配套方案智能配置</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>井下监测仪器配套方案智能配置</h1>
+  <p class="lead">智能完井要在高温高压的井筒里长期放置压力、温度、流量与光纤传感器，数据经电缆或光纤回到地面。
+  这里有两件难事：<b>一是能不能活下来</b>——同一支仪器在 120 ℃ 与 170 ℃ 下的寿命差好几倍；<b>二是钱花在哪</b>——
+  全井段铺满当然最好，但成本失控。知识图谱先把「监测需求 → 仪器类型 → 井筒条件 → 测控链路」的可行性规则梳理出来，
+  再在可行的方案组合上做多目标寻优，给出成本与可靠性的取舍，而不是一张标准清单。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>硬约束规则推理</li><li>帕累托寻优（配置 / 可靠性 / 成本）</li><li>可靠性评估</li></ul></div><div><b>为什么起作用</b><ul><li>温度压力等级是硬门槛，先用规则剔除不可行配置</li><li>可行域内做多目标寻优，避免「堆仪器」式过度配置</li></ul></div><div><b>在示范里怎么看</b><ul><li>选高温井，看部分仪器被判不可行、推荐配置自动降级</li></ul></div></div></div>
+
+  <div class="btnrow" role="group" aria-label="需要的监测参数">
+    <button data-m="P" class="on">压力</button>
+    <button data-m="T" class="on">温度</button>
+    <button data-m="D">流量 / 声波</button>
+    <button data-m="W">含水 / 持率</button>
+  </div>
+  <div class="btnrow" role="group" aria-label="井型">
+    <button data-w="vert" class="on">直井</button>
+    <button data-w="dev">定向井</button>
+    <button data-w="hz">水平井</button>
+  </div>
+
+  <div class="ctl">
+    <label>井底温度 <output id="out-t">— ℃</output></label>
+    <input type="range" id="temp" min="70" max="185" step="1" value="118">
+  </div>
+  <div class="ctl">
+    <label>水平段长度 <output id="out-l">— m</output></label>
+    <input type="range" id="lateral" min="0" max="1600" step="20" value="650">
+  </div>
+  <div class="ctl">
+    <label>设计寿命 <output id="out-life">5 年</output></label>
+    <input type="range" id="life" min="2" max="12" step="1" value="5">
+  </div>
+  <div class="ctl">
+    <label>预算权重 <output id="out-w">0.45</output></label>
+    <input type="range" id="wc" min="0" max="1" step="0.02" value="0.45">
+  </div>
+
+  <svg id="well" viewBox="0 0 720 220" role="img" aria-label="推荐布点方案的井筒剖面"></svg>
+  <svg id="pareto" viewBox="0 0 720 200" role="img" aria-label="成本与综合得分的帕累托前沿"></svg>
+  <svg id="lifechart" viewBox="0 0 720 190" role="img" aria-label="各备选仪器的耐温裕量与预期寿命"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">推荐组合</span><b id="ro-pick" style="font-family:inherit;font-size:12px">—</b></div>
+    <div class="ro"><span class="k">需求覆盖率</span><b id="ro-cov">—</b></div>
+    <div class="ro"><span class="k">预计寿命</span><b id="ro-life">—</b></div>
+    <div class="ro"><span class="k">总成本</span><b id="ro-cost">—</b></div>
+  </div>
+
+  <table class="tbl" id="tbl"></table>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

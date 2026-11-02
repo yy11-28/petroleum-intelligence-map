@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：老井复产 / 侧钻改造方案设计</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>老井复产 / 侧钻完井改造方案智能设计</h1>
+  <p class="lead">老井面对的是「井还在、资料不全、预算有限」：套管可能变形，剩余油分布靠推断，而一次侧钻的投入接近一口新井的零头。
+  这里分两步：<b>知识图谱</b>先按「井筒条件 → 可行性」把技术上装不进去的方案删掉，再用历史上同类老井的真实效果修正每条措施的成功率；
+  <b>多目标寻优</b>则在剩下的组合上算三年净现值（累计增油收入 − 投资），并同时给出工期与回收期，让决策现场就能看到取舍。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>案例推理（历史先例）</li><li>不确定性下的方案优选</li><li>经济性测算</li></ul></div><div><b>为什么起作用</b><ul><li>老井资料残缺，先例比公式更可靠</li><li>投资上限是硬约束，先删装不进去的措施，再按期望收益 / 风险排序</li></ul></div><div><b>在示范里怎么看</b><ul><li>调低投资上限，看措施组合被裁剪的顺序</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>套管完好度 <output id="out-cas">0.70</output></label>
+    <input type="range" id="cas" min="0.2" max="1" step="0.02" value="0.7">
+  </div>
+  <div class="ctl">
+    <label>剩余储量丰度 <output id="out-res">0.45</output></label>
+    <input type="range" id="res" min="0.05" max="1" step="0.02" value="0.45">
+  </div>
+  <div class="ctl">
+    <label>近井污染 / 结垢 <output id="out-dam">0.40</output></label>
+    <input type="range" id="dam" min="0" max="1" step="0.02" value="0.4">
+  </div>
+  <div class="ctl">
+    <label>油价 <output id="out-oil">420 元/桶</output></label>
+    <input type="range" id="price" min="200" max="700" step="10" value="420">
+  </div>
+  <div class="ctl">
+    <label>投资上限 <output id="out-cap">260 万元</output></label>
+    <input type="range" id="cap" min="60" max="600" step="10" value="260">
+  </div>
+
+  <svg id="well" viewBox="0 0 720 215" role="img" aria-label="老井井筒条件与候选措施的作用位置"></svg>
+  <svg id="econ" viewBox="0 0 720 200" role='img' aria-label="候选方案组合的投资、增油与净现值对比"></svg>
+  <svg id="hist" viewBox="0 0 720 195" role="img" aria-label="图谱检索到的同类老井改造案例与预测校正"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">推荐方案</span><b id="ro-plan" style="font-family:inherit;font-size:12px">—</b></div>
+    <div class="ro"><span class="k">三年累计增油</span><b id="ro-inc">—</b></div>
+    <div class="ro"><span class="k">投资回收期</span><b id="ro-pay">—</b></div>
+    <div class="ro"><span class="k">技术成功率</span><b id="ro-ps">—</b></div>
+  </div>
+
+  <table class="tbl" id="tbl"></table>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

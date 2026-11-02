@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：射孔参数智能设计</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>射孔参数智能设计 · 代理模型多目标寻优</h1>
+  <p class="lead">真实工况下跑一次射孔产能模型要几十分钟，没法做穷举。做法是用机理模型批量生成几万组
+  「参数 → 产能 / 出砂风险」样本，训练代理模型，然后在毫秒级的代理模型上找约束下的最优组合。
+  这里用两套拟合式代替真实代理模型：拖动滑杆改本井参数，看这组合落在目标空间的哪里、帕累托前沿怎么走。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>代理模型</li><li>多目标优化（帕累托前沿）</li><li>安全窗口寻优</li></ul></div><div><b>为什么起作用</b><ul><li>孔密越高产能越好但出砂风险越大，两者不可兼得，应给前沿而不是单点</li><li>安全窗口把「不出砂」当约束、把「多出油」当目标，避免用总分掩盖风险</li></ul></div><div><b>在示范里怎么看</b><ul><li>调孔密与相位，看前沿移动、可行窗口收窄</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>孔密 <output id="out-n">16 孔/m</output></label>
+    <input type="range" id="nd" min="6" max="40" step="1" value="16">
+  </div>
+  <div class="ctl">
+    <label>相位 <output id="out-ph">60°</output></label>
+    <input type="range" id="ph" min="0" max="4" step="1" value="1">
+  </div>
+  <div class="ctl">
+    <label>穿深 <output id="out-pen">420 mm</output></label>
+    <input type="range" id="pen" min="100" max="800" step="10" value="420">
+  </div>
+  <div class="ctl">
+    <label>岩石强度 UCS <output id="out-ucs">45 MPa</output></label>
+    <input type="range" id="ucs" min="15" max="70" step="1" value="45">
+  </div>
+  <div class="ctl">
+    <label>出砂风险容忍上限 <output id="out-r">0.50</output></label>
+    <input type="range" id="rlim" min="0.15" max="0.85" step="0.01" value="0.5">
+  </div>
+
+  <svg id="pareto" viewBox="0 0 720 300" role="img" aria-label="产能比与出砂风险的帕累托前沿"></svg>
+
+  <svg id="sens" viewBox="0 0 720 220" role="img" aria-label="三个参数各自的产能与风险灵敏度曲线"></svg>
+
+  <svg id="skin" viewBox="0 0 720 210" role="img" aria-label="表皮分解与三个方案的产能对比"></svg>
+
+  <div class="legend">
+    <span><i style="background:#cfd8dd"></i>其它相位的全部候选组合</span>
+    <span><i style="background:#2f7d6b"></i>当前相位 · 满足约束</span>
+    <span><i style="background:#b26a39"></i>当前相位 · 出砂超限</span>
+    <span><i style="background:#41699b"></i>帕累托前沿</span>
+  </div>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">产能比 PR</span><b id="ro-pr">—</b></div>
+    <div class="ro"><span class="k">相对标准方案</span><b id="ro-gain">—</b></div>
+    <div class="ro"><span class="k">出砂风险</span><b id="ro-risk">—</b></div>
+    <div class="ro"><span class="k">约束判定</span><b id="ro-ok">—</b></div>
+    <div class="ro"><span class="k">约束下最优</span><b id="ro-best">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

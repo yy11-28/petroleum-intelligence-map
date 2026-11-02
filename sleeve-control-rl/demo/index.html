@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：智能完井滑套控制策略</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>智能完井滑套控制 · 强化学习找策略</h1>
+  <p class="lead">智能井把储层切成 4 段，每段一个可调滑套。问题的难点不是「哪一段含水高」，而是各段耦合：
+  关掉一段，压力重新分配，别的段产能会变；今天的节流还会改变半年后的含水上升。<b>局部最优不等于整体最优</b>。
+  这里用一个 4 段 × 36 个月的极简模拟器，让表格 Q 学习自己去试错，再与「长期全开」「每次关掉含水最高段」同井对跑。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>强化学习（策略迭代）</li><li>储层数值模拟作环境</li><li>策略安全约束</li></ul></div><div><b>为什么起作用</b><ul><li>滑套调控是长期序贯决策，规则表覆盖不了所有来水组合</li><li>在模拟环境里试错学到「看什么调什么」，安全约束保证动作不越界</li></ul></div><div><b>在示范里怎么看</b><ul><li>加产水惩罚 λ，看策略从「多开多产」转向「控水稳产」</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>产水惩罚 λ <output id="out-lam">0.70</output></label>
+    <input type="range" id="lam" min="0.2" max="1.6" step="0.05" value="0.7">
+  </div>
+  <div class="ctl">
+    <label>训练回合 <output id="out-ep">600</output></label>
+    <input type="range" id="ep" min="200" max="1500" step="100" value="600">
+  </div>
+  <p class="note" style="margin:2px 0 10px">λ 就是经济参数的接口：油价低、水处理成本高时把它调大，最优策略会变得更保守。</p>
+
+  <svg id="lc" viewBox="0 0 720 240" role="img" aria-label="Q 学习训练过程中的回合回报曲线"></svg>
+
+  <div class="legend">
+    <span><i style="background:#cfd8dd"></i>每回合回报（含探索随机性）</span>
+    <span><i style="background:#41699b"></i>滑动平均（20 回合）</span>
+    <span><i style="background:#2f7d6b"></i>同状态重跑的确定性评估值</span>
+  </div>
+
+  <svg id="pc" viewBox="0 0 720 210" role="img" aria-label="三种滑套控制策略的累计产油与产水对比"></svg>
+
+  <svg id="plan" viewBox="0 0 720 210" role="img" aria-label="学到的策略与经验规则在 36 个月里的开度序列对比"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">累计产油（相对全开）</span><b id="ro-oil">—</b></div>
+    <div class="ro"><span class="k">累计产水（相对全开）</span><b id="ro-wat">—</b></div>
+    <div class="ro"><span class="k">36 个月内调阀次数</span><b id="ro-act">—</b></div>
+    <div class="ro"><span class="k">综合收益 J（策略 / 经验）</span><b id="ro-vs">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

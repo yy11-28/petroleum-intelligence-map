@@ -1,0 +1,247 @@
+/* =========================================================
+   map.css —— AI 介入点图谱页（#/map）版式
+   ---------------------------------------------------------
+   与 completion.css 同族：只服务图谱页，不影响其它页面。
+   ========================================================= */
+
+/* ---------- 筛选行 ---------- */
+.mp-filters{
+  display:flex;flex-wrap:wrap;align-items:center;gap:5px;
+  margin:14px 0 16px;padding:9px 12px;
+  border:1px solid var(--line);border-radius:var(--r-m);background:var(--card-soft);
+}
+/* 一组筛选（标签 + chips）作为整体换行，组内不拆分 */
+.mp-fgrp{display:inline-flex;align-items:center;gap:5px;flex:none;white-space:nowrap}
+.mp-filters .lbl{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--ink-4);margin-left:4px;
+}
+.mp-filters .divider{width:1px;height:16px;background:var(--line);margin:0 5px;flex:none}
+.mp-filters .chip i.mp-dot{margin-right:5px}
+.mp-filters .chip svg{margin-right:4px;vertical-align:-1px}
+.mp-lg svg{flex:none}
+.mp-filters .chip{padding-inline:9px}
+
+/* 丰富度组用紧凑档：字号与内边距收小，让方法+丰富度能排进第一行；
+   mp-brk 是整行占位的换行点，难度/数据从第二行开始 */
+.mp-fgrp.slim .chip{padding:2px 6px;font-size:11px}
+.mp-fgrp.slim .chip i.mp-dot{margin-right:3px;width:7px;height:7px}
+.mp-filters .mp-brk{flex-basis:100%;height:0}
+.mp-sel{
+  height:26px;padding:0 8px;font-size:11.5px;color:var(--ink-2);
+  border:1px solid var(--line);border-radius:var(--r-s);background:#fff;font-family:inherit;
+}
+html[data-theme="dark"] .mp-sel{background:#1A212B;color:var(--ink-2)}
+
+/* ---------- 图谱容器 ---------- */
+.mp-wrap{
+  border:1px solid var(--line);border-radius:var(--r-m);background:var(--card-soft);
+  padding:6px 0 2px;
+}
+.mp-scroll{overflow-x:auto;overflow-y:hidden;padding:2px 10px 8px}
+.mp-scroll::-webkit-scrollbar{height:8px}
+.mp-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+/* 图谱按 viewBox 等比缩放，横向撑满容器；过窄的屏幕保留最小宽度、出横向滚动 */
+.mp-svg{display:block;width:100%;height:auto;min-width:720px}
+
+/* 节点 */
+.mp-node{cursor:pointer;transition:opacity .15s}
+.mp-n-bg{fill:#fff;stroke:#C3D1DF;stroke-width:1}
+.mp-node:hover .mp-n-bg{stroke:#5B7CA8;fill:var(--bg-opt)}
+.mp-node.near .mp-n-bg{stroke:#8FA6BA;fill:#F4F8FB}
+.mp-node.sel .mp-n-bg{stroke:var(--blue);stroke-width:1.6;fill:var(--bg-opt)}
+.mp-node.dim{opacity:.13}
+.mp-node.dim:hover{opacity:.5}
+.mp-node:focus{outline:none}
+.mp-node:focus .mp-n-bg{stroke:var(--blue);stroke-width:2}
+
+/* 展开 / 收起：节点、列头、入口都靠 transform 定位，
+   transform-box:fill-box + origin 0 0 让 scale 以自身左上角为基准 */
+.mp-st-head,.mp-node,.mp-more{
+  cursor:pointer;
+  transform-box:fill-box;transform-origin:0 0;
+  transition:transform .42s cubic-bezier(.22,.61,.36,1),opacity .28s ease;
+}
+.mp-st-head:focus,.mp-node:focus,.mp-more:focus{outline:none}
+.mp-st-head:hover .mp-st-name{fill:#1A4779}
+.mp-st-head.on .mp-st-name{fill:#1A4779}
+
+/* 聚焦时退到背景：不在选中环节、也不在左右依赖侧栏里的元素 */
+.mp-st-head.faded,.mp-node.faded,.mp-more.faded{opacity:.13}
+.mp-col.dim{opacity:.13}
+.mp-node.rel .mp-n-bg{stroke:#7FA6C6}
+
+/* 依赖侧栏标题：「↑ 上游依赖 N」/「下游场景 N」 */
+.mp-slab{
+  font-size:10.5px;font-weight:600;fill:#5B6B7C;letter-spacing:.04em;
+  transform-box:fill-box;transform-origin:0 0;pointer-events:none;
+  transition:transform .42s cubic-bezier(.22,.61,.36,1),opacity .28s ease;
+}
+.mp-slab.hid{opacity:0;visibility:hidden;transition:opacity .2s ease,visibility 0s .2s}
+
+/* 折叠掉的场景 / 展开后不再需要的入口 */
+.mp-node.hid,.mp-more.hid{
+  opacity:0;visibility:hidden;
+  transition:opacity .2s ease,transform .42s cubic-bezier(.22,.61,.36,1),visibility 0s .2s;
+}
+
+/* 「还有 N 个场景」展开入口 */
+.mp-more-bg{fill:#F3F7FA;stroke:#7FA6C6;stroke-dasharray:4 3;stroke-width:1}
+.mp-more:hover .mp-more-bg{fill:#E7F0F7;stroke:#3D86BD}
+.mp-more text{pointer-events:none}
+
+/* 画布左上角的返回按钮（仅聚焦态显示） */
+.mp-back{cursor:pointer;transition:opacity .25s ease}
+.mp-back rect{fill:#fff;stroke:#3D86BD;stroke-width:1}
+.mp-back:hover rect{fill:#E7F0F7}
+.mp-back text{font-size:11px;font-weight:600;fill:#3D86BD;pointer-events:none}
+.mp-back.hid{opacity:0;visibility:hidden;transition:opacity .2s ease,visibility 0s .2s}
+
+/* 连线 */
+.mp-edges{transition:opacity .2s ease}
+.mp-edges.fade{opacity:0}
+.mp-edge{transition:stroke .15s,opacity .2s ease}
+.mp-edge.on{stroke-width:1.7}
+.mp-svg.no-edge .mp-edges{display:none}
+
+/* ---------- 图例 ---------- */
+.mp-legend{
+  display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;
+  margin:12px 0 2px;padding:9px 13px;
+  border:1px solid var(--line);border-radius:var(--r-s);background:var(--card-soft);
+  font-size:11px;color:var(--ink-3);
+}
+.mp-legend .divider{width:1px;height:14px;background:var(--line)}
+.mp-lg-t{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--ink-4)}
+.mp-lg{display:flex;align-items:center;gap:5px}
+.mp-lg i{width:9px;height:9px;border-radius:2px;display:block;flex:none}
+.mp-lg i.mp-ci{width:7px;height:7px;border-radius:50%;background:#238868}
+.mp-lg i.mp-tr{
+  width:0;height:0;border-radius:0;background:none;
+  border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid #B26A39;
+}
+.mp-lg i.mp-ar-ico{
+  width:auto;height:auto;background:none;border-radius:0;
+  font-family:var(--mono);font-size:12px;color:#8FA6BA;line-height:1;
+}
+
+/* ---------- 详情卡 ---------- */
+.mp-detail{
+  margin:14px 0 0;padding:13px 15px;
+  border:1px solid var(--line);border-left:3px solid var(--blue);
+  border-radius:var(--r-m);background:var(--card-soft);min-height:88px;
+}
+.mp-d-empty{font-size:12.5px;line-height:1.8;color:var(--ink-3)}
+.mp-d-empty b{color:var(--ink-2)}
+.mp-d-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.mp-d-l{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px}
+.mp-d-id{
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--ink-4);
+  border:1px solid var(--line);border-radius:3px;padding:1px 5px;background:#fff;
+}
+.mp-d-l h3{margin:0;font-size:15px;color:var(--ink)}
+.mp-d-sub{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:11px;color:var(--ink-3);width:100%}
+.mp-d-sub .mp-dot{margin-left:6px}
+.mp-d-r{display:flex;gap:8px;flex:none}
+.mp-d-body{margin-top:11px;display:grid;gap:6px}
+.mp-d-row{display:flex;gap:10px;font-size:11.5px;line-height:1.7}
+.mp-d-row .rk{
+  flex:none;width:64px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  color:var(--ink-4);padding-top:3px;
+}
+.mp-d-row .rv{color:var(--ink-2);flex:1}
+.mp-chip{
+  display:inline-flex;align-items:center;gap:5px;margin:0 6px 4px 0;padding:2px 7px;
+  border:1px solid var(--line);border-radius:3px;background:#fff;
+  font-size:11.5px;color:var(--ink-2);text-decoration:none;
+}
+.mp-chip b{font-family:var(--mono);font-size:10.5px;color:var(--ink-4);font-weight:500}
+.mp-chip:hover{border-color:var(--blue);background:var(--bg-opt);color:var(--blue)}
+.mp-d-warn{
+  margin-top:4px;padding:7px 10px;border:1px solid rgba(185,122,72,.28);border-left:3px solid var(--clay);
+  border-radius:var(--r-s);background:var(--warn-bg);font-size:11.5px;color:var(--ink-3);
+}
+
+/* 小色点（图例 / 详情共用） */
+.mp-dot{width:8px;height:8px;border-radius:2px;display:inline-block;flex:none}
+
+/* ---------- 暗色 ---------- */
+html[data-theme="dark"] .mp-n-bg{fill:#1B222C;stroke:#39465A}
+html[data-theme="dark"] .mp-more-bg{fill:#1D2530;stroke:#4E6B8A}
+html[data-theme="dark"] .mp-more:hover .mp-more-bg{fill:#223042;stroke:#7FA6C6}
+html[data-theme="dark"] .mp-back rect{fill:#1D2530;stroke:#7FA6C6}
+html[data-theme="dark"] .mp-back:hover rect{fill:#223042}
+html[data-theme="dark"] .mp-back text{fill:#8AB0DC}
+html[data-theme="dark"] .mp-st-head:hover .mp-st-name,
+html[data-theme="dark"] .mp-st-head.on .mp-st-name{fill:#8AB0DC}
+
+/* 照顾降低动效的系统设置 */
+@media (prefers-reduced-motion:reduce){
+  .mp-st-head,.mp-node,.mp-more,.mp-col,.mp-edges,.mp-slab{transition:none}
+}
+html[data-theme="dark"] .mp-node:hover .mp-n-bg{stroke:#6C8CB8;fill:#1F2A38}
+html[data-theme="dark"] .mp-node.near .mp-n-bg{stroke:#4E5F76;fill:#1E2632}
+html[data-theme="dark"] .mp-node.sel .mp-n-bg{stroke:#8AB0DC;fill:#1F2A38}
+html[data-theme="dark"] .mp-chip{background:#212A35}
+html[data-theme="dark"] .mp-d-id{background:#212A35}
+html[data-theme="dark"] .mp-scroll::-webkit-scrollbar-thumb{background:#39465A}
+
+/* ---------- 视图切换：流程依赖 / 技术聚类 ---------- */
+.mp-modes{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin:14px 0 12px;padding:9px 12px;
+  border:1px solid var(--line);border-radius:var(--r-m);background:var(--card-soft);
+}
+.mp-md-lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--ink-4)}
+.mp-md{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r-s);overflow:hidden;background:var(--card)}
+.mp-md button{
+  appearance:none;-webkit-appearance:none;border:0;border-right:1px solid var(--line);
+  background:transparent;cursor:pointer;font:inherit;
+  padding:5px 13px;font-size:12px;color:var(--ink-3);
+  transition:background .2s,color .2s;
+}
+.mp-md button:last-child{border-right:0}
+.mp-md button:hover{color:var(--blue);background:var(--bg-opt)}
+.mp-md button.on{background:var(--blue);color:#fff;font-weight:600}
+.mp-md-note{font-size:11px;color:var(--ink-4);line-height:1.6}
+
+/* ---------- 详情卡里的链路导出 ---------- */
+.mp-d-chain{
+  margin-top:11px;padding-top:10px;border-top:1px dashed var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.mp-dc-t{font-size:12px;font-weight:600;color:var(--ink)}
+.mp-dc-n{font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-left:7px}
+.mp-dc-acts{display:flex;gap:8px;flex:none}
+
+html[data-theme="dark"] .mp-md{background:var(--paper-2)}
+html[data-theme="dark"] .mp-md button{color:var(--ink-3)}
+html[data-theme="dark"] .mp-md button:hover{color:var(--blue-2);background:var(--bg-opt)}
+
+@media (max-width:760px){
+  .mp-filters{padding:8px 10px}
+  .mp-filters .lbl{margin-left:0}
+  .mp-d-head{flex-direction:column}
+  .mp-d-r{width:100%}
+  .mp-md-note{display:none}
+}
+
+/* ---------- 按智能化方法反查：方法汇总页入口卡 ---------- */
+.mp-methods{margin:20px 0 8px;padding:16px 18px;border-radius:12px;background:var(--card,#fff);box-shadow:var(--sh-2)}
+.mp-m-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.mp-m-t{font-size:15px;font-weight:700;color:var(--ink)}
+.mp-m-sub{font-size:12px;color:var(--ink-4)}
+.mp-m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.mp-mc{
+  display:flex;flex-direction:column;gap:5px;padding:11px 13px;border-radius:10px;
+  background:var(--bg,#fbfaf6);border:1px solid var(--line,#e9e4d8);
+  text-decoration:none;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;
+}
+.mp-mc:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:currentColor}
+.mp-mc-top{display:flex;align-items:baseline;gap:7px}
+.mp-mc-ab{font-size:15px;font-weight:800;letter-spacing:.5px}
+.mp-mc-nm{font-size:13.5px;font-weight:600;color:var(--ink)}
+.mp-mc-n{margin-left:auto;font-size:10.5px;color:var(--ink-4);white-space:nowrap}
+.mp-mc-ds{font-size:11.5px;line-height:1.65;color:var(--ink-3)}
+.mp-mc-go{font-size:11px;color:var(--blue-d);font-weight:600;margin-top:2px}
+html[data-theme="dark"] .mp-mc{background:var(--bg-opt)}
+@media (max-width:760px){.mp-m-grid{grid-template-columns:1fr 1fr}}

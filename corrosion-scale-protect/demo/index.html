@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：井筒腐蚀与结垢智能预测及防护方案推荐</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>井筒腐蚀 / 结垢预测 · 沿深度剖面 + 防护方案寻优</h1>
+  <p class="lead">腐蚀与结垢是同一套流体化学的两面：二氧化碳与硫化氢决定腐蚀速率，压力温度的沿程变化决定
+  碳酸钙在哪里析出。<b>它们沿井筒深度并不均匀，通常集中在一小段</b>——先找到这一段，再谈管材与加药。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>电化学机理模型 + 沿深度数值求解</li><li>防护组合成本寻优</li></ul></div><div><b>为什么起作用</b><ul><li>腐蚀速率沿井筒变化，只取井底值会错判峰值位置</li><li>材质、涂层、缓蚀剂成本差一个量级，要按「每降低 0.01 mm/a 花多少钱」来比</li></ul></div><div><b>在示范里怎么看</b><ul><li>调分压与温度，看两条速率曲线的峰值深度迁移</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>二氧化碳分压 <output id="out-co2">0.30 MPa</output></label>
+    <input type="range" id="co2" min="0.02" max="3" step="0.02" value="0.3">
+  </div>
+  <div class="ctl">
+    <label>硫化氢含量 <output id="out-h2s">50 ppm</output></label>
+    <input type="range" id="h2s" min="0" max="500" step="10" value="50">
+  </div>
+  <div class="ctl">
+    <label>氯离子（矿化度代表） <output id="out-cl">40000 mg/L</output></label>
+    <input type="range" id="cl" min="2000" max="150000" step="2000" value="40000">
+  </div>
+  <div class="ctl">
+    <label>井底温度 <output id="out-t">95 ℃</output></label>
+    <input type="range" id="t" min="40" max="150" step="1" value="95">
+  </div>
+  <div class="ctl">
+    <label>井底压力 <output id="out-p">22 MPa</output></label>
+    <input type="range" id="p" min="5" max="40" step="1" value="22">
+  </div>
+  <div class="ctl">
+    <label>产液量（流速代表） <output id="out-q">150 m³/d</output></label>
+    <input type="range" id="q" min="10" max="400" step="10" value="150">
+  </div>
+
+  <svg id="prof" viewBox="0 0 720 250" role="img" aria-label="腐蚀速率与结垢速率沿井筒深度的分布"></svg>
+
+  <svg id="pf" viewBox="0 0 720 230" role="img" aria-label="候选防护方案的年成本与剩余寿命前沿"></svg>
+
+  <svg id="dose" viewBox="0 0 720 230" role="img" aria-label="缓蚀剂浓度寻优曲线"></svg>
+
+  <div class="legend">
+    <span><i style="background:#c9613f"></i>不加防护（预测值）</span>
+    <span><i style="background:#41699b"></i>加防护后</span>
+    <span><i style="background:#b9c6cf"></i>不可行组合</span>
+    <span><i style="background:#2f7d6b"></i>推荐组合</span>
+    <span><i style="background:#242b2e"></i>当前设定</span>
+  </div>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">推荐组合</span><b id="ro-pick">—</b></div>
+    <div class="ro"><span class="k">年化成本</span><b id="ro-cost">—</b></div>
+    <div class="ro"><span class="k">剩余寿命</span><b id="ro-life">—</b></div>
+    <div class="ro"><span class="k">风险位置</span><b id="ro-pos">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+{
+  "id": "formation-damage-mitigation",
+  "sceneId": "co40",
+  "title": "储层保护配套措施智能推荐：把总伤害算出来再选措施",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "储层伤害不是单一工序造成的：入井液滤液、射孔压实带、固相侵入与不合理的投产压差叠加在一起。等产量不达标再做归因时，措施已经用完了——而现状是各工序各自选自己的入井液与压差，组合起来的总伤害没人算。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "结构化 + 知识",
+          "desc": "敏感性实验、入井液配方、作业压差与投产制度"
+        },
+        {
+          "label": "标注成本",
+          "value": "中",
+          "desc": "伤害程度需实验或反演，样本积累较慢"
+        },
+        {
+          "label": "可见收益",
+          "value": "中",
+          "desc": "措施组合可比选，也能回答「少做一项省多少」"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "多工序叠加，敏感性结论与现场制度脱节"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>做法是按经验清单逐项套用：入井液按区块习惯选、暂堵剂按供应商推荐加、射孔负压照抄邻井、投产压差按制度执行。每一道工序都有自己的一套做法，各自看都没问题。</p><p>问题有三个：<b>敏感性实验与现场脱节</b>——实验结论说水敏中等，现场入井液照样用清水基；<b>总伤害没人算</b>——各工序只对自己的一段负责，叠加起来是多少没人知道；<b>回答不了取舍</b>——想省钱少做一项，说不清会多损失多少产量，只能继续全套做。</p><svg viewBox='0 0 660 154' role='img' aria-label='分项各自达标 ≠ 总伤害可控：叠加效应没人算' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='154' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>四道工序各有各的伤害：分项都在「可接受」范围，叠加起来的总伤害却没人算</text><text x='50' y='42' font-size='10' fill='#3d4a48'>分项各自执行（现状）</text><rect x='50' y='50' width='250' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='66' y='68' font-size='8.5' fill='#4d565b'>入井液：习惯体系（滤液伤害 小）</text><text x='66' y='84' font-size='8.5' fill='#4d565b'>射孔：负压照抄邻井（压实带 中）</text><text x='66' y='100' font-size='8.5' fill='#4d565b'>暂堵：按推荐加量（固相侵入 小）</text><text x='66' y='116' font-size='8.5' fill='#4d565b'>投产：按制度压差（速敏 中）</text><text x='66' y='132' font-size='8.5' fill='#c9613f'>→ 每项都「可接受」，总伤害未知</text><text x='330' y='42' font-size='10' fill='#3d4a48'>总伤害量化（本方法）</text><rect x='330' y='50' width='300' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='346' y='68' font-size='9' fill='#4d565b'>总表皮 = 滤液 + 压实 + 固相 + 速敏</text><text x='346' y='84' font-size='9' fill='#4d565b'>逐项量化并给出占比</text><text x='346' y='100' font-size='9' fill='#c9613f'>→ 总伤害 8.6（产能损失 21%）</text><text x='346' y='116' font-size='9' fill='#2f7d6b'>→ 少做一项：省 12 万，损失 6% 产量</text><text x='346' y='132' font-size='9' fill='#2f7d6b'>→ 取舍可算，答案可查</text><text x='12' y='148' font-size='8.5' fill='#79828a'>差别不在措施变多，而在总伤害可算、取舍可算</text></svg><div class='viz-cap'>图：分项各自达标 ≠ 总伤害可控：叠加效应没人算</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>按储层敏感性（速敏、水敏、酸敏、碱敏、盐敏）与作业环节匹配保护措施组合：入井液体系、暂堵剂与加量、射孔负压、作业压差与投产制度，给出带伤害量化对比的推荐。</p><p>关键在两点：<b>敏感性结论要能落到作业参数上</b>（水敏中等 → 入井液滤液限量与矿化度要求，而不是一句\"注意防水敏\"）；<b>组合要能比选</b>——不同措施组合的总伤害与成本并列，选哪个是明确的取舍。</p><svg viewBox='0 0 660 130' role='img' aria-label='五类敏感性 → 作业环节 → 措施组合的匹配链路' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>敏感性结论必须落到可执行的作业参数上：从「注意防水敏」到「滤液矿化度 ≥ X」</text><rect x='20' y='34' width='130' height='52' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='32' y='54' font-size='10' fill='#3d4a48'>五类敏感性</text><text x='32' y='70' font-size='8.5' fill='#79828a'>速 / 水 / 酸 / 碱 / 盐敏</text><line x1='152' y1='60' x2='184' y2='60' stroke='#8a8f80' stroke-width='1.4'/><polygon points='184,60 178,56.5 178,63.5' fill='#8a8f80'/><rect x='186' y='34' width='140' height='52' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='198' y='54' font-size='10' fill='#3d4a48'>作业环节</text><text x='198' y='70' font-size='8.5' fill='#79828a'>钻完井 / 射孔 / 投产</text><line x1='328' y1='60' x2='360' y2='60' stroke='#8a8f80' stroke-width='1.4'/><polygon points='360,60 354,56.5 354,63.5' fill='#8a8f80'/><rect x='362' y='34' width='140' height='52' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='374' y='54' font-size='10' fill='#3d4a48'>措施组合</text><text x='374' y='70' font-size='8.5' fill='#79828a'>入井液 / 暂堵 / 负压</text><line x1='504' y1='60' x2='536' y2='60' stroke='#8a8f80' stroke-width='1.4'/><polygon points='536,60 530,56.5 530,63.5' fill='#8a8f80'/><rect x='538' y='34' width='110' height='52' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='550' y='54' font-size='10' fill='#3d4a48'>总伤害</text><text x='550' y='70' font-size='8.5' fill='#79828a'>量化 + 成本</text><text x='20' y='104' font-size='9.5' fill='#4d565b'>示例：水敏中等 → 入井液滤液矿化度 ≥ 20000 mg/L，而非「注意防水敏」</text><text x='20' y='122' font-size='8.5' fill='#2f7d6b'>组合比选：三套措施的总伤害与成本并列，选哪套是明确取舍而不是习惯</text><text x='12' y='138' font-size='8.5' fill='#79828a'>可量化才有可讨论的余地：少做一项省多少、多损失多少，都能算出来</text></svg><div class='viz-cap'>图：五类敏感性 → 作业环节 → 措施组合的匹配链路</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>敏感性实验结论</b>（五敏评价结果与临界条件）；<b>入井液与暂堵资料</b>（体系、配方、滤失量、固相含量）；<b>作业记录</b>（压差、浸泡时间、射孔负压、返排情况）；<b>邻井投产数据</b>（初期产量、表皮反演值、措施实施情况）。</p><p>有表皮反演值的邻井最有价值：总伤害的预测需要实测反演来校验，否则只是实验室到现场的外推。</p><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>五敏评价到临界条件（不只是等级）；入井液按滤失量与矿化度记录；邻井表皮需反演值</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>措施不能与敏感性冲突（水敏地层禁低矿化度滤液）；成本与伤害同时列，不允许只比伤害</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>给出总伤害构成 + 产能损失 + 成本，以及「少做一项」的边际代价</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度中等：敏感性实验到现场条件的换算是主要不确定来源——实验室是岩心、单相、恒温，现场是多相、变温、有固相侵入；另外措施之间的相互作用（暂堵剂与入井液配伍）也常被忽略。</p><p><b>难在哪</b>：实验结论外推到现场条件要打折，而这个折扣系数只能靠邻井反演标定，样本少的区块可信度有限。参考方向为敏感性匹配知识库、伤害叠加模型与多目标比选。</p><p><b>与传统做法的本质差别</b>：过去是「清单逐项套用、各自达标」，现在是「算总伤害、比组合、能回答少做一项的代价」——差别不在措施更全，而在取舍有据。</p>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "储层保护措施推荐怎么做",
+      "lead": [
+        "核心是把「经验清单逐项套用」换成「按敏感性匹配措施组合、算总伤害并比选」。",
+        "下面的示范是第 2—4 步：切换储层敏感性、增减措施项，看总伤害构成与产能、成本怎么变。"
+      ],
+      "stats": [
+        [
+          "敏感性",
+          "5 类"
+        ],
+        [
+          "措施项",
+          "4 项"
+        ],
+        [
+          "产能损失",
+          "6—21%"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "敏感性结论整理",
+          "role": "数据",
+          "do": "整理五敏评价结果与临界条件，把等级结论换算成可执行的参数约束。",
+          "effect": "每类敏感性都有对应的作业参数约束，而不是一句定性提示。",
+          "trap": "只记录等级不记录临界条件，落到作业参数时无从下手——\"水敏中等\"无法指导滤液矿化度取值。",
+          "viz": "<svg viewBox='0 0 660 150' role='img' aria-label='五敏评价：从等级到临界条件再到作业参数' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='150' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>等级 → 临界条件 → 参数约束：缺了中间一环，实验结论就用不到现场</text><rect x='30' y='36' width='180' height='92' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='44' y='54' font-size='9.5' fill='#4d565b'>五类敏感性等级</text><text x='44' y='72' font-size='8.5' fill='#79828a'>速敏 弱 · 水敏 中</text><text x='44' y='88' font-size='8.5' fill='#79828a'>酸敏 弱 · 碱敏 弱</text><text x='44' y='104' font-size='8.5' fill='#79828a'>盐敏 中</text><text x='44' y='120' font-size='8' fill='#c9613f'>（只到等级，无法落地）</text><line x1='212' y1='82' x2='244' y2='82' stroke='#8a8f80' stroke-width='1.4'/><polygon points='244,82 238,78.5 238,85.5' fill='#8a8f80'/><rect x='246' y='36' width='180' height='92' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='260' y='54' font-size='9.5' fill='#4d565b'>临界条件</text><text x='260' y='72' font-size='8.5' fill='#2f7d6b'>水敏：临界矿化度 15000</text><text x='260' y='88' font-size='8.5' fill='#2f7d6b'>盐敏：矿化度降幅 ≤ 30%</text><text x='260' y='104' font-size='8.5' fill='#2f7d6b'>速敏：临界流速 8 m/d</text><text x='260' y='120' font-size='8' fill='#2f7d6b'>（可换算成参数约束）</text><line x1='428' y1='82' x2='460' y2='82' stroke='#8a8f80' stroke-width='1.4'/><polygon points='460,82 454,78.5 454,85.5' fill='#8a8f80'/><rect x='462' y='36' width='186' height='92' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='476' y='54' font-size='9.5' fill='#4d565b'>作业参数约束</text><text x='476' y='72' font-size='8.5' fill='#2f7d6b'>滤液矿化度 ≥ 20000</text><text x='476' y='88' font-size='8.5' fill='#2f7d6b'>投产压差分段控制</text><text x='476' y='104' font-size='8.5' fill='#2f7d6b'>采液强度 ≤ 临界流速</text><text x='476' y='120' font-size='8' fill='#2f7d6b'>（可直接下作业指令）</text><text x='12' y='142' font-size='8.5' fill='#79828a'>实验结论的价值在于能换算：不能落地的结论等于没有结论</text></svg><div class='viz-cap'>图：五敏评价：从等级到临界条件再到作业参数</div>"
+        },
+        {
+          "name": "措施项与敏感性匹配",
+          "role": "算法",
+          "do": "按敏感性类型匹配候选措施（入井液体系、暂堵剂与加量、射孔负压、压差制度），剔除与敏感性冲突的组合。",
+          "effect": "得到若干套自洽的措施组合，每套都说明它针对哪类敏感性。",
+          "trap": "措施之间会相互冲突（暂堵剂与入井液不配伍），只按单项匹配会选出互相打架的组合。",
+          "viz": "<svg viewBox='0 0 660 168' role='img' aria-label='措施与敏感性匹配：同时检查配伍冲突' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='168' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>匹配不是查表：单项都对症，组合起来可能互相打架（配伍性必须查）</text><rect x='30' y='34' width='150' height='46' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='44' y='54' font-size='9.5' fill='#4d565b'>入井液体系</text><text x='44' y='72' font-size='8.5' fill='#79828a'>防水敏：矿化度 + 抑制</text><rect x='190' y='34' width='150' height='46' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='204' y='54' font-size='9.5' fill='#4d565b'>暂堵剂 + 加量</text><text x='204' y='72' font-size='8.5' fill='#79828a'>控滤失：粒径匹配</text><rect x='350' y='34' width='150' height='46' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='364' y='54' font-size='9.5' fill='#4d565b'>射孔负压</text><text x='364' y='72' font-size='8.5' fill='#79828a'>清压实带：负压值</text><rect x='510' y='34' width='138' height='46' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='524' y='54' font-size='9.5' fill='#4d565b'>投产压差</text><text x='524' y='72' font-size='8.5' fill='#79828a'>控速敏：分段升压</text><text x='30' y='98' font-size='10' fill='#3d4a48'>配伍性检查（组合层面的硬约束）</text><rect x='30' y='106' width='290' height='28' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='44' y='124' font-size='8.5' fill='#2f7d6b'>✔ 暂堵剂与入井液配伍：合格</text><rect x='330' y='106' width='318' height='28' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='344' y='124' font-size='8.5' fill='#c9613f'>✘ 阴离子体系 + 阳离子暂堵剂：絮凝，剔除</text><text x='30' y='148' font-size='8.5' fill='#c9613f'>单项对症不等于组合可用：配伍冲突在单项检查里看不出来</text><text x='12' y='162' font-size='8.5' fill='#79828a'>匹配结果要说明「针对哪类敏感性」：措施不是越多越好，是对症才有用</text></svg><div class='viz-cap'>图：措施与敏感性匹配：同时检查配伍冲突</div>"
+        },
+        {
+          "name": "总伤害叠加计算",
+          "role": "算法",
+          "do": "把滤液侵入、压实带、固相侵入与速敏四项伤害叠加，输出总表皮与各项占比。",
+          "effect": "总伤害可查构成，占比最大的那一项就是措施最该加强的地方。",
+          "trap": "伤害不是简单相加：滤液侵入会改变近井饱和度，与速敏耦合，线性叠加会低估。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='四项伤害叠加：占比最大项决定措施优先级' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>叠加要看耦合：滤液侵入改变近井饱和度后，速敏的临界条件也跟着变</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>伤害项 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>表皮</text><rect x='80' y='62' width='50' height='30' fill='#c3d2e2'/><text x='88' y='58' font-size='8.5' fill='#4d565b'>2.4</text><text x='76' y='104' font-size='8' fill='#4d565b'>滤液侵入</text><rect x='150' y='70' width='50' height='22' fill='#a9c9ba'/><text x='158' y='66' font-size='8.5' fill='#4d565b'>1.8</text><text x='146' y='104' font-size='8' fill='#4d565b'>压实带</text><rect x='220' y='76' width='50' height='16' fill='#7fae9b'/><text x='228' y='72' font-size='8.5' fill='#4d565b'>1.3</text><text x='216' y='104' font-size='8' fill='#4d565b'>固相</text><rect x='290' y='58' width='50' height='34' fill='#d9c27a'/><text x='298' y='54' font-size='8.5' fill='#4d565b'>2.9</text><text x='282' y='104' font-size='8' fill='#4d565b'>速敏</text><rect x='360' y='52' width='50' height='40' fill='#f4ded4'/><text x='368' y='48' font-size='8.5' fill='#8a3d20'>8.6</text><text x='352' y='104' font-size='8' fill='#4d565b'>总表皮</text><rect x='430' y='36' width='218' height='60' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#4d565b'>占比：速敏 34% > 滤液 28%</text><text x='442' y='70' font-size='8.5' fill='#4d565b'>　　　压实 21% > 固相 15%</text><text x='442' y='90' font-size='8.5' fill='#c9613f'>耦合：滤液改变饱和度 → 速敏加剧</text><text x='12' y='124' font-size='8.5' fill='#79828a'>线性叠加会低估总伤害：耦合项要单独估，并给出区间</text></svg><div class='viz-cap'>图：四项伤害叠加：占比最大项决定措施优先级</div>"
+        },
+        {
+          "name": "组合比选与边际代价",
+          "role": "算法",
+          "do": "按总伤害与成本比选措施组合，并给出「少做一项」的边际代价（省多少钱、损失多少产量）。",
+          "effect": "每套组合的伤害、产能与成本并列，取舍可算：少做一项省 12 万、损失 6% 产量。",
+          "trap": "只比伤害不比成本会选出最贵方案；反过来只比成本会砍掉关键项，敏感性高的层必须保留。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='组合比选：伤害与成本并列，边际代价可算' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>比选要同时看两端：只看伤害选最贵，只看成本会砍掉关键项</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>成本（万元）→</text><text x='46' y='38' font-size='8.5' fill='#79828a'>产能损失 ↓</text><circle cx='120' cy='46' r='8' fill='#c9613f'/><text x='132' y='44' font-size='8.5' fill='#4d565b'>全套：损失 6% · 成本 46 万</text><circle cx='230' cy='56' r='8' fill='#2f7d6b'/><text x='242' y='54' font-size='8.5' fill='#2f7d6b'>推荐：损失 9% · 成本 34 万</text><circle cx='330' cy='74' r='8' fill='#d9c27a'/><text x='342' y='76' font-size='8.5' fill='#8a6a3a'>精简：损失 15% · 成本 22 万</text><text x='230' y='100' font-size='9' fill='#2f7d6b'>少做一项：省 12 万，多损失 6% 产量</text><rect x='430' y='36' width='218' height='60' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#c9613f'>高敏感层：关键项不可砍</text><text x='442' y='70' font-size='8.5' fill='#4d565b'>低敏感层：可精简到 22 万档</text><text x='442' y='90' font-size='8.5' fill='#2f7d6b'>取舍的答案在表里，不在习惯里</text><text x='12' y='124' font-size='8.5' fill='#79828a'>能回答「少做一项省多少、损失多少」，才是这套方法的实际价值</text></svg><div class='viz-cap'>图：组合比选：伤害与成本并列，边际代价可算</div>"
+        },
+        {
+          "name": "投产核对与回填",
+          "role": "人工",
+          "do": "工程师按推荐实施措施，投产后把实测表皮反演值与初期产量回填，修正伤害估计。",
+          "effect": "每口井都在修正实验到现场的折扣系数，后续井的总伤害预测越来越准。",
+          "trap": "不回填实测表皮，实验到现场的外推系数永远停在初值，新区块的预测就没有可信度。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='投产核对与回填：修正实验到现场的外推系数' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>回填的是实测表皮与预测表皮的差：这个差就是实验到现场的折扣</text><rect x='20' y='40' width='136' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='58' font-size='9.5' fill='#4d565b'>按推荐实施</text><text x='34' y='74' font-size='8.5' fill='#79828a'>措施 + 参数约束</text><line x1='158' y1='62' x2='190' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='190,62 184,58.5 184,65.5' fill='#8a8f80'/><rect x='192' y='40' width='130' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='206' y='58' font-size='9.5' fill='#4d565b'>投产实测</text><text x='206' y='74' font-size='8.5' fill='#79828a'>产量 + 表皮反演</text><line x1='324' y1='62' x2='356' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='356,62 350,58.5 350,65.5' fill='#8a8f80'/><rect x='358' y='40' width='136' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='372' y='58' font-size='9.5' fill='#4d565b'>偏差归因</text><text x='372' y='74' font-size='8.5' fill='#c9613f'>落在哪一项伤害</text><line x1='496' y1='62' x2='528' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='528,62 522,58.5 522,65.5' fill='#8a8f80'/><rect x='530' y='40' width='112' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='544' y='58' font-size='9.5' fill='#4d565b'>系数修正</text><text x='544' y='74' font-size='8.5' fill='#79828a'>外推折扣更新</text><path d='M580 86 C 572 108 100 108 84 88' fill='none' stroke='#8a8f80' stroke-width='1.2' stroke-dasharray='4 3'/><text x='280' y='112' font-size='8' fill='#79828a'>回填闭环：外推系数逐井标定，新区块的可信度靠这个积累</text><rect x='20' y='92' width='622' height='16' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='32' y='104' font-size='8.5' fill='#c9613f'>不回填实测表皮 → 折扣系数永远停在初值，新区块的预测没有可信度</text></svg><div class='viz-cap'>图：投产核对与回填：修正实验到现场的外推系数</div>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>总伤害命中</b>：预测的总表皮与投产后反演表皮偏差 ≤ 20%。</p><p><b>措施不冲突</b>：推荐组合内各项措施配伍合格，无相互削弱。</p><p><b>边际代价可用</b>：「少做一项」的产能损失预测与实测偏差在可接受范围内。</p>"
+      },
+      "fails": [
+        {
+          "name": "只记等级不记临界条件",
+          "why": "\"水敏中等\"无法指导滤液矿化度取值，实验结论落不了地。"
+        },
+        {
+          "name": "只做单项匹配",
+          "why": "暂堵剂与入井液不配伍，组合互相削弱而单项检查看不出来。"
+        },
+        {
+          "name": "伤害线性叠加",
+          "why": "滤液侵入与速敏耦合，线性相加低估总伤害。"
+        },
+        {
+          "name": "不回填实测表皮",
+          "why": "实验到现场的外推系数无法标定，新区块预测不可信。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 700,
+      "intro": "切换储层敏感性与增减措施项，看总伤害构成与产能、成本怎么变——试试去掉一项措施，看边际代价是多少。",
+      "html": "demo/index.html"
+    }
+  }
+}

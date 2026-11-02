@@ -1,0 +1,168 @@
+{
+ "id": "completion-lcc-opt",
+ "sceneId": "co18",
+ "methods": [
+  "opt"
+ ],
+ "title": "完井全生命周期成本测算：方案经济性多目标优选",
+ "version": "1.0.0",
+ "updated": "2026-10-25",
+ "tabs": {
+  "background": {
+   "label": "专业背景",
+   "lede": "一套完井方案的账本从下单那天一直记到井报废：工具与作业只是第一笔，免修周期里藏着修井与大修，产能差异乘上油价才是收入侧的差距。示范模型里初始投资只占全生命周期成本的 11%—21%——比方案不能只比报价单，要把现金流逐月拉开算，这正是优化算法擅长的事。",
+   "judge": [
+    {
+     "label": "数据形态",
+     "value": "结构化表格",
+     "desc": "价格库、作业定额与井史，全部现成"
+    },
+    {
+     "label": "标注成本",
+     "value": "低",
+     "desc": "现金流由模型算出，无需人工标注"
+    },
+    {
+     "label": "可见收益",
+     "value": "中",
+     "desc": "同井三方案 NPV 极差 218 万，排名随油价与出砂翻转"
+    },
+    {
+     "label": "难度",
+     "value": "低",
+     "desc": "算法成熟，卡点在成本口径统一与假设管理"
+    }
+   ],
+   "sections": [
+    {
+     "no": 1,
+     "en": "PROBLEM",
+     "title": "当前做法与问题",
+     "html": "<p>常规做法：拿几份完井设计方案比初始报价，技术指标达标的里面挑便宜的；免修周期、维护费与产能差异靠会上定性讨论。可初始投资只占全生命周期成本的 <b>11%—21%</b>——按报价单选方案，等于只翻了账本的第一页。</p><p>问题有三个：<b>账本不完整</b>——修井、大修与停产损失散落在后面几十年，没人把它们折回今天；<b>口径不统一</b>——费用科目分布在预算、结算与生产三套系统里，人工汇总一个方案要几天，含税与动迁口径一混，差距全是假的；<b>比选不可复核</b>——「筛管贵 34 万但省心」这种判断无法检验，更说不清「省心」到底值多少钱。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='三方案全生命周期成本的冰山结构'>\n<rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>三套方案的真实账本：水面上是报价单，水面下才是大头（示范默认工况）</text>\n<line x1='16' y1='112' x2='684' y2='112' stroke='#41699b' stroke-width='1.2' stroke-dasharray='6 3'/>\n<text x='20' y='106' font-size='8.5' fill='#41699b'>水面 = 报价单（初始投资）</text>\n<rect x='80' y='95' width='120' height='17' fill='#41699b' opacity='0.9'/><text x='140' y='90' font-size='9' fill='#41699b' text-anchor='middle'>A 射孔 580 万</text>\n<rect x='80' y='119' width='120' height='95.8' fill='#7a5aa0' opacity='0.75'/><rect x='80' y='214.8' width='120' height='4.2' fill='#c9613f' opacity='0.85'/>\n<text x='140' y='170' font-size='9' fill='#fff' text-anchor='middle'>操作+修井 4,698 万</text>\n<rect x='300' y='85.3' width='120' height='26.7' fill='#41699b' opacity='0.9'/><text x='360' y='80' font-size='9' fill='#41699b' text-anchor='middle'>B 筛管 920 万</text>\n<rect x='300' y='119' width='120' height='95.8' fill='#7a5aa0' opacity='0.75'/><rect x='300' y='214.8' width='120' height='4.2' fill='#c9613f' opacity='0.85'/>\n<text x='360' y='170' font-size='9' fill='#fff' text-anchor='middle'>操作+修井 4,875 万</text>\n<rect x='520' y='76' width='120' height='36' fill='#41699b' opacity='0.9'/><text x='580' y='71' font-size='9' fill='#41699b' text-anchor='middle'>C 砾石充填 1,240 万</text>\n<rect x='520' y='119' width='120' height='93.6' fill='#7a5aa0' opacity='0.75'/><rect x='520' y='212.6' width='120' height='0.9' fill='#c9613f' opacity='0.85'/>\n<text x='580' y='170' font-size='9' fill='#fff' text-anchor='middle'>操作+修井 4,656 万</text>\n<text x='16' y='232' font-size='9.5' fill='#c9613f'>水下部分是水上的 4—8 倍；报价排名 A &lt; B &lt; C，水下部分 C 反而最小——只看水面上的，等于把八成账扔掉。</text>\n</svg><span class='viz-cap'>冰山结构：初始投资（蓝）之上是报价单，操作与修井成本（紫/红）沉在水面下，折现后仍占总成本八成。</span></div>"
+    },
+    {
+     "no": 2,
+     "en": "INTERVENTION",
+     "title": "AI 能做什么",
+     "html": "<p>合适的是<b>「现金流引擎 + 情景优化」</b>两件套，不涉及深度学习——这里没有样本可学，但有清晰的财务机理可算。<b>现金流引擎</b>：把价格库、作业定额、产能预测与失效规律拼成逐月现金流——收入 = 产量 × 油价，支出 = 操作成本 + 期望修井费（出砂风险 ×（1 − 防砂能力）），按月折现成 NPV 与回收期；<b>情景优化</b>：在 NPV、回收期、期望修井次数之间做约束排序，再对油价、出砂倾向逐项做敏感性，输出「什么条件下选什么」的决策域。</p><p>算法的输出不是单一答案，是<b>带边界的答案</b>：示范里推荐方案在油价 60 美元处从 A 翻到 B、出砂倾向 0.34 与 0.74 处各有一条边界——把这三条边界告诉工程师，比「B 最好」三个字有用得多。</p><div class='viz'><svg viewBox='0 0 700 220' role='img' aria-label='现金流引擎加情景优化的两件套架构'>\n<rect x='0' y='0' width='700' height='220' fill='#fbfaf6'/>\n<defs><marker id='lcA' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<text x='16' y='18' font-size='11' fill='#242b2e'>两个部件：现金流引擎管「算得全」，情景优化管「说得清」</text>\n<rect x='16' y='44' width='136' height='92' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='64' font-size='10' fill='#242b2e'>四类数据</text><text x='28' y='82' font-size='9' fill='#4d565b'>工具材料价格库</text><text x='28' y='96' font-size='9' fill='#4d565b'>作业费用定额</text><text x='28' y='110' font-size='9' fill='#4d565b'>产能预测（产量+递减）</text><text x='28' y='124' font-size='9' fill='#4d565b'>井史失效与维护</text>\n<path d='M152 90 L176 90' stroke='#242b2e' stroke-width='1.2' marker-end='url(#lcA)'/>\n<rect x='180' y='44' width='158' height='92' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='192' y='64' font-size='10' fill='#fff'>全生命周期现金流引擎</text><text x='192' y='82' font-size='9' fill='#d8ecdf'>逐月拼现金流</text><text x='192' y='96' font-size='9' fill='#d8ecdf'>收入 = 产量 × 油价</text><text x='192' y='110' font-size='9' fill='#d8ecdf'>支出 = 操作 + 期望修井</text><text x='192' y='124' font-size='9' fill='#fff'>按月折现 → NPV</text>\n<path d='M338 90 L360 90' stroke='#242b2e' stroke-width='1.2' marker-end='url(#lcA)'/>\n<rect x='364' y='44' width='140' height='92' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='376' y='64' font-size='10' fill='#242b2e'>情景优化</text><text x='376' y='82' font-size='9' fill='#4d565b'>NPV · 回收期 · 修井</text><text x='376' y='96' font-size='9' fill='#4d565b'>三目标约束排序</text><text x='376' y='110' font-size='9' fill='#4d565b'>油价 / 出砂逐项扫</text><text x='376' y='124' font-size='9' fill='#79828a'>找排名翻转的边界</text>\n<path d='M504 90 L526 90' stroke='#242b2e' stroke-width='1.2' marker-end='url(#lcA)'/>\n<rect x='530' y='44' width='154' height='92' rx='5' fill='#41699b' opacity='0.9'/><text x='542' y='64' font-size='10' fill='#fff'>决策域</text><text x='542' y='82' font-size='9' fill='#fff'>油价低于 60 美元 → A</text><text x='542' y='96' font-size='9' fill='#fff'>60 美元以上 → B</text><text x='542' y='110' font-size='9' fill='#fff'>出砂 0.74 以上 → C</text><text x='542' y='124' font-size='9' fill='#fff'>边界写进结论</text>\n<rect x='16' y='156' width='668' height='44' rx='5' fill='#dfe6ee'/>\n<text x='28' y='175' font-size='9.5' fill='#41699b'>输出不是单点答案：推荐方案 + 适用边界 + 假设清单</text>\n<text x='28' y='192' font-size='9' fill='#4d565b'>工程师审的是假设合不合理、边界里有没有漏情景——被替掉的是「算三天报表、吵半天口径」。</text>\n</svg><span class='viz-cap'>两件套架构：引擎把四类数据拼成逐月现金流，优化在情景里找推荐方案与翻转边界。</span></div><p><b>并入专项 · 完井方案经济性智能比选</b>：智能方法用产量预测 + 成本模型做净现值比选：每个方案给出预测产量曲线（含递减与含水上升），叠加成本清单与折现，算净现值与回收期；再做敏感性分析，排序出真正影响结论的因素。价值在于把「贵还是值」变成可答辩的计算：例如「智能完井方案投资高 28%，但五年净现值高 15%；结论对递减率最敏感——若实际递减率高出预测 20%，比选结论会翻转，建议投产后 6 个月用实际数据复核」。。</p>"
+    },
+    {
+     "no": 3,
+     "en": "DATA",
+     "title": "需要准备什么",
+     "html": "<p><b>四类输入</b>：完井工具与材料价格库（管柱、封隔器、筛管的单价与规格）；作业费用定额（钻机日费、修井机、作业周期）；单井产能预测（不同完井方式的初期产量与递减率，可来自产能模型）；失效与维护记录（井史里的免修周期、修井次数与大修费用）。</p><p><b>坑</b>：口径先统一——含税不含税、日费含不含动迁，一处不一致比选全作废；免修周期是<b>截尾数据</b>——「还没失效」不等于「不会失效」，直接取平均会把免修周期高估一大截，要按生存分析处理；油价给区间不给点值，结论必须挂在情景上。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='四类数据统一口径汇成现金流模板'>\n<rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/>\n<defs><marker id='lcB' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs>\n<text x='16' y='18' font-size='11' fill='#242b2e'>需要准备什么：四类输入，先过「口径统一」再进模板</text>\n<rect x='16' y='34' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='28' y='54' font-size='10' fill='#242b2e'>价格库与作业定额</text><text x='28' y='72' font-size='8.5' fill='#79828a'>单价 × 规格 · 日费 × 周期</text>\n<rect x='216' y='34' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='228' y='54' font-size='10' fill='#242b2e'>产能预测</text><text x='228' y='72' font-size='8.5' fill='#79828a'>初期产量 · 递减率（按方式）</text>\n<rect x='16' y='102' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='28' y='122' font-size='10' fill='#c9613f'>失效与维护记录</text><text x='28' y='140' font-size='8.5' fill='#c9613f'>免修周期 · 修井费（截尾！）</text>\n<rect x='216' y='102' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='228' y='122' font-size='10' fill='#242b2e'>口径清单</text><text x='228' y='140' font-size='8.5' fill='#79828a'>含税？动迁？折现基准点？</text>\n<path d='M206 62 L266 62' stroke='#79828a' marker-end='url(#lcB)'/><path d='M406 62 L466 78' stroke='#79828a' marker-end='url(#lcB)'/><path d='M206 130 L266 130' stroke='#c9613f' marker-end='url(#lcB)'/><path d='M406 130 L466 116' stroke='#79828a' marker-end='url(#lcB)'/>\n<rect x='470' y='54' width='214' height='92' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='484' y='78' font-size='10.5' fill='#fff'>统一现金流模板</text><text x='484' y='98' font-size='9' fill='#d8ecdf'>一口井一行 · 一月一列</text><text x='484' y='116' font-size='9' fill='#d8ecdf'>方案间自动同口径</text><text x='484' y='134' font-size='9' fill='#fff'>口径不齐的比选一律无效</text>\n<text x='16' y='186' font-size='9.5' fill='#c9613f'>坑：把「还没失效」当「不会失效」取平均，免修周期被高估一大截——未失效井要在生存分析里当截尾样本用。</text>\n</svg><span class='viz-cap'>数据汇聚：四类输入先过口径清单，再进统一模板；失效记录是截尾数据，不能直接平均。</span></div>"
+    },
+    {
+     "no": 4,
+     "en": "DIFFICULTY",
+     "title": "难度与参考方向",
+     "html": "<p>难点：<b>假设敏感</b>——示范里油价从 40 拉到 100，推荐方案从 A 换到 B，敏感性是必答题不是加分题；<b>失效随机</b>——修井是随机事件，期望值之外还要说明方差，否则连续两口井大修就把预算打穿；<b>隐性成本</b>——停产损失、环保合规费、平台占用容易漏项。</p><p>改进路线按成本从低到高：① 统一现金流模板，先把口径锁死；② 失效规律用生存分析建模，修井支出按蒙特卡洛给区间；③ 多目标 Pareto：NPV、回收期、期望修井三角呈现，取舍亮给工程师；④ 与产能预测模型联动，递减率按区块自动标定。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='三个难点：假设敏感、失效随机、隐性成本'>\n<rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>三个会让人白干一场的坑</text>\n<rect x='16' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10' fill='#4d565b'>① 假设敏感：排名会翻转</text>\n<line x1='40' y1='156' x2='216' y2='156' stroke='#242b2e'/><line x1='40' y1='60' x2='40' y2='156' stroke='#242b2e'/>\n<text x='34' y='170' font-size='8.5' fill='#79828a'>NPV</text><text x='216' y='170' font-size='8.5' fill='#79828a' text-anchor='end'>油价 40 → 100 美元</text>\n<path d='M46 140 C 90 100, 150 78, 212 66' fill='none' stroke='#c9613f' stroke-width='1.6'/>\n<path d='M46 148 C 90 116, 150 84, 212 58' fill='none' stroke='#41699b' stroke-width='2'/>\n<circle cx='128' cy='96' r='4' fill='none' stroke='#2f7d6b' stroke-width='2'/><text x='136' y='92' font-size='8.5' fill='#2f7d6b'>60 美元翻转</text>\n<text x='28' y='186' font-size='9' fill='#4d565b'>红线 A · 蓝线 B：只报「B 最好」不报边界，</text>\n<text x='28' y='198' font-size='9' fill='#c9613f'>油价一跌结论就翻车。</text>\n<rect x='244' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='46' font-size='10' fill='#4d565b'>② 失效随机：期望之外要方差</text>\n<text x='256' y='66' font-size='8.5' fill='#79828a'>NPV 的蒙特卡洛分布（示意）</text>\n<rect x='266' y='118' width='16' height='30' rx='2' fill='#41699b' opacity='0.55'/><rect x='286' y='96' width='16' height='52' rx='2' fill='#41699b' opacity='0.75'/><rect x='306' y='78' width='16' height='70' rx='2' fill='#41699b'/><rect x='326' y='88' width='16' height='60' rx='2' fill='#41699b' opacity='0.75'/><rect x='346' y='106' width='16' height='42' rx='2' fill='#41699b' opacity='0.55'/><rect x='366' y='126' width='16' height='22' rx='2' fill='#c9613f' opacity='0.7'/>\n<line x1='300' y1='70' x2='300' y2='152' stroke='#2f7d6b' stroke-dasharray='3 2'/><text x='300' y='64' font-size='8.5' fill='#2f7d6b' text-anchor='middle'>期望</text>\n<text x='256' y='186' font-size='9' fill='#4d565b'>只按期望编预算：右尾（红）一出现，</text>\n<text x='256' y='198' font-size='9' fill='#c9613f'>连续两口井大修就把年度预算打穿。</text>\n<rect x='472' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='46' font-size='10' fill='#4d565b'>③ 隐性成本：容易漏的四项</text>\n<text x='484' y='68' font-size='9' fill='#4d565b'>修井停产损失</text><rect x='596' y='60' width='70' height='10' rx='2' fill='#c9613f'/><text x='670' y='69' font-size='8.5' fill='#4d565b'>5.2%</text>\n<text x='484' y='88' font-size='9' fill='#4d565b'>平台槽口占用</text><rect x='596' y='80' width='32' height='10' rx='2' fill='#b26a39' opacity='0.7'/><text x='632' y='89' font-size='8.5' fill='#4d565b'>2.4%</text>\n<text x='484' y='108' font-size='9' fill='#4d565b'>环保合规费</text><rect x='596' y='100' width='24' height='10' rx='2' fill='#7a5aa0' opacity='0.7'/><text x='624' y='109' font-size='8.5' fill='#4d565b'>1.8%</text>\n<text x='484' y='128' font-size='9' fill='#4d565b'>动迁与候凝</text><rect x='596' y='120' width='15' height='10' rx='2' fill='#41699b' opacity='0.6'/><text x='615' y='129' font-size='8.5' fill='#4d565b'>1.1%</text>\n<text x='484' y='152' font-size='9' fill='#c9613f'>漏掉这四项，A 与 B 的差距</text>\n<text x='484' y='166' font-size='9' fill='#c9613f'>会被低估一半以上。</text>\n<text x='484' y='186' font-size='8.5' fill='#79828a'>占比为示范模型默认工况的示意值。</text>\n</svg><span class='viz-cap'>三个坑：假设敏感（60 美元翻转）、失效随机（要给方差）、隐性成本（漏项让差距失真）。</span></div>"
+    }
+   ]
+  },
+  "workflow": {
+   "label": "案例流程",
+   "title": "从「比报价单」到「算总账」的落地流程",
+   "lead": [
+    "这个流程把「挑便宜的」换成「算总账」。核心资产是一张全公司统一口径的现金流模板——模板口径不对，比出来的都是虚假的便宜。",
+    "下面的示范用一口井的三套方案演示第 3、4 步：拉油价与出砂倾向，看推荐方案在哪儿翻转、为什么翻转。"
+   ],
+   "stats": [
+    [
+     "默认工况推荐",
+     "B 筛管完井"
+    ],
+    [
+     "推荐翻转点",
+     "油价 60 美元"
+    ],
+    [
+     "初始投资占比",
+     "11%—21%"
+    ],
+    [
+     "邻井样本",
+     "360 口"
+    ]
+   ],
+   "steps": [
+    {
+     "name": "成本科目盘点与口径统一",
+     "role": "数据",
+     "do": "把预算、结算、生产三套系统里的费用科目对齐到一张现金流模板：工具材料、作业日费、维护、大修、停产损失，注明含税与动迁口径。",
+     "effect": "方案之间有了可比的现金流口径，任何方案 30 年账自动同口径。",
+     "trap": "含税与不含税、日费带不带动迁——口径差 20%，比选结论全白做。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='三套系统科目对齐到统一模板'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='lcS1' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs><text x='12' y='18' font-size='10' fill='#4d565b'>成本科目盘点：三套系统一张表，口径问题在进模板前解决</text><rect x='12' y='30' width='96' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='60' y='48' font-size='9.5' fill='#242b2e' text-anchor='middle'>预算系统</text><text x='60' y='62' font-size='8.5' fill='#79828a' text-anchor='middle'>报价 · 概算</text><rect x='120' y='30' width='96' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='168' y='48' font-size='9.5' fill='#242b2e' text-anchor='middle'>结算系统</text><text x='168' y='62' font-size='8.5' fill='#79828a' text-anchor='middle'>实际发生额</text><rect x='228' y='30' width='96' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='276' y='48' font-size='9.5' fill='#242b2e' text-anchor='middle'>生产系统</text><text x='276' y='62' font-size='8.5' fill='#79828a' text-anchor='middle'>维护 · 修井</text><path d='M108 50 L116 50' stroke='#79828a' marker-end='url(#lcS1)'/><path d='M216 50 L224 50' stroke='#79828a' marker-end='url(#lcS1)'/><path d='M324 50 L346 50' stroke='#79828a' marker-end='url(#lcS1)'/><rect x='350' y='24' width='150' height='52' rx='4' fill='#41699b' opacity='0.9'/><text x='425' y='46' font-size='9.5' fill='#fff' text-anchor='middle'>统一现金流模板</text><text x='425' y='64' font-size='9' fill='#fff' text-anchor='middle'>一口井一行 · 一月一列</text><path d='M500 50 L522 50' stroke='#242b2e' marker-end='url(#lcS1)'/><rect x='526' y='24' width='122' height='52' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='587' y='46' font-size='9.5' fill='#2f7d6b' text-anchor='middle'>口径检查项</text><text x='587' y='64' font-size='9' fill='#79828a' text-anchor='middle'>含税 · 动迁 · 基准点</text><text x='12' y='104' font-size='9.5' fill='#c9613f'>口径差 20% 的两家报价放在一起比，比出来的不是方案差距，是口径差距。</text></svg>"
+    },
+    {
+     "name": "免修周期与失效规律建模",
+     "role": "标注",
+     "do": "从井史统计各完井方式的免修周期与修井费用，出砂井单独标记，未失效井按生存分析做截尾处理。",
+     "effect": "每种完井方式有了失效风险曲线，期望修井次数可算、可校准。",
+     "trap": "把「还没失效」当「不会失效」直接取平均，免修周期被高估一大截。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='井史免修周期与截尾处理'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>井史里的免修周期：横线是每口井，箭头是「统计时还没失效」的截尾井</text><text x='12' y='40' font-size='8.5' fill='#79828a'>射孔完井 · 已失效</text><line x1='140' y1='37' x2='300' y2='37' stroke='#c9613f' stroke-width='2'/><circle cx='300' cy='37' r='3' fill='#c9613f'/><text x='308' y='40' font-size='8.5' fill='#c9613f'>14 月</text><text x='12' y='58' font-size='8.5' fill='#79828a'>射孔完井 · 已失效</text><line x1='140' y1='55' x2='360' y2='55' stroke='#c9613f' stroke-width='2'/><circle cx='360' cy='55' r='3' fill='#c9613f'/><text x='368' y='58' font-size='8.5' fill='#c9613f'>22 月</text><text x='12' y='76' font-size='8.5' fill='#79828a'>筛管完井 · 截尾</text><line x1='140' y1='73' x2='420' y2='73' stroke='#41699b' stroke-width='2' stroke-dasharray='5 3'/><path d='M420 73 L432 73' stroke='#41699b' marker-end='url(#lcS1b)'/><defs><marker id='lcS1b' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#41699b'/></marker></defs><text x='438' y='76' font-size='8.5' fill='#41699b'>仍在生产</text><rect x='510' y='30' width='138' height='56' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='579' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>生存分析</text><text x='579' y='70' font-size='9' fill='#d8ecdf' text-anchor='middle'>截尾井也要进模型</text><text x='12' y='104' font-size='9.5' fill='#c9613f'>直接对「已失效井」取平均会漏掉活得久的：免修周期被高估，修井风险被低估。</text></svg>"
+    },
+    {
+     "name": "全生命周期现金流引擎",
+     "role": "算法",
+     "do": "逐月拼现金流：收入 = 产量 × 油价，支出 = 操作成本 + 期望修井费，修井另计停产损失，全部按月折现成 NPV 与回收期。",
+     "effect": "任意方案任意情景秒级出账，方案之间自动同口径。",
+     "trap": "折现率与油价假设写死在代码里——结论只在那一个情景里成立。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='逐月现金流引擎'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='lcS3' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#41699b'/></marker></defs><text x='12' y='18' font-size='10' fill='#4d565b'>一个月的账：收入 − 操作成本 − 期望修井 → 折现累加</text><rect x='12' y='34' width='110' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='67' y='55' font-size='9.5' fill='#242b2e' text-anchor='middle'>产量 × 油价</text><rect x='146' y='34' width='110' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='201' y='55' font-size='9.5' fill='#242b2e' text-anchor='middle'>− 操作成本 45%</text><rect x='280' y='34' width='110' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='335' y='55' font-size='9.5' fill='#c9613f' text-anchor='middle'>− 期望修井费</text><rect x='414' y='34' width='110' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='469' y='55' font-size='9.5' fill='#242b2e' text-anchor='middle'>× 月度折现</text><rect x='548' y='30' width='100' height='42' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='598' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>NPV · 回收期</text><text x='598' y='64' font-size='8.5' fill='#d8ecdf' text-anchor='middle'>秒级 / 方案</text><path d='M122 51 L142 51' stroke='#41699b' marker-end='url(#lcS3)'/><path d='M256 51 L276 51' stroke='#41699b' marker-end='url(#lcS3)'/><path d='M390 51 L410 51' stroke='#41699b' marker-end='url(#lcS3)'/><path d='M524 51 L544 51' stroke='#41699b' marker-end='url(#lcS3)'/><text x='12' y='94' font-size='9.5' fill='#c9613f'>期望修井 = 出砂倾向 ×（1 − 防砂能力），每次修井另计 3 个月停产损失——漏了它，防砂投资永远「不划算」。</text><text x='12' y='112' font-size='8.5' fill='#79828a'>初始投资只在第 0 月出现一次；递减率按产能预测模型逐月衰减产量。</text></svg>"
+    },
+    {
+     "name": "情景比选与敏感性",
+     "role": "算法",
+     "do": "在 NPV 最大、回收期最短、期望修井最少之间做约束排序，对油价、出砂倾向、评价年限逐项做敏感性，找排名翻转的边界。",
+     "effect": "输出「什么条件下选什么」的决策域，而不是单一答案。",
+     "trap": "只给单一最优不给敏感性——油价一变结论翻转，信誉全失。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='敏感性扫描与决策域'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>油价敏感性：两根曲线的交叉点就是决策域的边界（示范默认工况）</text><line x1='40' y1='92' x2='330' y2='92' stroke='#242b2e'/><line x1='40' y1='30' x2='40' y2='92' stroke='#242b2e'/><text x='36' y='104' font-size='8.5' fill='#79828a'>NPV</text><text x='330' y='104' font-size='8.5' fill='#79828a' text-anchor='end'>油价 40 → 100 美元</text><path d='M46 86 C 110 66, 200 48, 324 36' fill='none' stroke='#c9613f' stroke-width='1.6'/><path d='M46 88 C 110 72, 200 46, 324 30' fill='none' stroke='#41699b' stroke-width='2'/><circle cx='176' cy='55' r='4' fill='none' stroke='#2f7d6b' stroke-width='2'/><text x='184' y='50' font-size='8.5' fill='#2f7d6b'>60 美元：A → B 翻转</text><rect x='40' y='60' width='136' height='32' fill='#c9613f' opacity='0.12'/><rect x='176' y='60' width='154' height='32' fill='#41699b' opacity='0.12'/><text x='108' y='80' font-size='8.5' fill='#c9613f' text-anchor='middle'>A 区</text><text x='253' y='80' font-size='8.5' fill='#41699b' text-anchor='middle'>B 区</text><rect x='360' y='30' width='288' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='372' y='50' font-size='9.5' fill='#242b2e'>决策域输出（三条边界）</text><text x='372' y='68' font-size='9' fill='#4d565b'>油价 60 美元：A → B</text><text x='372' y='84' font-size='9' fill='#4d565b'>出砂倾向 0.34 / 0.74：B → C（防砂值回票价）</text><text x='12' y='116' font-size='9.5' fill='#c9613f'>只报「B 最好」不报边界：油价跌破 60，结论当月翻车。</text></svg>"
+    },
+    {
+     "name": "方案审定与假设回填",
+     "role": "人工",
+     "do": "工程师核对技术可行性与假设合理性，选定方案实施后把结算价与实际免修记录回填模板。",
+     "effect": "价格库与失效规律越用越准，下一轮比选的基线更真实。",
+     "trap": "结算价与预算价两张皮，回填不及时，模型就永远停在开工那天。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='审定与回填闭环'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='lcS5' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='12' y='30' width='110' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='67' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>比选报告</text><path d='M122 47 L152 47' stroke='#242b2e' marker-end='url(#lcS5)'/><rect x='156' y='30' width='110' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='211' y='51' font-size='9.5' fill='#242b2e' text-anchor='middle'>工程师审定</text><path d='M266 47 L296 47' stroke='#242b2e' marker-end='url(#lcS5)'/><rect x='300' y='30' width='110' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='355' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>方案实施</text><path d='M410 47 L440 47' stroke='#242b2e' marker-end='url(#lcS5)'/><rect x='444' y='30' width='110' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='499' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>结算价回填</text><path d='M554 47 C 600 47, 610 80, 560 88 C 480 98, 180 98, 90 82' fill='none' stroke='#79828a' stroke-dasharray='4 3' marker-end='url(#lcS5)'/><text x='330' y='112' font-size='9' fill='#79828a' text-anchor='middle'>闭环：结算价与免修记录回填模板，价格库与失效曲线逐年校准</text><text x='12' y='24' font-size='9.5' fill='#4d565b'>审定看两条：假设合不合理？决策域里有没有漏情景？</text></svg>"
+    },
+    {
+     "name": "产量曲线预测",
+     "role": "算法",
+     "do": "按方案类型与邻井样本预测产量曲线与不确定性区间。",
+     "effect": "把产量差异量化而不靠拍。",
+     "trap": "小样本方案（如智能完井）预测区间宽，必须标注。"
+    }
+   ],
+   "metrics": {
+    "title": "怎么算“做对了”",
+    "html": "<p><b>同口径率</b>：纳入比选的方案必须使用同一张现金流模板，科目覆盖率 100%——口径不齐的比选一律无效。</p><p><b>回测精度</b>：已实施井的实际 NPV 与测算值偏差应小于 15%（剔除油价偏离情景的因素），偏差大的先查假设、再查模型。</p><p><b>决策域可用性</b>：每个推荐方案必须附带敏感性区间，主参数变动 ±20% 内结论不变才算「稳」，翻转点要写进结论。</p><p><b>失效期望校准</b>：预测的期望修井次数与井史实际值偏差应小于 30%，且随井史回填逐年收敛。</p>"
+   },
+   "fails": [
+    {
+     "name": "只比初始报价",
+     "why": "初始投资只占全生命周期成本的一到两成，按报价单选方案等于按封面选书。"
+    },
+    {
+     "name": "口径两张皮",
+     "why": "一家含税一家不含税、日费带不带动迁，比出来的差距全是口径差，不是方案差。"
+    },
+    {
+     "name": "失效当确定",
+     "why": "修井是随机事件：只算期望不算方差，遇到连续两口井大修预算就爆。"
+    },
+    {
+     "name": "假设不可见",
+     "why": "油价与免修周期藏在附录里，评审者无法检验结论的适用边界，一次翻车就失去信任。"
+    }
+   ]
+  },
+  "demo": {
+   "mode": "auto",
+   "html": "demo/index.html",
+   "label": "可运行示范",
+   "intro": "拖动滑杆设定油价、评价年限、递减率、出砂倾向与折现率，看三套完井方案的累计现金流何时交叉、全生命周期成本差在哪一项、以及推荐方案对油价与出砂的翻转门槛。",
+   "height": 1250
+  }
+ }
+}

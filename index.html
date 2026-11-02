@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>石油勘探开发智能化可能性地图 | Petro × AI Atlas</title>
+<meta name="description" content="面向石油勘探开发全流程的智能化场景检索平台：覆盖 13 个作业环节、77 个可智能化候选场景，逐项提供介入点、数据条件、技术路线与实施难度，并支持案例接入与浏览器内交互示范。">
+<meta name="theme-color" content="#0A2038">
+<meta name="keywords" content="石油勘探开发,智能化,机器学习,计算机视觉,时序预测,优化算法,知识图谱,案例库">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/core/tokens.css?v=20261102d">
+<link rel="stylesheet" href="assets/core/layout.css?v=20261102d">
+<link rel="stylesheet" href="assets/core/ui.css?v=20261102d">
+<link rel="stylesheet" href="assets/core/polish.css?v=20261102d">
+<link rel="stylesheet" href="assets/core/vizkit.css?v=20261102d">
+<link rel="stylesheet" href="assets/completion.css?v=20261102d">
+<link rel="stylesheet" href="assets/map.css?v=20261102d">
+<link rel="stylesheet" href="assets/find.css?v=20261102d">
+<link rel="stylesheet" href="assets/data.css?v=20261102d">
+<link rel="stylesheet" href="assets/plan.css?v=20261102d">
+<link rel="stylesheet" href="assets/home.css?v=20261102d">
+</head>
+<body>
+
+<div id="view">
+  <main class="wrap" style="padding:120px 0">
+    <div class="empty"><b>正在加载</b>若本提示持续显示，请检查浏览器控制台，并确认脚本文件路径正确。</div>
+  </main>
+</div>
+
+<noscript>
+  <div class="wrap" style="padding:80px 0">
+    <div class="empty"><b>需要启用 JavaScript</b>本站是纯前端渲染的，所有页面由本地脚本生成。</div>
+  </div>
+</noscript>
+
+<!-- =========================================================
+     脚本加载顺序（改这里之前先读 docs/如何添加新案例.md）
+     1. data.js         场景元数据
+     2. registry.js     案例注册表
+     3. kit.js          渲染工具箱
+     4. cases/*         案例插件 —— 新增案例加在这一段
+     5. case-demo-host  示范宿主（整页 iframe / 模块 Shadow DOM）
+     6. case-upload     案例包导入（读 localStorage，必须在 shell 前）
+     7. shell.js        外壳，必须最后
+     ========================================================= -->
+<script src="assets/data.js?v=20261102d"></script>
+<script src="assets/completion-meta.js?v=20261102d"></script>
+<script src="assets/core/registry.js?v=20261102d"></script>
+<script src="assets/core/kit.js?v=20261102d"></script>
+<script src="assets/core/vizkit.js?v=20261102d"></script>
+<script src="assets/art.js?v=20261102d"></script>
+<script src="assets/art3d.js?v=20261102d"></script>
+<script src="assets/art3d-b.js?v=20261102d"></script>
+<script src="assets/art3d-c.js?v=20261102d"></script>
+
+<script src="assets/cases/welllog-layer.case.js?v=20261102d"></script>
+<script src="assets/cases/welllog-layer.demo.js?v=20261102d"></script>
+<!-- ↑ 新案例加在这里：<script src="assets/cases/你的案例.case.js"></script> -->
+
+<!-- 上传的案例包（localStorage）在这里恢复注册，必须在 shell.js 之前 -->
+<!-- ===== 自动生成的插件案例（node _build-plugins.js）===== -->
+<script src="assets/cases/annulus-pressure-anomaly.case.js?v=20261102d"></script>
+<script src="assets/cases/candidate-well-ranking.case.js?v=20261102d"></script>
+<script src="assets/cases/casing-integrity-kg.case.js?v=20261102d"></script>
+<script src="assets/cases/casing-program-opt.case.js?v=20261102d"></script>
+<script src="assets/cases/casing-remaining-strength.case.js?v=20261102d"></script>
+<script src="assets/cases/cement-sheath-coupling.case.js?v=20261102d"></script>
+<script src="assets/cases/cementing-param-opt.case.js?v=20261102d"></script>
+<script src="assets/cases/cementing-quality-eval.case.js?v=20261102d"></script>
+<script src="assets/cases/completion-fluid-design.case.js?v=20261102d"></script>
+<script src="assets/cases/completion-lcc-opt.case.js?v=20261102d"></script>
+<script src="assets/cases/completion-mode-reco.case.js?v=20261102d"></script>
+<script src="assets/cases/completion-risk-warn.case.js?v=20261102d"></script>
+<script src="assets/cases/completion-run-analysis.case.js?v=20261102d"></script>
+<script src="assets/cases/completion-startup-opt.case.js?v=20261102d"></script>
+<script src="assets/cases/completion-string-force.case.js?v=20261102d"></script>
+<script src="assets/cases/corrosion-scale-protect.case.js?v=20261102d"></script>
+<script src="assets/cases/downhole-monitor-config.case.js?v=20261102d"></script>
+<script src="assets/cases/downhole-tool-fault.case.js?v=20261102d"></script>
+<script src="assets/cases/downhole-toolstring-design.case.js?v=20261102d"></script>
+<script src="assets/cases/firstbreak-stalta.case.js?v=20261102d"></script>
+<script src="assets/cases/formation-damage-mitigation.case.js?v=20261102d"></script>
+<script src="assets/cases/frac-design-opt.case.js?v=20261102d"></script>
+<script src="assets/cases/hpht-gas-risk.case.js?v=20261102d"></script>
+<script src="assets/cases/icv-zone-partition.case.js?v=20261102d"></script>
+<script src="assets/cases/lift-method-opt.case.js?v=20261102d"></script>
+<script src="assets/cases/old-well-recompletion.case.js?v=20261102d"></script>
+<script src="assets/cases/packer-isolation-design.case.js?v=20261102d"></script>
+<script src="assets/cases/perforation-param-opt.case.js?v=20261102d"></script>
+<script src="assets/cases/post-completion-review.case.js?v=20261102d"></script>
+<script src="assets/cases/pressure-buildup-analysis.case.js?v=20261102d"></script>
+<script src="assets/cases/sand-control-select.case.js?v=20261102d"></script>
+<script src="assets/cases/sand-control-skin.case.js?v=20261102d"></script>
+<script src="assets/cases/sleeve-control-rl.case.js?v=20261102d"></script>
+<script src="assets/cases/slurry-system-reco.case.js?v=20261102d"></script>
+<script src="assets/cases/thermal-string-stress.case.js?v=20261102d"></script>
+<script src="assets/cases/well-abandon-design.case.js?v=20261102d"></script>
+<script src="assets/cases/wellgroup-completion-opt.case.js?v=20261102d"></script>
+<script src="assets/cases/welltest-data-clean.case.js?v=20261102d"></script>
+<!-- ===== 自动生成结束 ===== -->
+
+<script src="assets/core/case-demo-host.js?v=20261102d"></script>
+<script src="assets/core/case-upload.js?v=20261102d"></script>
+
+<script src="assets/core/admin.js?v=20261102d"></script>
+<script src="assets/core/i18n.en.js?v=20261102d"></script>
+<script src="assets/cases/i18n.cases.en.js?v=20261102d"></script>
+
+<script src="assets/datapage.js?v=20261102d"></script>
+<script src="assets/work.js?v=20261102d"></script>
+<script src="assets/plan.js?v=20261102d"></script>
+<script src="assets/stage-meta.js?v=20261102d"></script>
+<script src="assets/core/shell.js?v=20261102d"></script>
+
+<script src="assets/core/learn.js?v=20261102d"></script>
+<script src="assets/completion.js?v=20261102d"></script>
+<script src="assets/stage.js?v=20261102d"></script>
+<script src="assets/map.js?v=20261102d"></script>
+<script src="assets/find.js?v=20261102d"></script>
+
+<script>
+/* PWA：注册 Service Worker（https 或 localhost 下生效），支持安装与离线浏览 */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' ||
+    location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function () { /* 注册失败不影响站点 */ });
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：完井投产制度智能优化</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>完井投产制度智能优化</h1>
+  <p class="lead">完井投产不是「打开生产阀就完事」：压差提得快，短期产量高却容易出砂或过早见水；提得慢，产能迟迟放不出来。
+  这里把投产过程写成<b>强化学习</b>问题：<b>状态</b>是当前压差、累计采出程度与已积累的地层伤害，<b>动作</b>是下一步压差抬多少，
+  <b>回报</b>是当期产油减去出砂与产水的代价。由于状态转移是确定性的（由产能方程给出），可以直接做<b>价值迭代</b>求最优策略，
+  再与「一步提到位」「慢慢提」两种常见做法放在同一张图上对比。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>动态规划（价值迭代）</li><li>代理模型</li><li>多目标加权</li></ul></div><div><b>为什么起作用</b><ul><li>投产制度是序贯决策：当前压差影响后期出砂与含水，逐步贪心会短视</li><li>价值迭代把未来代价折回当前，代理模型让实时重算成为可能</li></ul></div><div><b>在示范里怎么看</b><ul><li>调出砂代价权重，看最优压差轨道与「一步最优」分叉</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>出砂代价权重 <output id="out-ls">0.50</output></label>
+    <input type="range" id="ls" min="0" max="1" step="0.02" value="0.5">
+  </div>
+  <div class="ctl">
+    <label>水处理成本权重 <output id="out-lw">0.30</output></label>
+    <input type="range" id="lw" min="0" max="1" step="0.02" value="0.3">
+  </div>
+  <div class="ctl">
+    <label>水体能量 <output id="out-aq">0.45</output></label>
+    <input type="range" id="aq" min="0" max="1" step="0.02" value="0.45">
+  </div>
+  <div class="ctl">
+    <label>岩石强度（出砂临界压差）<output id="out-cd">6.4 MPa</output></label>
+    <input type="range" id="cd" min="3" max="10" step="0.2" value="6.4">
+  </div>
+
+  <svg id="policy" viewBox="0 0 720 210" role="img" aria-label="三种投产制度的压差与产量曲线对比"></svg>
+  <svg id="cum" viewBox="0 0 720 190" role="img" aria-label="累计产油、出砂与产水代价对比"></svg>
+  <svg id="diag" viewBox="0 0 720 195" role="img" aria-label="优化后策略的含水与出砂诊断"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">建议首步压差</span><b id="ro-step">—</b></div>
+    <div class="ro"><span class="k">90 天累计产油</span><b id="ro-oil">—</b></div>
+    <div class="ro"><span class="k">较阶梯提产提升</span><b id="ro-gain">—</b></div>
+    <div class="ro"><span class="k">出砂 / 含水</span><b id="ro-pen">—</b></div>
+  </div>
+
+  <table class="tbl" id="tbl"></table>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

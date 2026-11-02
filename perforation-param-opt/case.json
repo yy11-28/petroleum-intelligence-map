@@ -1,0 +1,179 @@
+{
+ "id": "perforation-param-opt",
+ "sceneId": "co2",
+ "methods": [
+  "opt"
+ ],
+ "title": "射孔参数智能设计：代理模型选参数",
+ "version": "1.0.0",
+ "updated": "2026-10-23",
+ "tabs": {
+  "background": {
+   "label": "专业背景",
+   "lede": "射孔是连通井筒与储层的最后一枪。孔密、相位、穿深三个参数互相牵制：孔密提高产能但加剧出砂，穿深突破损害带收益明显却受枪身与套管限制。现场多沿用「标准组合」，少有人算过本井的最优解在哪。",
+   "judge": [
+    {
+     "label": "数据形态",
+     "value": "小样本表格",
+     "desc": "每口井一组参数 + 一个测试结果"
+    },
+    {
+     "label": "标注成本",
+     "value": "低",
+     "desc": "标签是标量（产能、出砂），不用逐点标注"
+    },
+    {
+     "label": "可见收益",
+     "value": "快",
+     "desc": "只输出一组推荐参数，工程上立即能用"
+    },
+    {
+     "label": "难度",
+     "value": "中",
+     "desc": "真实协同样本不足，要借机理模型生成训练集"
+    }
+   ],
+   "sections": [
+    {
+     "no": 1,
+     "en": "PROBLEM",
+     "title": "当前做法与问题",
+     "html": "<p>常规做法：按区块习惯选一套标准射孔参数——通常是 13–16 孔/米、60° 相位、常规深穿透弹，再凭 CCL 校深后下枪。设计书里很少见到「为什么是这个孔密」的计算过程。</p><p>问题在于三件事：<b>参数空间被局部经验取代</b>——几十种可行组合里只试过三四种；<b>目标之间是冲突的</b>——提高孔密产能上升但出砂风险同步上升，且在敏感地层上可能适得其反；<b>反馈滞后</b>——井下压力计或测试产能要几周后才出，试错成本高到无法做实验。</p><div class='viz'><svg viewBox='0 0 700 240' role='img' aria-label='射孔参数与产能出砂的双重影响'>\n<rect x='0' y='0' width='700' height='240' fill='#fbfaf6'/>\n<defs><marker id='arP' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0 0 L6 3 L0 6 Z' fill='#c9613f'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>射孔：在套管上打出通道，让地层里的油气进井筒。参数改一点，产能和出砂会同时变</text>\n<rect x='16' y='30' width='330' height='186' rx='6' fill='#efece1' stroke='#e2ded0'/><text x='30' y='50' font-size='10.5' fill='#4d565b'>井筒剖面：孔眼穿过套管与水泥环，进入地层</text>\n<rect x='34' y='64' width='300' height='120' fill='#e3dac7'/><text x='40' y='180' font-size='8.5' fill='#8a7f66'>产层</text>\n<rect x='150' y='64' width='34' height='120' fill='#fff' stroke='#242b2e'/><line x1='150' y1='64' x2='150' y2='184' stroke='#41699b' stroke-width='2.4'/><line x1='184' y1='64' x2='184' y2='184' stroke='#41699b' stroke-width='2.4'/>\n<line x1='140' y1='96' x2='150' y2='96' stroke='#c9613f' stroke-width='1.6'/><line x1='184' y1='96' x2='194' y2='96' stroke='#c9613f' stroke-width='1.6'/><line x1='140' y1='124' x2='150' y2='124' stroke='#c9613f' stroke-width='1.6'/><line x1='184' y1='124' x2='194' y2='124' stroke='#c9613f' stroke-width='1.6'/><line x1='140' y1='152' x2='150' y2='152' stroke='#c9613f' stroke-width='1.6'/><line x1='184' y1='152' x2='194' y2='152' stroke='#c9613f' stroke-width='1.6'/>\n<path d='M222 96 L188 96' stroke='#c9613f' stroke-width='1' marker-end='url(#arP)'/><path d='M222 124 L188 124' stroke='#c9613f' stroke-width='1' marker-end='url(#arP)'/><path d='M112 152 L146 152' stroke='#c9613f' stroke-width='1' marker-end='url(#arP)'/>\n<text x='228' y='100' font-size='9' fill='#4d565b'>孔密（每米几孔）</text><text x='228' y='128' font-size='9' fill='#4d565b'>穿深（打进地层多深）</text><text x='60' y='156' font-size='9' fill='#4d565b'>相位</text>\n<text x='34' y='206' font-size='9.5' fill='#4d565b'>孔打得密、打得深 → 流动通道多 → 产能高；</text><text x='34' y='222' font-size='9.5' fill='#c9613f'>但孔眼周围应力集中也更强 → 更容易出砂。</text>\n<rect x='362' y='30' width='322' height='186' rx='6' fill='#fbfaf6' stroke='#e2ded0'/><text x='376' y='50' font-size='10.5' fill='#4d565b'>两个目标，方向相反</text>\n<text x='376' y='74' font-size='10' fill='#4d565b'>产能比 PR（越高越好）</text><rect x='376' y='80' width='290' height='12' rx='2' fill='#efece1'/><rect x='376' y='80' width='250' height='12' rx='2' fill='#2f7d6b'/><text x='376' y='110' font-size='9' fill='#79828a'>孔密↑ 穿深↑ 相位↑ → PR↑</text>\n<text x='376' y='134' font-size='10' fill='#4d565b'>出砂风险（越低越好）</text><rect x='376' y='140' width='290' height='12' rx='2' fill='#efece1'/><rect x='376' y='140' width='196' height='12' rx='2' fill='#b26a39'/><text x='376' y='170' font-size='9' fill='#79828a'>孔密↑ 穿深↑ 岩石弱 → 风险↑（相位↑ 反而↓）</text>\n<line x1='376' y1='182' x2='668' y2='182' stroke='#e2ded0'/>\n<text x='376' y='200' font-size='9.5' fill='#4d565b'>所以不存在「最好的一组参数」，只有</text><text x='376' y='216' font-size='9.5' fill='#242b2e'><tspan font-weight='600'>在给定出砂容忍度下产能最高</tspan>的那一组。</text>\n</svg><span class='viz-cap'>射孔三参数（孔密/相位/穿深）与两个方向相反的目标：产能要通道多，防砂要扰动小。</span></div>"
+    },
+    {
+     "no": 2,
+     "en": "INTERVENTION",
+     "title": "AI 能做什么",
+     "html": "<p>样本只有几百井次，不够直接训练端到端网络。可行路线是<b>机理模型 + 代理模型 + 多目标寻优</b>：先用射孔产能的解析/数值模型（如 Karakas–Tariq 的表皮分解）批量生成几万组「参数→产能」样本，训练一个轻量代理模型替代耗时计算，再在秒级完成的代理模型上做穷举或多目标优化，输出<b>帕累托前沿</b>而不是单一答案。</p><p>工程师拿到的不是一组数字，而是一条「产能 / 出砂风险」的取舍曲线：给定本井的出砂容忍度，曲线上对应的那一点就是推荐参数。计算量从每次跑专业软件几小时，变成拖动滑杆即时刷新。</p><div class='viz'><svg viewBox='0 0 700 220' role='img' aria-label='代理模型替代机理模型做寻优'><rect x='0' y='0' width='700' height='220' fill='#fbfaf6'/>\n<defs><marker id='arQ' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>为什么需要代理模型：机理模型跑一次几十分钟，穷举几万组根本不可能</text>\n<rect x='16' y='32' width='150' height='70' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='91' y='54' font-size='10.5' fill='#242b2e' text-anchor='middle'>机理模型</text><text x='91' y='72' font-size='9' fill='#c9613f' text-anchor='middle'>单次 ≈ 30–60 min</text><text x='91' y='90' font-size='9' fill='#79828a' text-anchor='middle'>产能 + 出砂</text>\n<path d='M166 67 L206 67' stroke='#242b2e' marker-end='url(#arQ)'/>\n<rect x='206' y='32' width='150' height='70' rx='5' fill='#41699b' opacity='0.9'/><text x='281' y='52' font-size='10.5' fill='#fff' text-anchor='middle'>实验设计采样</text><text x='281' y='70' font-size='9' fill='#fff' text-anchor='middle'>拉丁超立方</text><text x='281' y='88' font-size='9' fill='#fff' text-anchor='middle'>几百组即可覆盖</text>\n<path d='M356 67 L396 67' stroke='#242b2e' marker-end='url(#arQ)'/>\n<rect x='396' y='32' width='150' height='70' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='471' y='52' font-size='10.5' fill='#fff' text-anchor='middle'>代理模型</text><text x='471' y='70' font-size='9' fill='#fff' text-anchor='middle'>单次 &lt; 1 ms</text><text x='471' y='88' font-size='9' fill='#fff' text-anchor='middle'>精度用留出集校验</text>\n<path d='M546 67 L586 67' stroke='#242b2e' marker-end='url(#arQ)'/>\n<rect x='586' y='32' width='98' height='70' rx='5' fill='#b26a39' opacity='0.9'/><text x='635' y='54' font-size='10.5' fill='#fff' text-anchor='middle'>穷举寻优</text><text x='635' y='72' font-size='9' fill='#fff' text-anchor='middle'>4.8 万组</text><text x='635' y='90' font-size='9' fill='#fff' text-anchor='middle'>0.4 s</text>\n<line x1='16' y1='118' x2='684' y2='118' stroke='#e2ded0'/>\n<text x='16' y='136' font-size='10.5' fill='#4d565b'>代理模型不是「换个算法猜」，而是<tspan font-weight='600'>把机理模型的计算成本摊掉</tspan>：先花一次成本换一个毫秒级的替身，再在替身上做穷举。</text>\n<rect x='16' y='148' width='330' height='58' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='166' font-size='9.5' fill='#4d565b'>校验：留出 10% 样本不参与训练，看代理预测的</text><text x='28' y='182' font-size='9.5' fill='#4d565b'>产能与出砂误差（本例 R² ≈ 0.97 / 0.93）</text><text x='28' y='198' font-size='9' fill='#c9613f'>误差不在训练样本上测，那叫自欺</text>\n<rect x='360' y='148' width='324' height='58' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='372' y='166' font-size='9.5' fill='#41699b'>外推是最大的坑</text><text x='372' y='182' font-size='9' fill='#4d565b'>推荐值必须落在采样覆盖范围内（凸包内），</text><text x='372' y='198' font-size='9' fill='#4d565b'>越界就要回机理模型补样本再重训。</text>\n</svg><span class='viz-cap'>代理模型把「跑一次几十分钟」换成「毫秒级」，才谈得上在约束下穷举寻优。</span></div><p><b>并入专项 · 射孔孔眼布局智能设计</b>：智能方法把布孔变成沿井段的寻优问题：先用机理模型（孔眼流动压降 + 储层流入）建立「孔密—产能」与「孔密—出砂风险」的代理模型，再按井段物性分段寻优，输出帕累托方案集——例如「高渗段 20 孔/米、低渗段 8 孔/米，趾端加密」。价值是把沿井段的差异化从「想做但算不清」变成可求解：每段最优孔密由该段物性与出砂约束共同决定，方案附带各段的产能贡献预测，便于答辩。。</p><p><b>并入专项 · 负压射孔参数智能优选</b>：智能方法把「取中值」变成「算窗口」：用孔眼压实带渗透率恢复模型算清洁收益随负压的变化，用井壁稳定模型算塌井风险，两条曲线交叉区间就是安全窗口，窗口内再按产能目标取点。输出是带边界说明的推荐：「推荐 4.2 MPa（氮气），安全窗口 3.5—5.1 MPa；上限由 2180 m 处弱胶结段的井壁稳定控制，下限由孔眼清洁度 60% 控制」。。</p>"
+    },
+    {
+     "no": 3,
+     "en": "DATA",
+     "title": "需要准备什么",
+     "html": "<p><b>储层与岩石力学参数</b>：渗透率（含各向异性 k<sub>v</sub>/k<sub>h</sub>）、孔隙度、岩石单轴抗压强度、地应力、井眼半径与钻井损害深度/损害带渗透率比——这些是机理模型的输入，不需要标注。</p><p><b>真实样本</b>：200–500 井次的「参数组合 + 测试产能 + 出砂/修井记录」，用于校正机理模型、并在最后做 sanity check。</p><p><b>弹型库</b>：各型号弹的孔径、穿深（地面靶与地层条件下）、适用枪身与套管钢级，作为搜索空间的边界约束。</p><div class='viz'><svg viewBox='0 0 700 190' role='img' aria-label='数据来源与出砂标签的瓶颈'><rect x='0' y='0' width='700' height='190' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>需要准备什么：机理模型可算的部分不缺样本，缺的是「算完之后对不对」</text>\n<rect x='16' y='30' width='200' height='110' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='116' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>机理模型输入</text>\n<text x='28' y='66' font-size='9' fill='#4d565b'>井眼/泄流半径 · 损害深度</text><text x='28' y='80' font-size='9' fill='#4d565b'>孔密 · 相位 · 穿深 · 孔径</text><text x='28' y='94' font-size='9' fill='#4d565b'>各向异性 kv/kh</text><line x1='28' y1='104' x2='204' y2='104' stroke='#d8d2c4'/><text x='28' y='120' font-size='9' fill='#79828a'>来自测井与射孔器材目录</text><text x='28' y='134' font-size='9' fill='#79828a'>无需标注，可批量生成</text>\n<rect x='228' y='30' width='200' height='110' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='328' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>真实产能（校验用）</text>\n<text x='240' y='66' font-size='9' fill='#4d565b'>投产比采油指数 · 表皮反演</text><text x='240' y='84' font-size='9' fill='#4d565b'>PLT 分层产出剖面</text><line x1='240' y1='104' x2='416' y2='104' stroke='#d8d2c4'/><text x='240' y='120' font-size='9' fill='#c9613f'>320 井次，层位与年代分散</text><text x='240' y='134' font-size='9' fill='#c9613f'>口径不统一</text>\n<rect x='440' y='30' width='244' height='110' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='562' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>出砂标签（最缺）</text>\n<text x='452' y='66' font-size='9' fill='#4d565b'>含砂监测 · 冲砂作业记录</text><text x='452' y='84' font-size='9' fill='#4d565b'>UCS / 声波时差推算的岩强度</text><line x1='452' y1='104' x2='672' y2='104' stroke='#d8d2c4'/><text x='452' y='120' font-size='9' fill='#c9613f'>只有「出砂了才记」，轻度出砂没有标签</text><text x='452' y='134' font-size='9' fill='#c9613f'>不同作业方口径不一致</text>\n<rect x='160' y='152' width='380' height='28' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='350' y='170' font-size='10.5' fill='#fff' text-anchor='middle'>代理训练集 4.8 万组（机理生成）+ 320 井次真实校验</text>\n<path d='M116 140 L116 152' stroke='#79828a'/><path d='M328 140 L328 152' stroke='#c9613f'/><path d='M562 140 L562 152' stroke='#c9613f'/>\n</svg><span class='viz-cap'>数据分层：机理输入可批量生成，瓶颈是真实产能校验与出砂标签（只有「出砂了才记」）。</span></div>"
+    },
+    {
+     "no": 4,
+     "en": "DIFFICULTY",
+     "title": "难度与参考方向",
+     "html": "<p>难点：<b>机理模型准不准</b>决定了代理模型的上限，而机理模型的输入（损害深度、各向异性）往往只有取值范围而不是确定值；<b>出砂端缺少定量模型</b>——出砂是阈值型行为的连续判据至今没有统一口径，通常只能用「强度折减 + 应力集中系数」做代理指标；<b>多目标怎么加权</b>取决于油价与作业成本。</p><p>改进路线：① 先用 Sobol / 拉丁超立方做实验设计，保证几万组样本均匀覆盖参数空间；② 代理模型用高斯过程而不是神经网络——样本小、需要不确定性估计；③ 输入不确定性用蒙特卡洛传播，把「安全边界」也画出来；④ 最终选点用 期望改善（EI） 之类的贝叶斯优化准则，把新井的不断到来的测试数据接回去更新模型。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='外推风险、约束与帕累托前沿取舍'><rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>两个必须处理好的问题：别让模型外推，别把前沿直接丢给人</text>\n<rect x='16' y='28' width='320' height='160' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10.5' fill='#4d565b'>① 外推：推荐值跑出了训练覆盖范围</text>\n<line x1='40' y1='150' x2='300' y2='150' stroke='#242b2e'/><line x1='40' y1='60' x2='40' y2='150' stroke='#242b2e'/>\n<rect x='52' y='80' width='150' height='62' fill='none' stroke='#2f7d6b' stroke-dasharray='4 3'/><text x='60' y='96' font-size='9' fill='#2f7d6b'>采样覆盖范围</text>\n<circle cx='70' cy='110' r='2' fill='#41699b'/><circle cx='92' cy='94' r='2' fill='#41699b'/><circle cx='116' cy='124' r='2' fill='#41699b'/><circle cx='140' cy='88' r='2' fill='#41699b'/><circle cx='164' cy='118' r='2' fill='#41699b'/><circle cx='188' cy='100' r='2' fill='#41699b'/>\n<circle cx='262' cy='72' r='5' fill='none' stroke='#c9613f' stroke-width='1.6'/><circle cx='262' cy='72' r='2.4' fill='#c9613f'/><text x='232' y='68' font-size='9' fill='#c9613f' text-anchor='end'>推荐值</text>\n<text x='28' y='170' font-size='9' fill='#c9613f'>越界的预测值看着更好，实钻后往往打折扣</text><text x='28' y='184' font-size='9' fill='#79828a'>处理：越界即回机理模型补样本重训</text>\n<rect x='352' y='28' width='332' height='160' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='364' y='46' font-size='10.5' fill='#4d565b'>② 帕累托前沿不能直接给人</text>\n<line x1='380' y1='150' x2='664' y2='150' stroke='#242b2e'/><line x1='380' y1='60' x2='380' y2='150' stroke='#242b2e'/>\n<circle cx='396' cy='128' r='2.6' fill='#cfd8dd'/><circle cx='420' cy='116' r='2.6' fill='#cfd8dd'/><circle cx='448' cy='104' r='2.6' fill='#cfd8dd'/><circle cx='480' cy='92' r='2.6' fill='#cfd8dd'/><circle cx='516' cy='80' r='2.6' fill='#cfd8dd'/><circle cx='556' cy='70' r='2.6' fill='#cfd8dd'/><circle cx='600' cy='64' r='2.6' fill='#cfd8dd'/><circle cx='640' cy='62' r='2.6' fill='#cfd8dd'/>\n<path d='M396 128 C 440 108, 500 82, 640 62' fill='none' stroke='#41699b' stroke-width='1.6'/>\n<line x1='380' y1='112' x2='664' y2='112' stroke='#b26a39' stroke-dasharray='5 3'/><text x='664' y='108' font-size='8.5' fill='#b26a39' text-anchor='end'>出砂容忍上限</text>\n<circle cx='470' cy='112' r='4.5' fill='#41699b'/><text x='478' y='126' font-size='9' fill='#41699b'>约束下的解</text>\n<text x='364' y='170' font-size='9' fill='#4d565b'>前沿上有几十个点都「有资格」，不给偏好就没人用；</text><text x='364' y='184' font-size='9' fill='#4d565b'>给出砂容忍度，前沿与约束线的<tspan font-weight='600'>交点</tspan>才是可施工的方案。</text>\n</svg><span class='viz-cap'>左：外推风险（推荐值跑出采样覆盖）。右：帕累托前沿必须由约束收敛到唯一可施工解。</span></div>"
+    }
+   ]
+  },
+  "workflow": {
+   "label": "案例流程",
+   "title": "一口井的射孔参数寻优流程",
+   "lead": [
+    "这个流程的核心是把「跑一次射孔产能模型的几十分钟」换成「代理模型上的毫秒级穷举」，从而让多目标优化第一次变得可行。",
+    "下面的示范就是这个流程的第 2–4 步：拖动参数，看每一组参数落在二维目标空间的哪里、约束下最优的那组是什么。"
+   ],
+   "stats": [
+    [
+     "真实样本",
+     "320 井次"
+    ],
+    [
+     "代理训练集",
+     "4.8 万组"
+    ],
+    [
+     "单次寻优",
+     "0.4 s"
+    ],
+    [
+     "样本井次",
+     "420"
+    ],
+    [
+     "样本井次",
+     "260"
+    ]
+   ],
+   "steps": [
+    {
+     "name": "机理模型搭建与标定",
+     "role": "数据",
+     "do": "用射孔表皮分解模型（平面流 + 垂向汇聚 + 井筒效应）算出给定参数下的总表皮与产能比，用真实测试井标定 20–30 口。",
+     "effect": "有了可批量产样本的「假真值」，不依赖昂贵的现场试验。",
+     "trap": "损害深度与各向异性取不准时绝对产能会偏，但参数之间的相对好坏仍然可信——别把它当产能预测值公开使用。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='机理模型搭建与标定'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='30' width='120' height='36' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='72' y='52' font-size='9.5' fill='#242b2e' text-anchor='middle'>射孔表皮模型</text><rect x='12' y='72' width='120' height='30' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='72' y='91' font-size='9.5' fill='#242b2e' text-anchor='middle'>孔眼流动压降</text><path d='M132 48 L166 60' stroke='#79828a'/><path d='M132 87 L166 68' stroke='#79828a'/><rect x='166' y='42' width='130' height='36' rx='4' fill='#41699b' opacity='0.9'/><text x='231' y='58' font-size='9.5' fill='#fff' text-anchor='middle'>机理模型</text><text x='231' y='72' font-size='9' fill='#fff' text-anchor='middle'>单次 30–60 min</text><path d='M296 60 L330 60' stroke='#242b2e' marker-end='url(#arT)'/><defs><marker id='arT' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='330' y='42' width='150' height='36' rx='4' fill='#c9613f' opacity='0.85'/><text x='405' y='58' font-size='9.5' fill='#fff' text-anchor='middle'>用 320 井次标定</text><text x='405' y='72' font-size='9' fill='#fff' text-anchor='middle'>表皮反演值对齐</text><path d='M480 60 L514 60' stroke='#242b2e' marker-end='url(#arT)'/><rect x='514' y='42' width='134' height='36' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='581' y='64' font-size='9.5' fill='#fff' text-anchor='middle'>可用作样本发生器</text><rect x='166' y='88' width='482' height='24' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='178' y='104' font-size='9' fill='#4d565b'>标定看的是「模型算出的表皮」与「实测反演的表皮」是否一致；这一步不做，后面 4.8 万组样本都是精致的垃圾。</text></svg>"
+    },
+    {
+     "name": "实验设计与批量生成样本",
+     "role": "算法",
+     "do": "对孔密、相位、穿深、孔径、储层强度按拟随机序列采样，生成几万组「参数→产能/出砂代理指标」样本。",
+     "effect": "得到覆盖均匀的训练集，避免集中在常用参数附近。",
+     "trap": "只采样常用组合会让模型在从未见过的区域外推，推荐结果可能违反物理。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='实验设计与批量样本生成'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>三维参数空间的采样：均匀网格 vs 拉丁超立方</text><rect x='12' y='28' width='150' height='80' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='26' y='44' font-size='9' fill='#79828a'>网格（每维 8 档）</text><circle cx='40' cy='60' r='2' fill='#cfd8dd'/><circle cx='40' cy='80' r='2' fill='#cfd8dd'/><circle cx='40' cy='100' r='2' fill='#cfd8dd'/><circle cx='80' cy='60' r='2' fill='#cfd8dd'/><circle cx='80' cy='80' r='2' fill='#cfd8dd'/><circle cx='80' cy='100' r='2' fill='#cfd8dd'/><circle cx='120' cy='60' r='2' fill='#cfd8dd'/><circle cx='120' cy='80' r='2' fill='#cfd8dd'/><circle cx='120' cy='100' r='2' fill='#cfd8dd'/><text x='26' y='112' font-size='9' fill='#c9613f'>512 组，投影后大量重合</text><rect x='176' y='28' width='150' height='80' rx='4' fill='#dfe6ee' stroke='#d8d2c4'/><text x='190' y='44' font-size='9' fill='#41699b'>拉丁超立方</text><circle cx='200' cy='62' r='2' fill='#41699b'/><circle cx='228' cy='98' r='2' fill='#41699b'/><circle cx='252' cy='72' r='2' fill='#41699b'/><circle cx='278' cy='90' r='2' fill='#41699b'/><circle cx='300' cy='58' r='2' fill='#41699b'/><circle cx='190' cy='84' r='2' fill='#41699b'/><circle cx='216' cy='60' r='2' fill='#41699b'/><circle cx='262' cy='104' r='2' fill='#41699b'/><circle cx='292' cy='78' r='2' fill='#41699b'/><text x='190' y='112' font-size='9' fill='#41699b'>300 组，每维投影都不重合</text><path d='M338 68 L368 68' stroke='#242b2e' marker-end='url(#arT2)'/><defs><marker id='arT2' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='368' y='28' width='280' height='80' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='380' y='46' font-size='9.5' fill='#4d565b'>样本量：孔密 18 档 × 相位 5 × 穿深 15</text><text x='380' y='64' font-size='9.5' fill='#4d565b'>= 1,350 组（单次 30 min → 串行需 28 天）</text><text x='380' y='82' font-size='9.5' fill='#41699b'>并行 + 代理：实际 4.8 万组 / 用时 &lt; 1 天</text><text x='380' y='100' font-size='9' fill='#79828a'>采样边界要覆盖到现场可能取到的全部参数范围</text></svg>"
+    },
+    {
+     "name": "训练代理模型",
+     "role": "算法",
+     "do": "用高斯过程/梯度提升树拟合产能与出砂风险两个目标，留出 20% 做验证并给出预测不确定度。",
+     "effect": "单次评估从几十分钟降到毫秒，穷举与贝叶斯优化成为可能。",
+     "trap": "必须保存不确定度：只有点估计会让优化器跑到样本稀疏区取到一个虚假的「最优」。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='代理模型训练与留出集校验'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>训练与校验：留出 10% 不参与训练，误差只在留出集上看</text><rect x='12' y='30' width='190' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='107' y='48' font-size='9.5' fill='#242b2e' text-anchor='middle'>4.8 万组样本</text><text x='107' y='64' font-size='9' fill='#79828a' text-anchor='middle'>机理模型生成</text><path d='M202 50 L236 50' stroke='#242b2e' marker-end='url(#arT3)'/><defs><marker id='arT3' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='236' y='30' width='96' height='40' rx='4' fill='#c9613f' opacity='0.85'/><text x='284' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>切分 9:1</text><text x='284' y='64' font-size='9' fill='#fff' text-anchor='middle'>随机但分层</text><path d='M332 50 L366 50' stroke='#242b2e' marker-end='url(#arT3)'/><rect x='366' y='28' width='130' height='44' rx='4' fill='#41699b' opacity='0.9'/><text x='431' y='46' font-size='9.5' fill='#fff' text-anchor='middle'>训练代理模型</text><text x='431' y='62' font-size='9' fill='#fff' text-anchor='middle'>高斯过程 / GBDT</text><path d='M496 50 L530 50' stroke='#242b2e' marker-end='url(#arT3)'/><rect x='530' y='28' width='118' height='44' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='589' y='46' font-size='9.5' fill='#fff' text-anchor='middle'>留出集校验</text><text x='589' y='62' font-size='9' fill='#fff' text-anchor='middle'>R² 0.97 / 0.93</text><rect x='12' y='80' width='320' height='32' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='96' font-size='9' fill='#c9613f'>在训练样本上测误差永远很好看</text><text x='24' y='108' font-size='9' fill='#4d565b'>留出集 + 320 井次真实井双通道校验</text><rect x='346' y='80' width='302' height='32' rx='4' fill='#dfe6ee' stroke='#d8d2c4'/><text x='358' y='96' font-size='9' fill='#41699b'>同时输出预测区间</text><text x='358' y='108' font-size='9' fill='#4d565b'>区间宽 = 该区域样本稀疏，不确定性要一起给人看</text></svg>"
+    },
+    {
+     "name": "多目标寻优与帕累托前沿",
+     "role": "算法",
+     "do": "在约束（弹型可达、套管损伤上限、出砂风险容忍度）下求非支配解集，画出产能—出砂风险的前沿曲线。",
+     "effect": "工程师看到的是一条取舍曲线，而不是一个黑箱数字。",
+     "trap": "约束写得太紧会让前沿退化成一个点，等于又回到「标准方案」。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='多目标寻优与帕累托前沿'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>最大化产能、最小化出砂：前沿上的点互不支配，必须由约束收敛</text><line x1='30' y1='98' x2='300' y2='98' stroke='#242b2e'/><line x1='30' y1='30' x2='30' y2='98' stroke='#242b2e'/><text x='30' y='112' font-size='8.5' fill='#79828a'>产能比 PR →</text><text x='24' y='28' font-size='8.5' fill='#79828a' text-anchor='end'>↑ 出砂</text><circle cx='52' cy='88' r='2.4' fill='#cfd8dd'/><circle cx='76' cy='80' r='2.4' fill='#cfd8dd'/><circle cx='104' cy='70' r='2.4' fill='#cfd8dd'/><circle cx='136' cy='60' r='2.4' fill='#cfd8dd'/><circle cx='172' cy='50' r='2.4' fill='#cfd8dd'/><circle cx='212' cy='42' r='2.4' fill='#cfd8dd'/><circle cx='256' cy='36' r='2.4' fill='#cfd8dd'/><circle cx='290' cy='34' r='2.4' fill='#cfd8dd'/><path d='M52 88 C 110 68, 180 44, 290 34' fill='none' stroke='#41699b' stroke-width='2'/><text x='200' y='30' font-size='9' fill='#41699b'>帕累托前沿</text><line x1='30' y1='66' x2='300' y2='66' stroke='#b26a39' stroke-dasharray='5 3'/><text x='300' y='62' font-size='8.5' fill='#b26a39' text-anchor='end'>出砂容忍上限</text><circle cx='150' cy='66' r='5' fill='#41699b'/><text x='158' y='80' font-size='9' fill='#41699b'>约束下最优</text><rect x='330' y='26' width='318' height='86' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='342' y='44' font-size='9.5' fill='#4d565b'>前沿上「更好的产能」必然伴随「更高的出砂」，</text><text x='342' y='60' font-size='9.5' fill='#4d565b'>所以<tspan font-weight='600'>没有唯一最优</tspan>，只有给定容忍度后的解。</text><text x='342' y='78' font-size='9' fill='#4d565b'>同产能时取成本更低的一组（孔密小、穿深浅），</text><text x='342' y='94' font-size='9' fill='#4d565b'>这是工程上的二次排序依据。</text><text x='342' y='108' font-size='9' fill='#c9613f'>容忍上限收得过紧 → 可行域为空 → 只能沿用标准方案</text></svg>"
+    },
+    {
+     "name": "现场标定与回填",
+     "role": "人工",
+     "do": "按推荐参数施工，用测试产能与实际出砂情况回填样本库，更新代理模型。",
+     "effect": "每完成一口井，下一口井的推荐就更准，半年后推荐命中率从 55% 升到 78%。",
+     "trap": "施工偏差（孔密没打到位、穿深不达标）不回填会让模型学到错误的对应关系。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='现场标定与回填'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='30' width='112' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='68' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>推荐参数组合</text><path d='M124 47 L158 47' stroke='#242b2e' marker-end='url(#arT4)'/><defs><marker id='arT4' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='158' y='30' width='112' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='214' y='51' font-size='9.5' fill='#242b2e' text-anchor='middle'>现场施工</text><path d='M270 47 L304 47' stroke='#242b2e' marker-end='url(#arT4)'/><rect x='304' y='30' width='112' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='360' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>实测比采油指数</text><path d='M416 47 L450 47' stroke='#242b2e' marker-end='url(#arT4)'/><rect x='450' y='30' width='112' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='506' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>回填训练集</text><path d='M562 47 C 620 47, 626 80, 580 88 C 540 94, 130 96, 68 74' fill='none' stroke='#79828a' stroke-dasharray='4 3'/><rect x='12' y='74' width='300' height='36' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='90' font-size='9' fill='#4d565b'>预测 vs 实测的偏差要逐井记录，偏差大的井</text><text x='24' y='104' font-size='9' fill='#c9613f'>往往集中在某一类岩性——这就是下一次要补样的区域</text><rect x='324' y='74' width='324' height='36' rx='4' fill='#dfe6ee' stroke='#d8d2c4'/><text x='336' y='90' font-size='9' fill='#41699b'>靶心指标：预测产能 vs 实测产能的平均偏差</text><text x='336' y='104' font-size='9' fill='#4d565b'>目标 &lt; 8%；只统计「被采纳的方案」会让偏差被系统性隐藏</text></svg>"
+    },
+    {
+     "name": "机理样本批量生成",
+     "role": "算法",
+     "do": "用孔眼流动与储层流入模型批量生成不同孔密下的产能样本。",
+     "effect": "不依赖昂贵试验就能得到训练集。",
+     "trap": "机理模型的绝对产能会偏，只用于比较相对好坏。"
+    },
+    {
+     "name": "清洁收益建模",
+     "role": "算法",
+     "do": "建立负压值与压实带渗透率恢复的关系。",
+     "effect": "量化「清得净」的收益。",
+     "trap": "清洁度难实测，模型多靠间接指标校准，误差偏乐观。"
+    }
+   ],
+   "metrics": {
+    "title": "怎么算“做对了”",
+    "html": "<p><b>代理精度</b>：产能比预测的平均绝对误差 ≤ 0.03，出砂风险排序的 Spearman 相关系数 ≥ 0.85。</p><p><b>推荐命中</b>：本井实际测试产能落在推荐方案预测值的 ±10% 以内，记为一次命中；统计独立验证井上的命中率。</p><p><b>约束遵循</b>：推荐方案中出砂风险超标的比例应为 0——这是一票否决项，不计入优化目标。</p>"
+   },
+   "fails": [
+    {
+     "name": "代理模型外推",
+     "why": "推荐的参数组合落在训练集覆盖范围之外，预测的产能虚高，实钻后打了折扣。"
+    },
+    {
+     "name": "出砂指标不可比",
+     "why": "出砂风险用不同口径的代理指标训练，模型学到的其实是文献来源而不是井下事实。"
+    },
+    {
+     "name": "约束被忽略",
+     "why": "只优化产能，推荐了现场根本打不出或会伤套管的穿深，方案不可施工。"
+    },
+    {
+     "name": "帕累托集过大",
+     "why": "前沿上几十个点都有候选资格，界面没有按偏好收敛，工程师会直接退回标准方案。"
+    }
+   ]
+  },
+  "demo": {
+   "mode": "auto",
+   "html": "demo/index.html",
+   "label": "可运行示范",
+   "intro": "拖动孔密、相位、穿深与岩石强度四个滑杆：三张图分别给出「产能比—出砂风险」的帕累托前沿、三个参数的单参数灵敏度曲线（哪个还值得调）、以及表皮分解（产能为什么会变）。",
+   "height": 1120
+  }
+ }
+}

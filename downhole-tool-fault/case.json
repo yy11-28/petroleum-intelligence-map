@@ -1,0 +1,149 @@
+{
+  "id": "downhole-tool-fault",
+  "sceneId": "co43",
+  "title": "完井下入仪器投产前故障诊断：把故障拦在下井之前",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "监测仪器一旦下入就很难更换：投产后才发现某个压力计漂移或通讯中断，要靠修井起管柱才能处理，费用远高于下井前多花几小时做诊断。而现状是下井前只做通电检查——靠「能读数」判断好坏。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "时序 + 文本",
+          "desc": "自检报告、地面测试曲线、下井前联调记录"
+        },
+        {
+          "label": "标注成本",
+          "value": "低",
+          "desc": "故障类型可从历史维修与返厂记录整理"
+        },
+        {
+          "label": "可见收益",
+          "value": "中",
+          "desc": "拦在井下前，省一次修井"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "间歇性故障在短时测试里不表现"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>下井前的检查是通电看读数：接上地面设备，看压力计有没有数、读数值对不对、通讯通不通。有数就算好，然后装管柱下井。</p><p>问题有三个：<b>漂移在短时测试里看不出</b>——几分钟的通电检查看不到几小时量级的慢漂移，而这种漂移投产后会污染全部数据；<b>间歇性通讯故障测不出来</b>——测试时通了就认为没问题，实际是接触不良或线缆受应力后才断；<b>厂家自检报告格式各异</b>——不同厂家的报告不可比，历史故障经验没有沉淀成可复用判据，同样的坑反复踩。</p><svg viewBox='0 0 660 154' role='img' aria-label='通电检查 vs 基线诊断：短时测试漏掉慢漂移与间歇故障' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='154' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>「能读数」只证明了此刻能工作：慢漂移与间歇性故障在几分钟里都不表现</text><text x='50' y='42' font-size='10' fill='#3d4a48'>通电检查（现状）</text><rect x='50' y='50' width='250' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='66' y='68' font-size='8.5' fill='#4d565b'>接设备 → 有数 → 认为正常</text><text x='66' y='84' font-size='8.5' fill='#79828a'>测试时长：几分钟</text><text x='66' y='100' font-size='8.5' fill='#c9613f'>→ 慢漂移：看不出来</text><text x='66' y='116' font-size='8.5' fill='#c9613f'>→ 间歇通讯：测的时候正好通</text><text x='66' y='132' font-size='8.5' fill='#c9613f'>→ 历史经验没有沉淀</text><text x='330' y='42' font-size='10' fill='#3d4a48'>基线诊断（本方法）</text><rect x='330' y='50' width='300' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='346' y='68' font-size='9' fill='#4d565b'>出厂自检 + 地面测试 + 联调三段比对</text><text x='346' y='84' font-size='9' fill='#4d565b'>与同型号正常基线逐项比对</text><text x='346' y='100' font-size='9' fill='#2f7d6b'>→ 漂移：趋势项与基线偏离可查</text><text x='346' y='116' font-size='9' fill='#2f7d6b'>→ 通讯中断：重试与误码率可统计</text><text x='346' y='132' font-size='9' fill='#2f7d6b'>→ 故障判据沉淀成可复用规则</text><text x='12' y='148' font-size='8.5' fill='#79828a'>差别不在检查更久，而在有基线可比、有判据可复用</text></svg><div class='viz-cap'>图：通电检查 vs 基线诊断：短时测试漏掉慢漂移与间歇故障</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>用仪器出厂自检、地面测试与下井前联调数据建立正常基线，识别传感器漂移、通讯中断、电路异常与机械卡滞，把故障拦在下井之前。</p><p>关键是<b>三段数据可比</b>——把出厂、地面、联调三段放在同一基线上看，单看一段发现不了漂移，三段连起来才看得出趋势；以及<b>判据可复用</b>——不同厂家的报告先归一化，再按统一判据检查，历史故障经验才能沉淀。</p><svg viewBox='0 0 660 158' role='img' aria-label='三段数据建基线：出厂 / 地面 / 联调连起来才看得出漂移' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='158' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>单看一段都在合格范围，三段连起来看趋势才是诊断的关键</text><rect x='20' y='36' width='190' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='56' font-size='10' fill='#3d4a48'>① 出厂自检</text><text x='34' y='72' font-size='8.5' fill='#79828a'>厂家报告（格式各异）</text><text x='34' y='90' font-size='8.5' fill='#2f7d6b'>→ 归一化到统一字段</text><line x1='212' y1='66' x2='244' y2='66' stroke='#8a8f80' stroke-width='1.4'/><polygon points='244,66 238,62.5 238,69.5' fill='#8a8f80'/><rect x='246' y='36' width='190' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='260' y='56' font-size='10' fill='#3d4a48'>② 地面测试</text><text x='260' y='72' font-size='8.5' fill='#79828a'>通电曲线 + 阶跃响应</text><text x='260' y='90' font-size='8.5' fill='#2f7d6b'>→ 与基线比趋势项</text><line x1='438' y1='66' x2='470' y2='66' stroke='#8a8f80' stroke-width='1.4'/><polygon points='470,66 464,62.5 464,69.5' fill='#8a8f80'/><rect x='472' y='36' width='176' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='486' y='56' font-size='10' fill='#3d4a48'>③ 下井前联调</text><text x='486' y='72' font-size='8.5' fill='#79828a'>通讯误码 + 动作测试</text><text x='486' y='90' font-size='8.5' fill='#2f7d6b'>→ 与基线比重试次数</text><text x='20' y='116' font-size='10' fill='#4d565b'>四类故障：传感器漂移 · 通讯中断 · 电路异常 · 机械卡滞</text><text x='20' y='134' font-size='8.5' fill='#2f7d6b'>判据来自历史故障样本：同样的坑不再踩第二次</text><text x='12' y='150' font-size='8.5' fill='#79828a'>三段可比 + 判据可复用：这是把经验变成资产的唯一方式</text></svg><div class='viz-cap'>图：三段数据建基线：出厂 / 地面 / 联调连起来才看得出漂移</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>出厂自检报告</b>（各厂家格式，含标定系数与精度）；<b>地面测试记录</b>（通电曲线、阶跃响应、加压测试）；<b>下井前联调数据</b>（通讯误码率、重试次数、动作测试）；<b>历史故障与返厂记录</b>（故障类型、现象、原因与处置）。</p><p>历史故障记录是关键：判据要靠它建立；没有历史样本时，可先用同型号的正常基线做偏离检测。</p><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>自检报告归一化到统一字段；地面测试 ≥ 2 h 才看得见慢漂移；联调记录误码率与重试次数</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>三段数据必须可比（同一基线）；间歇性故障要求多次重试统计，单次通过不算通过</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>给出故障类型 + 概率 + 建议处置（更换 / 观察 / 可用）+ 需复核的项</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度中等：四类故障的信号特征本身清楚，难在间歇性故障——测试时正好正常就漏掉，需要多次重试统计才有意义；另外各厂家自检报告格式不统一，归一化本身要花功夫。</p><p><b>难在哪</b>：间歇性故障的复现率与测试次数相关，而现场留给诊断的时间有限；判据偏严会把好仪器判坏（增加成本），偏宽则漏判（代价更大）。参考方向为基线偏离检测、间歇故障统计判据与多源报告归一化。</p><p><b>与传统做法的本质差别</b>：过去是「通电有数就算好」，现在是「三段连起来看趋势、按判据分类、故障经验可复用」——差别不在检查更严格，而在经验能沉淀。</p>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "下入仪器投产前诊断怎么做",
+      "lead": [
+        "核心是把「通电有数就算好」换成「三段数据建基线、按判据分类」。",
+        "下面的示范是第 2—4 步：调整漂移量、通讯重试次数与测试时长，看故障分类与处置建议怎么变。"
+      ],
+      "stats": [
+        [
+          "故障类型",
+          "4 类"
+        ],
+        [
+          "诊断依据",
+          "三段数据"
+        ],
+        [
+          "测试时长",
+          "≥ 2 h"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "多源报告归一化",
+          "role": "数据",
+          "do": "把不同厂家的自检报告、地面测试与联调记录归一化到统一字段与量纲。",
+          "effect": "得到可横向比较的仪器档案，同型号不同厂家的数据可比。",
+          "trap": "标定系数与精度口径不统一会让不同厂家的数值直接不可比，归一化前必须先对齐口径。",
+          "viz": "<svg viewBox='0 0 660 160' role='img' aria-label='多源报告归一化：口径对齐才可比' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='160' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>厂家报告字段与量纲各不相同：先归一化，后面的比对才有意义</text><rect x='20' y='36' width='190' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='56' font-size='10' fill='#3d4a48'>A 厂报告</text><text x='34' y='74' font-size='8.5' fill='#79828a'>精度：%FS · 温漂：ppm/℃</text><text x='34' y='92' font-size='8.5' fill='#79828a'>标定：二点</text><rect x='230' y='36' width='190' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='244' y='56' font-size='10' fill='#3d4a48'>B 厂报告</text><text x='244' y='74' font-size='8.5' fill='#79828a'>精度：MPa · 温漂：kPa/℃</text><text x='244' y='92' font-size='8.5' fill='#79828a'>标定：五点</text><line x1='180' y1='120' x2='300' y2='120' stroke='#2f7d6b' stroke-width='1.4'/><polygon points='300,120 294,116.5 294,123.5' fill='#2f7d6b'/><rect x='440' y='36' width='208' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='454' y='56' font-size='10' fill='#3d4a48'>统一字段</text><text x='454' y='74' font-size='8.5' fill='#2f7d6b'>精度统一到 %FS</text><text x='454' y='92' font-size='8.5' fill='#2f7d6b'>温漂统一到 ppm/℃</text><text x='454' y='110' font-size='8.5' fill='#2f7d6b'>标定点数作为置信度权重</text><text x='20' y='138' font-size='8.5' fill='#c9613f'>归一化不是格式转换：量纲与口径对齐后，数值才真正可比</text><text x='12' y='152' font-size='8.5' fill='#79828a'>这一步做不干净，后面的基线比对就是在比不同单位</text></svg><div class='viz-cap'>图：多源报告归一化：口径对齐才可比</div>"
+        },
+        {
+          "name": "同型号基线建立",
+          "role": "算法",
+          "do": "按型号汇总正常仪器的自检与测试特征，建立该型号的正常基线与允许区间。",
+          "effect": "每台新仪器都能与同型号的正常基线比对，偏离可见。",
+          "trap": "样本量少的型号基线不稳，允许区间过宽会漏判，过窄会误判，必须标注样本量。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='同型号基线：个体与群体比，偏离才看得见' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>单台数据看不出异常：与同型号群体的正常区间比，偏离就显出来了</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>样本（同型号）→</text><text x='46' y='38' font-size='8.5' fill='#79828a'>漂移量</text><rect x='70' y='56' width='320' height='24' fill='#a9c9ba' opacity='0.3'/><text x='80' y='50' font-size='8.5' fill='#2f5a4d'>正常区间（P5—P95）</text>undefined<circle cx='110' cy='68' r='3.5' fill='#2f7d6b'/><circle cx='150' cy='64' r='3.5' fill='#2f7d6b'/><circle cx='190' cy='70' r='3.5' fill='#2f7d6b'/><circle cx='230' cy='66' r='3.5' fill='#2f7d6b'/><circle cx='270' cy='69' r='3.5' fill='#2f7d6b'/><circle cx='310' cy='65' r='3.5' fill='#2f7d6b'/><circle cx='350' cy='40' r='4.5' fill='#c9613f'/><text x='358' y='36' font-size='8.5' fill='#c9613f'>本台：超出正常区间</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#4d565b'>样本量决定区间可信度</text><text x='442' y='70' font-size='8.5' fill='#c9613f'>样本 < 10 台：区间需放宽并标注</text><text x='442' y='90' font-size='8.5' fill='#2f7d6b'>样本 ≥ 30 台：区间稳定</text><text x='12' y='124' font-size='8.5' fill='#79828a'>基线是判据的基准：样本不足时必须把不确定性明确写出来</text></svg><div class='viz-cap'>图：同型号基线：个体与群体比，偏离才看得见</div>"
+        },
+        {
+          "name": "四类故障识别",
+          "role": "算法",
+          "do": "按漂移趋势、通讯重试统计、电路特征与动作响应识别四类故障，输出故障类型与概率。",
+          "effect": "每台仪器的可疑项与依据可查，不是一句「正常 / 不正常」。",
+          "trap": "间歇性通讯故障必须多次重试统计，单次通过不算通过——这是最容易被放过的类型。",
+          "viz": "<svg viewBox='0 0 660 148' role='img' aria-label='四类故障的判据：间歇故障必须多次重试统计' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='148' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>四类故障各有判据：漂移看趋势，通讯看重试，电路看特征，机械看动作</text><rect x='20' y='34' width='150' height='48' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='32' y='54' font-size='9.5' fill='#4d565b'>① 传感器漂移</text><text x='32' y='70' font-size='8.5' fill='#79828a'>阶跃后趋势项偏离</text><text x='32' y='86' font-size='8.5' fill='#c9613f'>≥ 2 h 测试才可见</text><rect x='180' y='34' width='150' height='48' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='192' y='54' font-size='9.5' fill='#4d565b'>② 通讯中断</text><text x='192' y='70' font-size='8.5' fill='#79828a'>重试次数与误码率</text><text x='192' y='86' font-size='8.5' fill='#c9613f'>单次通过不算通过</text><rect x='340' y='34' width='150' height='48' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='352' y='54' font-size='9.5' fill='#4d565b'>③ 电路异常</text><text x='352' y='70' font-size='8.5' fill='#79828a'>工作电流与温升</text><text x='352' y='86' font-size='8.5' fill='#79828a'>与基线比曲线形状</text><rect x='500' y='34' width='148' height='48' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='512' y='54' font-size='9.5' fill='#4d565b'>④ 机械卡滞</text><text x='512' y='70' font-size='8.5' fill='#79828a'>动作时间与行程</text><text x='512' y='86' font-size='8.5' fill='#79828a'>行程不足即卡滞</text><text x='20' y='104' font-size='9' fill='#4d565b'>判据偏严误判好仪器（增加成本），偏宽漏判（代价更大）：按后果加权</text><rect x='20' y='112' width='628' height='18' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='32' y='125' font-size='8.5' fill='#c9613f'>间歇性故障最易放过：测的时候正好通，必须做多次重试统计</text><text x='12' y='140' font-size='8.5' fill='#79828a'>四类判据都来自历史故障样本：没有样本时只能做偏离检测，不能做分类</text></svg><div class='viz-cap'>图：四类故障的判据：间歇故障必须多次重试统计</div>"
+        },
+        {
+          "name": "处置建议与复核",
+          "role": "算法",
+          "do": "按故障类型与概率给出处置建议（更换 / 观察 / 可用），并列出需复核的项。",
+          "effect": "每台仪器有明确处置建议，可更换的在下井前换掉，避免投产后动管柱。",
+          "trap": "把「观察」当成「可用」是常见误读：观察项必须有明确的下井后跟踪要求，否则等于没判。",
+          "viz": "<svg viewBox='0 0 660 150' role='img' aria-label='处置建议：更换 / 观察 / 可用三档' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='150' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>三档处置对应三种代价：下井前换最便宜，投产后动管柱最贵</text><rect x='30' y='40' width='176' height='52' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='46' y='60' font-size='9.5' fill='#4d565b'>① 更换（下井前）</text><text x='46' y='78' font-size='8.5' fill='#2f7d6b'>成本：一台仪器 + 等待</text><rect x='230' y='40' width='176' height='52' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='246' y='60' font-size='9.5' fill='#4d565b'>② 观察（带条件）</text><text x='246' y='78' font-size='8.5' fill='#8a6a3a'>成本：投产后跟踪</text><rect x='430' y='40' width='208' height='52' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='446' y='60' font-size='9.5' fill='#4d565b'>③ 可用（正常）</text><text x='446' y='78' font-size='8.5' fill='#2f7d6b'>成本：无</text><text x='30' y='108' font-size='9' fill='#c9613f'>「观察」必须有跟踪要求：记录什么、多久看一次、什么情况要处理</text><text x='30' y='126' font-size='8.5' fill='#c9613f'>把观察当可用 = 没判：这类误读是投产后再出问题的常见来源</text><text x='12' y='142' font-size='8.5' fill='#79828a'>建议要能直接执行：换哪个、等多久、怎么跟踪，都要说清楚</text></svg><div class='viz-cap'>图：处置建议：更换 / 观察 / 可用三档</div>"
+        },
+        {
+          "name": "诊断结果回填",
+          "role": "人工",
+          "do": "工程师按建议处置，把投产后仪器的实际表现与下井前诊断对照回填，修正判据。",
+          "effect": "每口井都在校验下井前的判断，判据随实际表现收敛，漏判与误判都可量化。",
+          "trap": "不回填投产后表现，就不知道下井前的判据是偏严还是偏宽，经验仍然无法沉淀。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='投产后表现回填：让判据知道自己是偏严还是偏宽' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>回填的是「下井前判断 vs 投产后实际」：偏严误判与偏宽漏判都能量化</text><rect x='20' y='40' width='140' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='58' font-size='9.5' fill='#4d565b'>下井前诊断</text><text x='34' y='74' font-size='8.5' fill='#79828a'>类型 + 概率 + 处置</text><line x1='162' y1='62' x2='194' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='194,62 188,58.5 188,65.5' fill='#8a8f80'/><rect x='196' y='40' width='140' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='210' y='58' font-size='9.5' fill='#4d565b'>投产后表现</text><text x='210' y='74' font-size='8.5' fill='#79828a'>实际漂移 / 通讯情况</text><line x1='338' y1='62' x2='370' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='370,62 364,58.5 364,65.5' fill='#8a8f80'/><rect x='372' y='40' width='130' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='386' y='58' font-size='9.5' fill='#4d565b'>对照归档</text><text x='386' y='74' font-size='8.5' fill='#c9613f'>判对 / 误判 / 漏判</text><line x1='504' y1='62' x2='536' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='536,62 530,58.5 530,65.5' fill='#8a8f80'/><rect x='538' y='40' width='110' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='552' y='58' font-size='9.5' fill='#4d565b'>判据修正</text><text x='552' y='74' font-size='8.5' fill='#79828a'>阈值调整</text><path d='M590 86 C 582 108 100 108 84 88' fill='none' stroke='#8a8f80' stroke-width='1.2' stroke-dasharray='4 3'/><text x='280' y='112' font-size='8' fill='#79828a'>回填闭环：判据阈值随实际表现收敛，误判与漏判率可量化</text><rect x='20' y='92' width='628' height='16' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='32' y='104' font-size='8.5' fill='#c9613f'>不回填投产后表现 → 判据不知道自己偏严还是偏宽，经验无法沉淀</text></svg><div class='viz-cap'>图：投产后表现回填：让判据知道自己是偏严还是偏宽</div>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>漏判率为零优先</b>：投产后确认故障的仪器中，下井前被判为「可用」的比例应尽量低（漏判代价最高）。</p><p><b>误判可控</b>：被判「更换」但投后表现正常的比例 ≤ 20%（误判增加成本但不致命）。</p><p><b>建议可执行</b>：每档处置都写明执行内容、等待时间与跟踪要求。</p>"
+      },
+      "fails": [
+        {
+          "name": "通电有数就算好",
+          "why": "短时测试漏掉慢漂移与间歇性故障，投产后污染全部数据。"
+        },
+        {
+          "name": "单次重试通过即放行",
+          "why": "间歇性通讯故障正好在测试时正常，必须多次统计。"
+        },
+        {
+          "name": "报告口径不统一",
+          "why": "不同厂家数值直接不可比，基线比对失去意义。"
+        },
+        {
+          "name": "把观察当可用",
+          "why": "观察项没有跟踪要求，等于没判，投产后再出问题。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 700,
+      "intro": "调整漂移量、通讯重试次数与测试时长，看四类故障的判据命中与处置建议怎么变——把测试时长压到 30 分钟，注意漂移还能不能看出来。",
+      "html": "demo/index.html"
+    }
+  }
+}

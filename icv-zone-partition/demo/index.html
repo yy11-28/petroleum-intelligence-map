@@ -1,0 +1,146 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>智能完井层段划分智能优化 · 可运行示范</title><style>
+.panel{padding:0;font:14px/1.7 system-ui,"Microsoft YaHei",sans-serif;color:#242b2e}
+h1{font-size:19px;margin:0 0 6px}.lead{margin:0;color:#5a6469;font-size:13px}
+.ctl{display:flex;gap:26px;margin:14px 0 0;flex-wrap:wrap;align-items:flex-end}
+.ctl label{flex:1;min-width:220px;display:block}
+.ctl span{display:flex;justify-content:space-between;font-size:12.5px}
+.ctl input{width:100%}.ctl i{font-style:normal;font-size:11px;color:#8a9296}
+.fig{background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:8px 6px 2px;margin-top:14px}
+.fig h3{font-size:13px;margin:2px 8px 0;color:#3d4a48}
+.fig svg{width:100%;display:block}
+.grid{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap}
+.grid .fig{flex:1;min-width:300px;margin-top:0}
+.readouts{display:flex;gap:8px;margin:14px 0 0;flex-wrap:wrap}
+.readouts div{flex:1;min-width:140px;background:#fbfaf6;border:1px solid #e2dccd;border-radius:8px;padding:7px 12px}
+.readouts b{display:block;font-size:17px}.readouts span{font-size:11px;color:#8a9296}
+.ok b{color:#2f7d6b}.bad b{color:#c1613f}.warn b{color:#d9a441}
+.note{margin-top:14px;font-size:12.5px;color:#3d4a48;background:#f3efe2;border-radius:8px;padding:9px 14px}
+.tag{display:inline-block;background:#eef5ef;color:#2f7d6b;border-radius:5px;padding:0 7px;font-size:11px;margin-right:6px}
+.hint{font-size:11px;color:#8a9296;margin-top:2px}
+
+.cmp{margin-top:14px;border:1px solid #e2dccd;border-radius:10px;background:#fffdf8;overflow:hidden}.cmp-h{font-size:12.5px;font-weight:700;color:#3d4a48;padding:8px 14px;background:#f3efe2}.cmp-g{display:flex;gap:0;flex-wrap:wrap}.cmp-c{flex:1;min-width:240px;padding:9px 14px}.cmp-c+.cmp-c{border-left:1px solid #e2dccd}.cmp-c b{display:block;font-size:12px;margin-bottom:5px}.cmp-c.man b{color:#8a6a3a}.cmp-c.ai b{color:#2f7d6b}.cmp-c ul{margin:0;padding-left:16px}.cmp-c li{font-size:12px;line-height:1.7;color:#3d4a48;margin:2px 0}
+.meth{margin:13px 0 0;border:1px solid #e2dccd;border-left:3px solid #2f7d6b;border-radius:9px;background:#f6f4ec}.meth-h{font-size:11.5px;font-weight:700;color:#2f7d6b;letter-spacing:.05em;padding:9px 15px 2px}.meth-g{display:flex;flex-wrap:wrap;padding:0 0 9px}.meth-g>div{flex:1 1 200px;min-width:185px;padding:3px 15px}.meth-g>div+div{border-left:1px dashed #e2dccd}.meth-g b{display:block;font-size:11px;color:#8a6a3a;margin:3px 0 2px}.meth-g ul{margin:0;padding-left:14px}.meth-g li{font-size:11.6px;line-height:1.62;color:#3d4a48;margin:1px 0}</style></head><body><div class="panel blk-card">
+<h1>智能完井层段划分智能优化</h1>
+<p class="lead">分段数凭经验取 3—6 段，但真正该隔开的是水窜通道。模型预测各段产液贡献、定位层间干扰，再按「调控收益 − 成本 − 故障风险」推荐分段数。拖动分段数、点击某段阀门「关小」，看控水效果与净收益怎么变。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>产液剖面预测</li><li>分段聚类</li><li>调控收益评估</li></ul></div><div><b>为什么起作用</b><ul><li>分段太粗控不住水窜、太细成本与故障率上升，边界应由产出剖面相似性决定</li><li>分完段还要算每段调控收益，才知道多分一段值不值</li></ul></div><div><b>在示范里怎么看</b><ul><li>成本权重拉满，看分段数被压下来、收益损失多少</li></ul></div></div></div>
+<div class="ctl">
+  <label><span>分段数 <b id="vN">4</b> 段</span><input type="range" id="sN" min="2" max="6" step="1" value="4"><i>每段一个 ICV 阀（成本与故障点随之增加）</i></label>
+  <label><span>水窜强度 <b id="vW">中</b></span><input type="range" id="sW" min="0" max="2" step="1" value="1"><i>弱 → 强（水窜段含水上升越快）</i></label>
+</div>
+<div class="fig"><h3>水平井段划分与 ICV 布置（点击阀门关小/开大）</h3><svg id="cv" viewBox="0 0 900 150"></svg></div>
+<div class="grid">
+  <div class="fig"><h3>各段产液贡献与含水（当前调控状态）</h3><svg id="bc" viewBox="0 0 430 250"></svg></div>
+  <div class="fig"><h3>分段数的两难：调控收益 vs 成本与故障风险</h3><svg id="nc" viewBox="0 0 430 250"></svg></div>
+</div>
+<div class="readouts" id="ro"></div>
+<div class="cmp"><div class="cmp-h">人工做法 vs 模型做法（同一口井，同一批数据）</div><div class="cmp-g"><div class="cmp-c man"><b>人工做法（现状）</b><ul><li>按经验段数大致均分</li><li>水窜段等见水以后才确认</li><li>只算增产不算工具成本</li></ul></div><div class="cmp-c ai"><b>模型做法（本示范）</b><ul><li>沿井段 10 m 切片算产液贡献剖面，按贡献划分</li><li>模拟含水上升路径，给出见水提前量与受压制邻段</li><li>按 5 年净现值比选，给出段数—收益曲线与拐点</li></ul></div></div></div><div class="note" id="note"></div>
+</div><script>
+var NSEG=4, WSTR=1, closed={};
+var SEGNAMES=['段1（跟端）','段2','段3（主力）','段4','段5','段6（趾端）'];
+/* 各段物性：渗透率差异 + 一个水窜段 */
+function segs(){
+  var out=[];
+  for(var i=0;i<NSEG;i++){
+    var u=i/(NSEG-1);
+    var k=0.5+0.5*Math.sin(u*3.1+0.6); /* 物性沿井段波动 */
+    var water=(i===Math.floor(NSEG/2)- (WSTR>0?1:0)||i===Math.floor(NSEG*0.7));
+    var wi=water?0.45+WSTR*0.25:0.08+0.15*k;
+    var q=(0.5+k)*100*(1-wi*0.5);
+    out.push({i:i,k:k,water:water,q:q,wc:wi});
+  }
+  return out;
+}
+function netGain(n){
+  var ben=92*(1-Math.exp(-(n-1.6)/1.7))*(0.6+WSTR*0.2);
+  var cost=14+(n-2)*12;
+  return {ben:ben,cost:cost,net:ben-cost+18};
+}
+function draw(){
+  document.getElementById('vN').textContent=NSEG;
+  document.getElementById('vW').textContent=['弱','中','强'][WSTR];
+  var SS=segs();
+  /* ---- 水平井段图 ---- */
+  var W=900,H=150;
+  var s='<rect width="900" height="150" fill="#fffdf8"/>';
+  var x0=40,x1=860,ry=72,rh=26;
+  var sw=(x1-x0)/NSEG;
+  var cols=['#9fb3ad','#7fb89a','#d9a441','#c1613f','#8b77a8','#3a5f8c'];
+  SS.forEach(function(sg,i){
+    var x=x0+i*sw;
+    s+='<rect x="'+x+'" y="'+ry+'" width="'+(sw-6)+'" height="'+rh+'" rx="4" fill="'+cols[i%6]+'" opacity="0.75"/>';
+    s+='<text x="'+(x+(sw-6)/2)+'" y="'+(ry+17)+'" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">段'+(i+1)+(sg.water?' · 水窜':'')+'</text>';
+    /* ICV 阀 */
+    var vx=x-6, vy=ry-24;
+    var on=!closed[i];
+    s+='<g style="cursor:pointer" data-v="'+i+'">';
+    s+='<rect x="'+(vx-16)+'" y="'+(vy-14)+'" width="34" height="30" rx="6" fill="'+(on?'#2f7d6b':'#c1613f')+'" stroke="#fffdf8" stroke-width="2"/>';
+    s+='<text x="'+vx+'" y="'+(vy+5)+'" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="700">'+(on?'开':'关')+'</text>';
+    s+='<text x="'+vx+'" y="'+(vy-18)+'" font-size="9" fill="#5a6469" text-anchor="middle">ICV-'+(i+1)+'</text>';
+    s+='</g>';
+  });
+  s+='<text x="'+(x0)+'" y="'+(ry+rh+26)+'" font-size="10.5" fill="#5a6469">← 井眼跟端　　趾端 →　　（阀在段间，点击切换开/关）</text>';
+  s+='<text x="'+(x1)+'" y="'+(ry-30)+'" font-size="10.5" fill="'+(WSTR>0?'#c1613f':'#8a9296')+'" text-anchor="end">'+(WSTR>0?'⚠ 识别出水窜通道：阀必须能单独隔开它':'物性差异小，分段收益有限')+'</text>';
+  document.getElementById('cv').innerHTML=s;
+  [].forEach.call(document.querySelectorAll('#cv g[data-v]'),function(g){g.onclick=function(){var i=+g.dataset.v;closed[i]=!closed[i];draw();};});
+  /* ---- 贡献柱 ---- */
+  var bw=430,bh=250;
+  var c='<rect width="430" height="250" fill="#fffdf8"/>';
+  var ch=170,cb=200;
+  SS.forEach(function(sg,i){
+    var x=44+i*((bw-70)/NSEG), w=(bw-70)/NSEG-14;
+    var qv=sg.q*(closed[i]?0.15:1);
+    var h1=qv/110*ch;
+    c+='<rect x="'+x+'" y="'+(cb-h1)+'" width="'+w+'" height="'+h1+'" fill="'+(closed[i]?'#8a9296':'#2f7d6b')+'" opacity="0.8"/>';
+    c+='<text x="'+(x+w/2)+'" y="'+(cb-h1-4)+'" font-size="10" fill="#3d4a48" text-anchor="middle">'+qv.toFixed(0)+' m³/d</text>';
+    var h2=sg.wc*(closed[i]?sg.wc*0.5:1)/0.95*ch*0.85;
+    c+='<rect x="'+x+'" y="'+(cb-h2)+'" width="'+w+'" height="'+h2+'" fill="#c1613f" opacity="0.35"/>';
+    c+='<text x="'+(x+w/2)+'" y="'+(cb+14)+'" font-size="9.5" fill="#5a6469" text-anchor="middle">段'+(i+1)+'</text>';
+    c+='<text x="'+(x+w/2)+'" y="'+(cb+26)+'" font-size="9.5" fill="'+(sg.wc>0.4?'#c1613f':'#8a9296')+'" text-anchor="middle">含水 '+(sg.wc*(closed[i]?0.5:1)*100).toFixed(0)+'%</text>';
+  });
+  c+='<rect x="44" y="228" width="10" height="10" fill="#2f7d6b" opacity="0.8"/><text x="58" y="237" font-size="9.5" fill="#5a6469">产液</text>';
+  c+='<rect x="100" y="228" width="10" height="10" fill="#c1613f" opacity="0.35"/><text x="114" y="237" font-size="9.5" fill="#5a6469">含水占比</text>';
+  document.getElementById('bc').innerHTML=c;
+  /* ---- 净收益曲线 ---- */
+  var n2='<rect width="430" height="250" fill="#fffdf8"/>';
+  var L2=46,R2=410,T2=24,B2=200;
+  function X(v){return L2+(v-2)/4*(R2-L2);}
+  function Y(v){return B2-v/100*(B2-T2);}
+  for(var g=0;g<=100;g+=25){n2+='<line x1="'+L2+'" y1="'+Y(g)+'" x2="'+R2+'" y2="'+Y(g)+'" stroke="#eee7d8"/><text x="'+(L2-5)+'" y="'+(Y(g)+3)+'" font-size="9" fill="#8a9296" text-anchor="end">'+g+'</text>';}
+  for(var nn=2;nn<=6;nn++){n2+='<text x="'+X(nn)+'" y="'+(B2+14)+'" font-size="9.5" fill="#8a9296" text-anchor="middle">'+nn+'段</text>';}
+  function line(f,c,dash){var p='';for(var n=2;n<=6.01;n+=0.1){var v=f(Math.round(n)||n);v=f(n);p+=(p?' L':'M')+X(n)+' '+Y(Math.max(0,v));}n2+='<path d="'+p+'" fill="none" stroke="'+c+'" stroke-width="1.8"'+(dash?' stroke-dasharray="5 3"':'')+'/>';}
+  line(function(n){return netGain(n).ben;},'#2f7d6b');
+  line(function(n){return netGain(n).cost;},'#c1613f');
+  line(function(n){return netGain(n).net;},'#3a5f8c',1);
+  var cur=netGain(NSEG);
+  n2+='<circle cx="'+X(NSEG)+'" cy="'+Y(Math.max(0,cur.net))+'" r="5" fill="#3a5f8c"/>';
+  n2+='<text x="'+(X(NSEG))+'" y="'+(Y(Math.max(0,cur.net))-8)+'" font-size="10" font-weight="700" fill="#3a5f8c" text-anchor="middle">当前 '+cur.net.toFixed(0)+'</text>';
+  /* 推荐点 */
+  var bestN=2,bestV=-1e9;
+  for(nn=2;nn<=6;nn++){var v=netGain(nn).net;if(v>bestV){bestV=v;bestN=nn;}}
+  n2+='<circle cx="'+X(bestN)+'" cy="'+Y(bestV)+'" r="5" fill="none" stroke="#2f7d6b" stroke-width="2"/>';
+  n2+='<text x="'+X(bestN)+'" y="'+(Y(bestV)+18)+'" font-size="9.5" fill="#2f7d6b" text-anchor="middle">模型推荐 '+bestN+' 段</text>';
+  n2+='<text x="'+(R2-4)+'" y="'+(T2+10)+'" font-size="9.5" fill="#2f7d6b" text-anchor="end">调控收益</text>';
+  n2+='<text x="'+(R2-4)+'" y="'+(T2+22)+'" font-size="9.5" fill="#c1613f" text-anchor="end">成本+故障风险</text>';
+  n2+='<text x="'+(R2-4)+'" y="'+(T2+34)+'" font-size="9.5" fill="#3a5f8c" text-anchor="end">净收益</text>';
+  document.getElementById('nc').innerHTML=n2;
+  /* ---- 读数 ---- */
+  var qT=0,wT=0,qT0=0,wT0=0;
+  SS.forEach(function(sg){
+    qT+=sg.q*(closed[sg.i]?0.15:1); wT+=sg.wc*(closed[sg.i]?0.5:1);
+    qT0+=sg.q; wT0+=sg.wc;
+  });
+  var wc1=wT/NSEG*100, wc0=wT0/NSEG*100;
+  var ro='';
+  ro+='<div class="ok"><b>'+qT.toFixed(0)+' m³/d</b><span>调控后产液（调控前 '+qT0.toFixed(0)+'）</span></div>';
+  ro+='<div class="'+(wc1<wc0?'ok':'bad')+'"><b>'+wc1.toFixed(0)+'%</b><span>综合含水（调控前 '+wc0.toFixed(0)+'%）</span></div>';
+  ro+='<div class="warn"><b>'+Object.keys(closed).filter(function(k){return closed[k]}).length+' / '+NSEG+'</b><span>已关小的阀（阀数=分段数=成本）</span></div>';
+  ro+='<div class="'+(NSEG===bestN?'ok':'bad')+'"><b>'+(NSEG===bestN?'当前即最优':'建议 '+bestN+' 段')+'</b><span>净收益最大化分段数</span></div>';
+  document.getElementById('ro').innerHTML=ro;
+  document.getElementById('note').innerHTML='<span class="tag">划分结论</span>'+
+    '水窜强度「'+['弱','中','强'][WSTR]+'」时，模型推荐 <b>'+bestN+'</b> 段（净收益 '+bestV.toFixed(0)+'）：段数再增加，隔开水窜的收益不再覆盖每段一套阀的成本与故障风险。'+
+    (WSTR>0?'水窜段必须能被单独关小——这就是「按水窜通道划分」与「按物性均匀切」的本质差别。':'水窜弱时均匀划分也可接受，但强水窜井必须按通道划分。');
+}
+document.getElementById('sN').oninput=function(){NSEG=+this.value;closed={};draw();};
+document.getElementById('sW').oninput=function(){WSTR=+this.value;draw();};
+draw();
+</script>
+</body></html>

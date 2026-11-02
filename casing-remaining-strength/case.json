@@ -1,0 +1,149 @@
+{
+  "id": "casing-remaining-strength",
+  "sceneId": "co41",
+  "title": "套管剩余承载强度智能评估：还能承受多大压差、还能用多久",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "套管服役几年后壁厚因腐蚀与磨损变薄，抗挤强度随之下降；后续作业（试压、压裂、注水）若仍按新套管强度校核，很容易在作业中把老套管挤毁。现状要么保守到底限制作业空间，要么凭经验放宽松。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "测井 + 时序",
+          "desc": "壁厚检测、腐蚀速率、历史工况与作业计划"
+        },
+        {
+          "label": "标注成本",
+          "value": "低",
+          "desc": "壁厚可测，腐蚀速率可反演，不需人工标注"
+        },
+        {
+          "label": "可见收益",
+          "value": "中",
+          "desc": "作业空间可量化，避免挤毁也避免过保守"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "检测井少，腐蚀速率靠区块经验，置信度难说清"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>做法是两种极端：保守派一律按原始钢级的最低壁厚校核，所有作业都受限——试压不敢打到设计值、压裂不敢上排量；经验派按区块\"用了十年也没事\"放宽，作业照做。</p><p>问题有三个：<b>壁厚检测只在少数井上有</b>——大多数井没有实测数据，只能用区块经验值；<b>腐蚀速率靠经验</b>——同一区块不同井的含水、温度、流速差很多，一个速率套全部不准；<b>结论说不清置信度</b>——评估结论给一个数字，没人知道它有多准，作业决策自然不敢用。</p><svg viewBox='0 0 660 154' role='img' aria-label='两种极端与按剩余壁厚校核的差别' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='154' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>保守到底浪费作业空间，经验放宽可能挤毁：差别在于有没有沿深度的剩余壁厚剖面</text><text x='50' y='42' font-size='10' fill='#3d4a48'>两种极端（现状）</text><rect x='50' y='50' width='250' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='66' y='68' font-size='8.5' fill='#4d565b'>保守：按原始钢级最低值校核</text><text x='66' y='84' font-size='8.5' fill='#8a6a3a'>→ 试压、压裂全面受限</text><text x='66' y='100' font-size='8.5' fill='#4d565b'>经验：按「用了十年没事」放宽</text><text x='66' y='116' font-size='8.5' fill='#c9613f'>→ 局部严重腐蚀段被漏掉</text><text x='66' y='132' font-size='8.5' fill='#c9613f'>→ 结论没有置信度，不敢用</text><text x='330' y='42' font-size='10' fill='#3d4a48'>按剩余壁厚校核（本方法）</text><rect x='330' y='50' width='300' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='346' y='68' font-size='9' fill='#4d565b'>沿深度推算剩余壁厚</text><text x='346' y='84' font-size='9' fill='#4d565b'>抗挤 / 抗内压 / 抗拉分项校核</text><text x='346' y='100' font-size='9' fill='#2f7d6b'>→ 给出还能承受多大压差</text><text x='346' y='116' font-size='9' fill='#2f7d6b'>→ 给出还能用多久 + 置信区间</text><text x='346' y='132' font-size='9' fill='#2f7d6b'>→ 作业空间与风险同时可见</text><text x='12' y='148' font-size='8.5' fill='#79828a'>差别不在保不保守，而在有没有沿深度的、带置信度的剩余强度剖面</text></svg><div class='viz-cap'>图：两种极端与按剩余壁厚校核的差别</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>用测井壁厚、腐蚀速率与历史工况推算套管沿深度的剩余壁厚，按抗挤、抗内压与抗拉公式校核剩余承载强度，给出还能承受多大压差与还能用多久的判断。</p><p>关键在于两点：<b>沿深度而不是整口井一个数</b>——腐蚀总是局部最严重，整井平均值会漏掉最薄的那一段；<b>结论带置信度</b>——检测井少时给出区间，并说明\"再测一次能把区间收窄多少\"。</p><svg viewBox='0 0 660 140' role='img' aria-label='沿深度剩余壁厚推算与三项校核' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='140' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>腐蚀是局部的：整井平均壁厚会漏掉最薄段，而破坏总从最薄段开始</text><line x1='60' y1='32' x2='60' y2='108' stroke='#242b2e' stroke-width='1'/><text x='40' y='38' font-size='8' fill='#4d565b'>0 m</text><text x='34' y='70' font-size='8' fill='#4d565b'>1500</text><text x='34' y='104' font-size='8' fill='#4d565b'>3000</text><rect x='70' y='34' width='30' height='16' fill='#7fae9b'/><rect x='70' y='52' width='26' height='16' fill='#7fae9b'/><rect x='70' y='70' width='18' height='16' fill='#d9c27a'/><rect x='70' y='88' width='12' height='16' fill='#c9613f'/><text x='86' y='100' font-size='8' fill='#8a3d20'>最薄段 2180 m</text><rect x='70' y='106' width='24' height='8' fill='#a9c9ba'/><text x='112' y='46' font-size='8.5' fill='#79828a'>剩余壁厚（mm）</text><line x1='140' y1='32' x2='140' y2='112' stroke='#e2ded0' stroke-width='1'/><text x='160' y='46' font-size='9' fill='#4d565b'>原壁厚 10.36 mm → 最薄段剩余 4.1 mm（−60%）</text><text x='160' y='64' font-size='9' fill='#c9613f'>抗挤：68 → 31 MPa（最薄段控制）</text><text x='160' y='82' font-size='9' fill='#4d565b'>抗内压：72 → 44 MPa</text><text x='160' y='100' font-size='9' fill='#79828a'>抗拉：余量充足（非控制项）</text><text x='160' y='118' font-size='9' fill='#2f7d6b'>结论：作业压差上限由最薄段决定，不是整井平均</text><rect x='470' y='40' width='178' height='56' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='482' y='58' font-size='9' fill='#4d565b'>置信度</text><text x='482' y='74' font-size='8.5' fill='#2f7d6b'>有测井：±8%</text><text x='482' y='90' font-size='8.5' fill='#c9613f'>无测井：±22%（区间）</text><text x='12' y='132' font-size='8.5' fill='#79828a'>沿深度 + 带置信度：这两点决定结论能不能用在作业决策里</text></svg><div class='viz-cap'>图：沿深度剩余壁厚推算与三项校核</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>套管基础参数</b>（钢级、壁厚、外径、下深与服役年限）；<b>壁厚检测资料</b>（多臂井径、电磁测厚、超声波，含检测日期）；<b>生产与流体数据</b>（含水、温度、流速、CO₂/H₂S 含量、缓蚀剂加注记录）；<b>历史工况</b>（试压、压裂、修井次数与压力）。</p><p>有两次以上壁厚检测的井最有价值：两次检测之间的差值就是真实的腐蚀速率，比区块经验值可靠得多。</p><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>两次以上壁厚检测可直接反演腐蚀速率；无检测时按区块值并标 ±22% 区间</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>校核按最薄段而非整井平均；三项判据（抗挤 / 抗内压 / 抗拉）分别给余量</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>给出沿深度剩余壁厚剖面 + 作业压差上限 + 剩余年限 + 置信区间</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度中等：强度公式本身成熟，难在输入——壁厚检测覆盖率低、腐蚀速率空间变异大、局部腐蚀（点蚀、磨损）用均匀减薄模型会低估。结论还得说清置信度，否则作业方不敢用。</p><p><b>难在哪</b>：无检测井只能靠区块经验值，而同一区块内单井差异可达一倍；点蚀造成的局部减薄在均匀模型里被平滑掉，恰恰是最危险的部分。参考方向为腐蚀速率反演、局部减薄修正与可靠性评估。</p><p><b>与传统做法的本质差别</b>：过去是「保守到底或凭经验放宽」二选一，现在是「沿深度剖面 + 三项余量 + 置信区间」——差别不在更保守，而在结论可用、敢用。</p>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "套管剩余强度评估怎么做",
+      "lead": [
+        "核心是把「整井一个数、保守或放宽二选一」换成「沿深度推算剩余壁厚、三项分别校核、带置信度」。",
+        "下面的示范是第 2—4 步：调整服役年限、腐蚀速率与作业压差，看剩余强度与可用年限怎么变。"
+      ],
+      "stats": [
+        [
+          "服役年限",
+          "3—18 年"
+        ],
+        [
+          "校核项",
+          "抗挤 / 内压 / 抗拉"
+        ],
+        [
+          "置信区间",
+          "±8% / ±22%"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "套管与检测资料整理",
+          "role": "数据",
+          "do": "整理钢级壁厚外径、服役年限、壁厚检测资料与生产流体数据，统一深度基准。",
+          "effect": "得到套管基础档案与可用检测点清单，有两次检测的井可直接反演速率。",
+          "trap": "检测日期与服役年限对不上会让速率反演出错；不同检测工具的精度差异必须分开对待。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='资料整理：两次检测可直接反演腐蚀速率' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>两次检测的差值就是真实速率：比区块经验值可靠得多，能大幅收窄置信区间</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>服役年限 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>壁厚</text><polyline points='70,44 130,50 190,56 250,62 310,68 370,74' fill='none' stroke='#41699b' stroke-width='2'/><circle cx='130' cy='50' r='4' fill='#41699b'/><text x='140' y='46' font-size='8.5' fill='#41699b'>第 3 年检测 9.4 mm</text><circle cx='310' cy='68' r='4' fill='#c9613f'/><text x='320' y='64' font-size='8.5' fill='#c9613f'>第 9 年检测 7.6 mm</text><text x='200' y='88' font-size='9' fill='#2f7d6b'>反演速率 = (9.4 − 7.6) / 6 = 0.30 mm/年</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#4d565b'>单次检测：只能给当前壁厚</text><text x='442' y='70' font-size='8.5' fill='#c9613f'>速率靠区块值：±22% 区间</text><text x='442' y='90' font-size='8.5' fill='#2f7d6b'>两次检测：速率实测 ±8%</text><text x='12' y='124' font-size='8.5' fill='#79828a'>检测覆盖率决定置信度：这是结论能不能用于作业决策的前提</text></svg><div class='viz-cap'>图：资料整理：两次检测可直接反演腐蚀速率</div>"
+        },
+        {
+          "name": "腐蚀速率与剩余壁厚推算",
+          "role": "算法",
+          "do": "按检测值与工况反演腐蚀速率，推算沿深度的剩余壁厚，标出点蚀与磨损的局部减薄段。",
+          "effect": "得到沿深度的剩余壁厚剖面，最薄段定位到米位。",
+          "trap": "均匀减薄模型会平滑掉点蚀造成的局部减薄，而破坏恰恰从这些局部开始。",
+          "viz": "<svg viewBox='0 0 660 138' role='img' aria-label='剩余壁厚沿深度推算：均匀减薄 vs 局部减薄' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='138' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>均匀模型把点蚀平滑掉：最危险的那一段在平均值里消失了</text><line x1='60' y1='32' x2='60' y2='108' stroke='#242b2e' stroke-width='1'/><text x='40' y='38' font-size='8' fill='#4d565b'>0</text><text x='34' y='70' font-size='8' fill='#4d565b'>1500</text><text x='34' y='104' font-size='8' fill='#4d565b'>3000</text><text x='80' y='30' font-size='8.5' fill='#79828a'>均匀减薄模型</text><rect x='80' y='40' width='26' height='14' fill='#a9c9ba'/><rect x='80' y='58' width='24' height='14' fill='#a9c9ba'/><rect x='80' y='76' width='22' height='14' fill='#a9c9ba'/><rect x='80' y='94' width='20' height='14' fill='#a9c9ba'/><text x='120' y='60' font-size='8.5' fill='#4d565b'>均匀 → 最小值 20% 减薄</text><text x='240' y='30' font-size='8.5' fill='#79828a'>含局部减薄修正</text><rect x='240' y='40' width='26' height='14' fill='#a9c9ba'/><rect x='240' y='58' width='22' height='14' fill='#d9c27a'/><rect x='240' y='76' width='10' height='14' fill='#c9613f'/><circle cx='245' cy='83' r='5' fill='none' stroke='#c9613f' stroke-width='1.5'/><text x='258' y='88' font-size='8' fill='#8a3d20'>点蚀段 2180 m −48%</text><rect x='240' y='94' width='18' height='14' fill='#c9613f' opacity='0.7'/><text x='280' y='100' font-size='8' fill='#8a3d20'>磨损段（斜井段）</text><text x='240' y='116' font-size='8.5' fill='#c9613f'>局部减薄才是控制项：均匀模型在这里偏乐观</text><rect x='430' y='40' width='218' height='56' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='58' font-size='8.5' fill='#4d565b'>点蚀：按检测分辨率修正</text><text x='442' y='74' font-size='8.5' fill='#4d565b'>磨损：斜井段与作业次数相关</text><text x='442' y='94' font-size='8.5' fill='#c9613f'>两者都要单独标出米位</text><text x='12' y='130' font-size='8.5' fill='#79828a'>剖面里的极值点比平均值重要：破坏总从最薄的那一段开始</text></svg><div class='viz-cap'>图：剩余壁厚沿深度推算：均匀减薄 vs 局部减薄</div>"
+        },
+        {
+          "name": "三项强度校核",
+          "role": "算法",
+          "do": "按抗挤、抗内压与抗拉公式逐段校核剩余承载强度，给出各项余量与控制项。",
+          "effect": "每一段的抗挤、抗内压、抗拉余量可查，控制项与作业压差上限明确。",
+          "trap": "只校核抗挤会漏掉试压与压裂工况下的抗内压控制，两者控制段常常不在同一深度。",
+          "viz": "<svg viewBox='0 0 660 140' role='img' aria-label='三项校核：抗挤 / 抗内压 / 抗拉分别给余量' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='140' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>三项都要校：只校抗挤会漏掉试压、压裂工况下的抗内压控制段</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>深度 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>余量（MPa）</text><polyline points='70,66 120,60 170,52 220,40 270,46 320,56 370,62' fill='none' stroke='#c9613f' stroke-width='2'/><text x='240' y='34' font-size='8.5' fill='#c9613f'>抗挤余量</text><polyline points='70,80 120,78 170,74 220,68 270,54 320,48 370,44' fill='none' stroke='#41699b' stroke-width='1.6'/><text x='300' y='42' font-size='8.5' fill='#41699b'>抗内压余量</text><polyline points='70,88 120,86 170,84 220,82 270,80 320,78 370,76' fill='none' stroke='#2f7d6b' stroke-width='1.4'/><text x='300' y='74' font-size='8.5' fill='#2f7d6b'>抗拉余量（充足）</text><line x1='60' y1='40' x2='400' y2='40' stroke='#8a8f80' stroke-width='1' stroke-dasharray='4 3'/><text x='320' y='36' font-size='8.5' fill='#79828a'>安全余量下限</text><circle cx='220' cy='40' r='7' fill='none' stroke='#c9613f' stroke-width='1.5'/><text x='228' y='30' font-size='8.5' fill='#c9613f'>抗挤控制：2180 m</text><circle cx='320' cy='48' r='7' fill='none' stroke='#41699b' stroke-width='1.5'/><text x='266' y='52' font-size='8.5' fill='#41699b'>内压控制：2650 m</text><text x='70' y='118' font-size='8.5' fill='#c9613f'>控制段不在同一深度：抗挤看最薄段，抗内压看试压/压裂段</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#4d565b'>作业压差上限由控制项决定</text><text x='442' y='70' font-size='8.5' fill='#79828a'>抗挤 → 环空与外挤工况</text><text x='442' y='88' font-size='8.5' fill='#79828a'>抗内压 → 试压、压裂工况</text><text x='12' y='132' font-size='8.5' fill='#79828a'>三项并列才完整：漏一项就等于在某一类作业上裸奔</text></svg><div class='viz-cap'>图：三项校核：抗挤 / 抗内压 / 抗拉分别给余量</div>"
+        },
+        {
+          "name": "剩余年限与置信度",
+          "role": "算法",
+          "do": "按腐蚀速率与剩余壁厚推算还能用多久，并按检测覆盖率给出置信区间。",
+          "effect": "给出剩余年限区间，并说明再测一次能把区间收窄多少。",
+          "trap": "不给置信度的年限结论会被当成确定值用，而无检测井的区间宽达 ±22%，决策风险很大。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='剩余年限与置信区间：区间宽窄决定能不能用于决策' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>年限必须带区间：无检测井的区间宽达 ±22%，当确定值用会出事</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>年限（年）→</text><text x='46' y='40' font-size='8.5' fill='#2f7d6b'>有两次检测</text><rect x='120' y='36' width='120' height='14' fill='#a9c9ba'/><text x='126' y='47' font-size='8.5' fill='#2f5a4d'>5.8 — 6.8 年（±8%）</text><text x='46' y='62' font-size='8.5' fill='#c9613f'>无检测（区块值）</text><rect x='100' y='58' width='180' height='14' fill='#f4ded4'/><text x='106' y='69' font-size='8.5' fill='#8a3d20'>4.2 — 8.9 年（±22%）</text><text x='280' y='44' font-size='8.5' fill='#2f7d6b'>再测一次：区间收窄到 ±10%</text><text x='280' y='62' font-size='8.5' fill='#4d565b'>值得测：区间宽时决策风险大</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#c9613f'>结论要写清置信度</text><text x='442' y='70' font-size='8.5' fill='#c9613f'>不写 = 被当成确定值用</text><text x='442' y='88' font-size='8.5' fill='#2f7d6b'>并说明再测一次的收益</text><text x='12' y='124' font-size='8.5' fill='#79828a'>置信度不是附属信息，它决定这个结论能不能进作业决策</text></svg><div class='viz-cap'>图：剩余年限与置信区间：区间宽窄决定能不能用于决策</div>"
+        },
+        {
+          "name": "作业校核与复测安排",
+          "role": "人工",
+          "do": "工程师按剩余强度校核本次作业参数（试压值、压裂排量与压力），必要时安排复测后再定。",
+          "effect": "作业参数有明确上限，超标段要么改参数要么先复测，不再凭经验放行。",
+          "trap": "区间宽时直接按中值放行等于赌一把：该复测的井必须复测，工期压力不能替代数据。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='作业校核与复测：区间宽时先测再定' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>校核结论落到具体作业参数：能不能打这个压力、要不要先复测</text><rect x='20' y='40' width='150' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='58' font-size='9.5' fill='#4d565b'>本次作业参数</text><text x='34' y='74' font-size='8.5' fill='#79828a'>试压 32 MPa / 压裂限压</text><line x1='172' y1='62' x2='204' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='204,62 198,58.5 198,65.5' fill='#8a8f80'/><rect x='206' y='40' width='150' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='220' y='58' font-size='9.5' fill='#4d565b'>对剩余强度校核</text><text x='220' y='74' font-size='8.5' fill='#79828a'>控制段余量是否够</text><line x1='358' y1='62' x2='390' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='390,62 384,58.5 384,65.5' fill='#8a8f80'/><rect x='392' y='40' width='128' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='406' y='58' font-size='9.5' fill='#4d565b'>结论</text><text x='406' y='74' font-size='8.5' fill='#79828a'>通过 / 降级 / 复测</text><line x1='522' y1='62' x2='554' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='554,62 548,58.5 548,65.5' fill='#8a8f80'/><rect x='556' y='40' width='94' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='570' y='58' font-size='9.5' fill='#4d565b'>归档</text><text x='570' y='74' font-size='8.5' fill='#79828a'>工况入库</text><text x='20' y='104' font-size='9' fill='#4d565b'>三种结论：余量充足 → 通过；余量不足 → 降级作业参数；区间宽 → 先复测再定</text><rect x='20' y='112' width='630' height='18' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='32' y='125' font-size='8.5' fill='#c9613f'>区间宽时按中值放行 = 赌一把：工期压力不能替代一次壁厚检测</text></svg><div class='viz-cap'>图：作业校核与复测：区间宽时先测再定</div>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>壁厚命中</b>：预测的剩余壁厚与后续实测偏差 ≤ 10%（有检测井）／≤ 25%（无检测井）。</p><p><b>作业零挤毁</b>：按结论控制作业参数后，作业中发生的套管挤毁或变形次数为 0。</p><p><b>置信度可用</b>：结论明确标注置信区间，且区间宽度与检测覆盖率一致。</p>"
+      },
+      "fails": [
+        {
+          "name": "按整井平均壁厚校核",
+          "why": "腐蚀是局部的，平均值漏掉最薄段，破坏恰恰从那里开始。"
+        },
+        {
+          "name": "只校核抗挤",
+          "why": "试压与压裂工况下是抗内压控制，漏校等于在这类作业上裸奔。"
+        },
+        {
+          "name": "均匀减薄模型",
+          "why": "点蚀与磨损造成的局部减薄被平滑，评估偏乐观。"
+        },
+        {
+          "name": "年限不带置信度",
+          "why": "无检测井区间达 ±22%，被当确定值用会放大决策风险。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 700,
+      "intro": "拖动服役年限、腐蚀速率与本次作业压差，看三项强度余量与剩余年限区间怎么变——注意控制段出现在哪一段。",
+      "html": "demo/index.html"
+    }
+  }
+}

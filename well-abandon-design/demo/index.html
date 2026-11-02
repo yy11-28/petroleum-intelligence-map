@@ -1,0 +1,38 @@
+<!-- 整页示范：报废井封隔方案智能设计（运行在沙箱 iframe 里） -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：报废弃井封隔方案智能设计</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>报废井封隔方案设计</h1>
+  <p class="lead">这口井从上到下贯穿<b>浅层水层、三个产层和一个高压水层</b>。报废封堵的规则：每个贯穿层段都要设置<b>井筒屏障</b>（桥塞 + 水泥塞），
+  塞面在射孔段顶以上 ≥50 m，塞长随层间压差加长，工艺等级随压差升级（标准桥塞 → 高压桥塞 → 双桥塞+试压）。
+  知识图谱把规范条款变成可执行约束，逐段推理出塞位、塞长与工艺，并随附<b>条款核查清单</b>与<b>相似案例</b>。
+  拉动滑杆改变高压层压力、固井质量与屏障冗余等级，看方案怎么变、依据在哪条边。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>条款形式化（规范 → 规则）</li><li>多约束推理</li><li>井筒屏障校核</li></ul></div><div><b>为什么起作用</b><ul><li>塞位、塞长、屏障数量必须逐条满足规范，形式化后才能自动核查</li><li>屏障冗余的判据是「任一道失效仍能封住」，不是「做了几道」</li></ul></div><div><b>在示范里怎么看</b><ul><li>提高水层压力系数，看塞位塞长与屏障数量自动增加</li></ul></div></div></div>
+
+  <div class="ctl"><label>高压水层压力系数 <output id="out-p">1.35</output></label><input type="range" id="pc" min="1.1" max="1.6" step="0.02" value="1.35"></div>
+  <div class="ctl"><label>固井质量（900—980 m 段） <output id="out-cem">0.60</output></label><input type="range" id="cem" min="0" max="1" step="0.02" value="0.6"></div>
+  <div class="ctl"><label>屏障冗余等级 <output id="out-red">1 级（基本）</output></label><input type="range" id="red" min="1" max="2" step="1" value="1"></div>
+
+  <svg id="well" viewBox="0 0 720 280" role="img" aria-label="井身剖面与逐段封堵方案"></svg>
+  <svg id="check" viewBox="0 0 720 150" role="img" aria-label="规范条款核查清单"></svg>
+  <svg id="cases" viewBox="0 0 720 140" role="img" aria-label="相似井案例匹配"></svg>
+  <svg id="cost" viewBox="0 0 720 120" role="img" aria-label="分段费用与工期"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">屏障段数</span><b id="ro-seg">—</b></div>
+    <div class="ro"><span class="k">最长塞</span><b id="ro-plug">—</b></div>
+    <div class="ro"><span class="k">高压层方案</span><b id="ro-hp">—</b></div>
+    <div class="ro"><span class="k">预计工期</span><b id="ro-day">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

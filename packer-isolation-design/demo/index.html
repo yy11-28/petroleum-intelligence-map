@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：封隔器 / 分层隔离方案智能设计</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>封隔器 / 分层隔离方案 · 窜层风险量化与选型</h1>
+  <p class="lead">一口三层合采井下入封隔器：哪些隔层值得坐封、每处用什么型号，取决于额定参数能不能通过校核，
+  以及<b>层间驱动压差、隔层自身封隔能力、环空窜槽</b>三者叠加后的残余窜流通道。左边是方案与井身，右边是这个空间里全部
+  可行组合的「成本—风险」前沿。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>多约束规则校验</li><li>图谱推理</li><li>组合寻优</li></ul></div><div><b>为什么起作用</b><ul><li>型号受温度、压差、井径、流体相容多重约束，任一不满足就是失效风险</li><li>先校验再寻优，避免「最优但装不上」</li></ul></div><div><b>在示范里怎么看</b><ul><li>拉高层间压差，看哪些型号被判不可行</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>层间压差 <output id="out-dp">10 MPa</output></label>
+    <input type="range" id="dp" min="2" max="18" step="1" value="10">
+  </div>
+  <div class="ctl">
+    <label>井底温度 <output id="out-temp">120 ℃</output></label>
+    <input type="range" id="temp" min="70" max="175" step="5" value="120">
+  </div>
+  <div class="ctl">
+    <label>固井质量（一、二界面） <output id="out-cem">82 %</output></label>
+    <input type="range" id="cem" min="55" max="100" step="1" value="82">
+  </div>
+  <div class="ctl">
+    <label>成本预算上限 <output id="out-bg">3.5</output></label>
+    <input type="range" id="bg" min="0.8" max="6" step="0.1" value="3.5">
+  </div>
+
+  <div class="btnrow" id="typerow"></div>
+  <div class="btnrow" id="slotrow"></div>
+
+  <svg id="well" viewBox="0 0 720 320" role="img" aria-label="井身结构、层位与封隔器坐封位置"></svg>
+
+  <svg id="pf" viewBox="0 0 720 250" role="img" aria-label="候选隔离方案的成本与窜层风险分布"></svg>
+
+  <svg id="brk" viewBox="0 0 720 210" role="img" aria-label="窜层风险的构成分解与型号额定校核"></svg>
+
+  <div class="legend">
+    <span><i style="background:#b9c6cf"></i>可行组合</span>
+    <span><i style="background:#41699b"></i>帕累托前沿</span>
+    <span><i style="background:#242b2e"></i>当前方案</span>
+    <span><i style="background:#2f7d6b"></i>预算内最优</span>
+    <span><i style="background:#c9613f"></i>窜层通道</span>
+  </div>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">窜层风险指数</span><b id="ro-risk">—</b></div>
+    <div class="ro"><span class="k">当前隔离方式</span><b id="ro-cur">—</b></div>
+    <div class="ro"><span class="k">额定校核</span><b id="ro-chk">—</b></div>
+    <div class="ro"><span class="k">预算内最优可降至</span><b id="ro-best">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

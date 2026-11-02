@@ -1,0 +1,158 @@
+{
+  "id": "packer-isolation-design",
+  "sceneId": "co6",
+  "methods": [
+    "kg",
+    "opt"
+  ],
+  "title": "封隔器 / 分层隔离方案智能设计",
+  "version": "1.0.0",
+  "updated": "2026-10-23",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "多层合采、分层注水或先期封隔，都要靠封隔器把井筒切成互不干扰的段。方案写在完井设计书里通常只有短短几行，但它决定了层间是否窜流、能不能分层治理。出问题的时间点很晚——往往要等到产液剖面测出来才发现。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "结构化清单 + 少量失效记录",
+          "desc": "规格库与层间参数都是结构化的"
+        },
+        {
+          "label": "标注成本",
+          "value": "中",
+          "desc": "失效标签少，且窜层真值难以直接观测"
+        },
+        {
+          "label": "可见收益",
+          "value": "中",
+          "desc": "方案层面就把风险标出来，避免返工"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "组合空间不大，难在判据分散在多个专业"
+        }
+      ],
+      "sections": [
+        {
+          "no": 1,
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>常规做法：按区块习惯选定封隔器型号与坐封层位——通常是隔层最厚的那个位置放一个机械压缩式封隔器，需要分层时在其余位置再补一个同型号；型号选择主要看「以前用过没出问题」。</p><p>问题在于：<b>判据分散</b>——额定压差、额定耐温、坐封段井径规则度、适用套管钢级分别写在厂家样本、固井质量报告与地质分层表里，方案评审时很少放在一起逐项核；<b>窜层风险没有量化</b>——层间压差有多大、隔层到底隔不隔得住、环空有没有窜槽，这些都不进设计计算；<b>失效发现太晚</b>——封隔失效要到投产后测产液剖面或者某一层突然见水时才被察觉，那时已经错过了成本最低的处理窗口。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='封隔器隔离与三条窜层通道'>\n<rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/>\n<defs><marker id='arK' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0 0 L6 3 L0 6 Z' fill='#c9613f'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>封隔器把各层隔开；隔不住的地方，高压层的水会窜进低压层</text>\n<rect x='16' y='28' width='300' height='200' rx='6' fill='#efece1' stroke='#e2ded0'/><text x='30' y='48' font-size='10.5' fill='#4d565b'>井身：三个油层 + 底部水层，中间三个候选坐封隔层</text>\n<rect x='140' y='60' width='34' height='152' fill='#fff' stroke='#242b2e'/><line x1='140' y1='60' x2='140' y2='212' stroke='#41699b' stroke-width='2'/><line x1='174' y1='60' x2='174' y2='212' stroke='#41699b' stroke-width='2'/>\n<rect x='46' y='62' width='88' height='26' fill='#2f7d6b' opacity='0.75'/><text x='52' y='80' font-size='9' fill='#fff'>油层 I</text>\n<rect x='46' y='90' width='88' height='14' fill='#e9e4d8'/><text x='52' y='101' font-size='8' fill='#8a7f66'>隔层 A 22m</text>\n<rect x='46' y='106' width='88' height='28' fill='#2f7d6b' opacity='0.7'/><text x='52' y='124' font-size='9' fill='#fff'>油层 II</text>\n<rect x='46' y='136' width='88' height='12' fill='#e9e4d8'/><text x='52' y='146' font-size='8' fill='#8a7f66'>隔层 B 16m</text>\n<rect x='46' y='150' width='88' height='26' fill='#2f7d6b' opacity='0.65'/><text x='52' y='168' font-size='9' fill='#fff'>油层 III</text>\n<rect x='46' y='178' width='88' height='10' fill='#e9e4d8'/><text x='52' y='186' font-size='8' fill='#8a7f66'>隔层 C 12m</text>\n<rect x='46' y='190' width='88' height='22' fill='#41699b' opacity='0.55'/><text x='52' y='205' font-size='9' fill='#fff'>水层</text>\n<path d='M148 97 L148 97' fill='none'/><path d='M140 97 L174 97' stroke='#242b2e' stroke-width='5'/><text x='182' y='101' font-size='9' fill='#242b2e'>封隔器（坐封在隔层 A）</text>\n<path d='M126 142 C 152 128, 168 128, 190 142' fill='none' stroke='#c9613f' stroke-width='1.6' marker-end='url(#arK)'/><text x='196' y='140' font-size='8.5' fill='#c9613f'>未坐封 → 窜流</text>\n<path d='M126 183 C 152 170, 168 170, 190 183' fill='none' stroke='#c9613f' stroke-width='2.2' marker-end='url(#arK)'/><text x='196' y='181' font-size='8.5' fill='#c9613f'>隔层薄 → 窜得更厉害</text>\n<text x='30' y='224' font-size='9' fill='#79828a'>箭头越粗＝残余通道越大；封隔器只能封住它坐封的那一段。</text>\n<rect x='332' y='28' width='352' height='200' rx='6' fill='#fbfaf6' stroke='#e2ded0'/><text x='346' y='48' font-size='10.5' fill='#4d565b'>三条通道 + 一条环空，风险是加出来的</text>\n<text x='346' y='72' font-size='10' fill='#4d565b'>① 层间驱动 × 残余通道</text><text x='346' y='88' font-size='9' fill='#79828a'>压差越大、隔层越差，通道越大</text>\n<text x='346' y='108' font-size='10' fill='#4d565b'>② 隔层自身的封隔能力</text><text x='346' y='124' font-size='9' fill='#79828a'>岩性 × 厚度：砂泥互层最差</text>\n<text x='346' y='144' font-size='10' fill='#4d565b'>③ 封隔器坐封有效性</text><text x='346' y='160' font-size='9' fill='#79828a'>座在差隔层上，再好的型号也打折扣</text>\n<text x='346' y='180' font-size='10' fill='#4d565b'>④ 环空窜槽（固井质量）</text><text x='346' y='196' font-size='9' fill='#c9613f'>这是底噪，封隔器数量再多也压不下去</text>\n<line x1='346' y1='206' x2='668' y2='206' stroke='#e2ded0'/>\n<text x='346' y='222' font-size='9.5' fill='#242b2e'>所以「多下一个封隔器」并不总是对的：</text><text x='346' y='238' font-size='9.5' fill='#79828a'>先把哪一条通道最大算出来，再决定下在哪里。</text>\n</svg><span class='viz-cap'>封隔器只封住坐封的那一段；风险由三条层间通道与环空窜槽叠加而成。</span></div>"
+        },
+        {
+          "no": 2,
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>这个场景的两件事：<b>知识图谱负责把判据聚到一起</b>——层间参数、隔层质量、套管/井径、厂家规格、历史失效井连成一张图，任何一条规则都能查出来源，任何一口失效井都能反查是哪一条判据没满足；<b>优化负责把组合搜干净</b>——封隔器数量、型号组合与坐封层位的组合空间是几百量级，人工只会挑其中一两个，枚举 + 约束剪枝能在毫秒内做完，并给出「窜层风险—成本」的前沿。</p><p>被替掉的是「查样本手册 + 套用习惯做法」这一步。工程师拿到的是一组可行方案、每条建议所附的额定参数校核结果，以及它对施工条件的敏感性。</p><div class='viz'><svg viewBox='0 0 700 215' role='img' aria-label='知识图谱剪枝与风险量化寻优'>\n<rect x='0' y='0' width='700' height='215' fill='#fbfaf6'/>\n<defs><marker id='arM' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>两层：图谱先做可行性剪枝（型号能不能用），再在剩下的组合里按风险—成本寻优</text>\n<rect x='16' y='30' width='150' height='74' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='91' y='50' font-size='10.5' fill='#242b2e' text-anchor='middle'>125 种组合</text><text x='91' y='68' font-size='9' fill='#79828a' text-anchor='middle'>3 处坐封 × 4 种型号</text><text x='91' y='86' font-size='9' fill='#79828a' text-anchor='middle'>+ 不坐封</text>\n<path d='M166 67 L200 67' stroke='#242b2e' marker-end='url(#arM)'/>\n<rect x='200' y='30' width='160' height='74' rx='5' fill='#41699b' opacity='0.9'/><text x='280' y='50' font-size='10.5' fill='#fff' text-anchor='middle'>可行性剪枝</text><text x='280' y='68' font-size='9' fill='#fff' text-anchor='middle'>额定压差 × 1.25</text><text x='280' y='86' font-size='9' fill='#fff' text-anchor='middle'>耐温 + 10 ℃ 余量</text>\n<path d='M360 67 L394 67' stroke='#242b2e' marker-end='url(#arM)'/>\n<rect x='394' y='30' width='150' height='74' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='469' y='50' font-size='10.5' fill='#fff' text-anchor='middle'>风险量化</text><text x='469' y='68' font-size='9' fill='#fff' text-anchor='middle'>逐隔层残余通道</text><text x='469' y='86' font-size='9' fill='#fff' text-anchor='middle'>+ 环空窜槽</text>\n<path d='M544 67 L578 67' stroke='#242b2e' marker-end='url(#arM)'/>\n<rect x='578' y='30' width='106' height='74' rx='5' fill='#b26a39' opacity='0.9'/><text x='631' y='50' font-size='10.5' fill='#fff' text-anchor='middle'>预算内</text><text x='631' y='68' font-size='9' fill='#fff' text-anchor='middle'>成本—风险</text><text x='631' y='86' font-size='9' fill='#fff' text-anchor='middle'>前沿</text>\n<line x1='16' y1='120' x2='684' y2='120' stroke='#e2ded0'/>\n<rect x='16' y='130' width='330' height='72' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='150' font-size='9.5' fill='#4d565b'>剪枝的意义不只是省算力：把「在达标边缘工作」</text><text x='28' y='168' font-size='9.5' fill='#c9613f'>的组合提前拦掉——压差波动后失效风险会大幅上升。</text><text x='28' y='186' font-size='9' fill='#79828a'>额定值要乘安全系数，余量写在规则里而不是记在脑子里。</text>\n<rect x='360' y='130' width='324' height='72' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='372' y='150' font-size='9.5' fill='#41699b'>风险是加出来的，所以要能拆开看</text><text x='372' y='168' font-size='9' fill='#4d565b'>只给一个总风险值，工程师无法判断该加固井还是加封隔器；</text><text x='372' y='186' font-size='9' fill='#4d565b'>给出各通道的贡献，才知道第一步该做什么。</text>\n</svg><span class='viz-cap'>先按额定压差/耐温剪枝，再在可行组合里量化风险并给出成本—风险前沿。</span></div>"
+        },
+        {
+          "no": 3,
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p><b>层间参数</b>：分层压力（或压力系数）、渗透率、孔隙度、含水，来自测试与测井解释，决定了层间驱动压差。</p><p><b>隔层与井身条件</b>：隔层厚度、岩性与胶结程度、井径规则度、井斜与狗腿度、套管钢级与壁厚——决定某个位置能不能坐封、坐封质量如何。</p><p><b>封隔器规格库</b>：各型号的额定压差、额定耐温、密封机理、适用套管与最小坐封段长。这部分是结构化清单，无需标注。</p><p><b>失效标签</b>：历史窜层、验封不合格、提前起出的井次与当时的工况。这类样本量少（一个区块通常几十起），但价值最高——它定义了「多危险才算危险」。</p><div class='viz'><svg viewBox='0 0 700 190' role='img' aria-label='数据来源与隔层评价瓶颈'>\n<rect x='0' y='0' width='700' height='190' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>需要准备什么：规格参数不缺，隔层质量与失效案例最缺</text>\n<rect x='16' y='30' width='200' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='116' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>封隔器规格</text>\n<text x='28' y='66' font-size='9' fill='#4d565b'>额定压差 · 额定耐温</text><text x='28' y='82' font-size='9' fill='#4d565b'>密封等级 · 可坐封井径</text><line x1='28' y1='94' x2='204' y2='94' stroke='#d8d2c4'/><text x='28' y='110' font-size='9' fill='#79828a'>来自厂家手册，结构化</text><text x='28' y='130' font-size='9' fill='#79828a'>成本为相对指数</text>\n<rect x='228' y='30' width='200' height='112' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='328' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>层间条件</text>\n<text x='240' y='66' font-size='9' fill='#4d565b'>各层压力系数 · 含水</text><text x='240' y='82' font-size='9' fill='#4d565b'>井底温度 · 固井质量</text><line x1='240' y1='94' x2='416' y2='94' stroke='#d8d2c4'/><text x='240' y='110' font-size='9' fill='#41699b'>每个都是区间，不是点值</text><text x='240' y='130' font-size='9' fill='#41699b'>压差取值决定型号能否通过</text>\n<rect x='440' y='30' width='244' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='562' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>隔层质量与失效案例</text>\n<text x='452' y='66' font-size='9' fill='#4d565b'>岩性 · 厚度 · 胶结</text><text x='452' y='82' font-size='9' fill='#4d565b'>37 起历史失效记录</text><line x1='452' y1='94' x2='672' y2='94' stroke='#d8d2c4'/><text x='452' y='110' font-size='9' fill='#c9613f'>只看厚度不看岩性 = 座不住</text><text x='452' y='130' font-size='9' fill='#c9613f'>失效案例不回填 = 下一个区块再犯</text>\n<rect x='150' y='156' width='400' height='26' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='350' y='173' font-size='10' fill='#fff' text-anchor='middle'>知识图谱节点：规格 / 层位 / 隔层 / 失效案例 · 边＝判据</text>\n<path d='M116 142 L116 156' stroke='#79828a'/><path d='M328 142 L328 156' stroke='#41699b'/><path d='M562 142 L562 156' stroke='#c9613f'/>\n</svg><span class='viz-cap'>数据分层：规格与层间条件是输入，瓶颈在隔层质量评价与失效案例回填。</span></div>"
+        },
+        {
+          "no": 4,
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难点：<b>窜层风险的真值难以观测</b>——无法井下直读，只能靠产液剖面或示踪剂间接判断，「风险高不高」缺少标定基准；<b>规则的适用性边界模糊</b>——「隔层够厚」到底是 5 m 还是 15 m，取决于岩性与胶结，写死会误判；<b>专业交叉</b>——完井只管选型，固井管不了层间压差，油藏不参加完井评审，判据分散在三处。</p><p>改进路线：① 先用历史失效井反查漏掉了哪条判据，把规则补齐而不是加严；② 把风险做成<b>区间而非定值</b>：输入（隔层质量、固井质量）本来就是取值范围，输出应给出敏感性与置信区间；③ 先按规则做可行性剪枝，再在小空间里枚举；④ 输出必须附每条建议的额定参数校核表，让评审能逐行签字，而不是让 AI 替他签字。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='额定余量与区间不确定性两个难点'>\n<rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>两个必须处理好的事：余量要写进规则，输入要当区间而不是点值</text>\n<rect x='16' y='28' width='330' height='160' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10.5' fill='#4d565b'>① 在达标边缘工作</text>\n<line x1='44' y1='150' x2='330' y2='150' stroke='#242b2e'/><line x1='44' y1='62' x2='44' y2='150' stroke='#242b2e'/>\n<text x='44' y='176' font-size='8.5' fill='#79828a'>额定压差 MPa →</text>\n<rect x='60' y='100' width='70' height='22' rx='2' fill='#41699b' opacity='0.8'/><text x='95' y='115' font-size='9' fill='#fff' text-anchor='middle'>额定 35</text>\n<line x1='150' y1='92' x2='150' y2='150' stroke='#c9613f' stroke-dasharray='4 3'/><text x='154' y='108' font-size='9' fill='#c9613f'>需求 22.5</text>\n<rect x='150' y='100' width='26' height='22' fill='#c9613f' opacity='0.25'/><text x='200' y='115' font-size='9' fill='#4d565b'>余量 12.5 MPa</text>\n<rect x='60' y='132' width='70' height='14' rx='2' fill='#b9c6cf'/><text x='95' y='143' font-size='8.5' fill='#242b2e' text-anchor='middle'>另一型号 额定 28</text>\n<line x1='150' y1='126' x2='150' y2='150' stroke='#c9613f'/><rect x='130' y='132' width='20' height='14' fill='#c9613f' opacity='0.4'/><text x='200' y='143' font-size='9' fill='#c9613f'>余量仅 5.5 MPa</text>\n<text x='28' y='164' font-size='9' fill='#4d565b'>余量小的方案在数据上「通过」，但压差一波动就失效。</text>\n<rect x='360' y='28' width='324' height='160' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='372' y='46' font-size='10.5' fill='#4d565b'>② 输入是区间，输出却被当真值</text>\n<line x1='386' y1='150' x2='668' y2='150' stroke='#242b2e'/><line x1='386' y1='62' x2='386' y2='150' stroke='#242b2e'/>\n<line x1='386' y1='112' x2='668' y2='112' stroke='#c9613f' stroke-dasharray='4 3'/><text x='390' y='108' font-size='8.5' fill='#c9613f'>可接受风险上限</text>\n<circle cx='480' cy='130' r='5' fill='#2f7d6b'/><text x='490' y='134' font-size='9' fill='#2f7d6b'>名义工况（通过）</text>\n<rect x='440' y='120' width='130' height='20' fill=\"none\" stroke='#b26a39' stroke-dasharray='3 2'/><text x='505' y='158' font-size='9' fill='#b26a39' text-anchor='middle'>压差波动范围</text>\n<circle cx='456' cy='104' r='4' fill='#c9613f'/><circle cx='562' cy='100' r='4' fill='#c9613f'/><text x='566' y='98' font-size='9' fill='#c9613f'>越限</text>\n<text x='372' y='172' font-size='9' fill='#4d565b'>只按名义值校核会给出假的确定性；给区间或失效概率才对得上现场。</text><text x='372' y='186' font-size='9' fill='#79828a'>「算着没问题、投产半年窜了」多半出自这里</text>\n</svg><span class='viz-cap'>左：额定余量要写进规则（乘安全系数）。右：输入是区间，点值输出会给出假的确定性。</span></div>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "一口多层合采井的分层隔离设计流程",
+      "lead": [
+        "这个场景的价值不在算法复杂度，而在于把分散在三个专业的判据聚到一处：先让所有「不可能」暴露出来，再谈优化。",
+        "下面的示范就是这个流程的第 3–5 步：改层间条件或坐封位置，看窜层风险怎么分布、以及遇到了什么约束。"
+      ],
+      "stats": [
+        [
+          "坐封层位",
+          "3 处"
+        ],
+        [
+          "候选组合",
+          "125 种"
+        ],
+        [
+          "历史失效井",
+          "37 起"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "层间条件与隔层评价",
+          "role": "数据",
+          "do": "从测井与测试取分层压力、物性、含水；从井径、岩性与胶结评价各隔层的封隔能力与可坐封性。",
+          "effect": "得到每个候选坐封位置的驱动压差与坐封质量系数，这是后面所有计算的输入。",
+          "trap": "隔层评价只用厚度、不看岩性与胶结，会把「砂泥互层」误判成可用的坐封段。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='层间条件与隔层评价'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>逐层整理压力、含水，逐隔层给出「岩性 × 厚度」的封隔能力</text><rect x='12' y='28' width='186' height='76' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='105' y='46' font-size='9.5' fill='#242b2e' text-anchor='middle'>层间条件</text><text x='24' y='64' font-size='9' fill='#4d565b'>油层 I　压力系数 1.35</text><text x='24' y='80' font-size='9' fill='#4d565b'>油层 III　1.19</text><text x='24' y='96' font-size='9' fill='#4d565b'>水层　1.10　→ 驱动方向向下</text><path d='M198 66 L228 66' stroke='#242b2e' marker-end='url(#arN)'/><defs><marker id='arN' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='228' y='28' width='180' height='76' rx='4' fill='#41699b' opacity='0.9'/><text x='318' y='46' font-size='9.5' fill='#fff' text-anchor='middle'>隔层封隔能力</text><text x='240' y='64' font-size='9' fill='#fff'>隔层 A 致密泥岩 22m → 85%</text><text x='240' y='80' font-size='9' fill='#fff'>隔层 B 泥质粉砂岩 16m → 68%</text><text x='240' y='96' font-size='9' fill='#fff'>隔层 C 砂泥互层 12m → 45%</text><path d='M408 66 L438 66' stroke='#242b2e' marker-end='url(#arN)'/><rect x='438' y='28' width='210' height='76' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='450' y='46' font-size='9.5' fill='#4d565b'>封隔能力 = 岩性质量 × 厚度贡献</text><text x='450' y='64' font-size='9' fill='#4d565b'>只看厚度会选错：22m 的砂泥互层</text><text x='450' y='78' font-size='9' fill='#c9613f'>未必比 12m 的致密泥岩座得住</text><text x='450' y='94' font-size='9' fill='#4d565b'>坐封有效性 = 密封等级 × (0.45 + 0.55 × 封隔能力)</text></svg>"
+        },
+        {
+          "name": "规格库与失效案例入图",
+          "role": "数据",
+          "do": "把厂家样本的额定压差、耐温、适用套管与最短坐封段录入规格库，并把历史失效井按「漏掉哪条判据」挂到图上。",
+          "effect": "规则不再是口传经验，每条都能查到来源与反例。",
+          "trap": "规格库只录常用型号，会把新型号和新工艺排除在方案之外。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='规格库与失效案例入图'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>规格节点 + 失效案例节点 + 判据边 = 可查询的知识图谱</text><circle cx='60' cy='50' r='22' fill='#e9e4d8' stroke='#d8d2c4'/><text x='60' y='54' font-size='9' fill='#242b2e' text-anchor='middle'>规格</text><circle cx='150' cy='50' r='22' fill='#41699b' opacity='0.85'/><text x='150' y='54' font-size='9' fill='#fff' text-anchor='middle'>隔层</text><circle cx='240' cy='50' r='22' fill='#c9613f' opacity='0.85'/><text x='240' y='54' font-size='9' fill='#fff' text-anchor='middle'>失效</text><line x1='82' y1='50' x2='128' y2='50' stroke='#79828a'/><line x1='172' y1='50' x2='218' y2='50' stroke='#c9613f'/><text x='90' y='44' font-size='8' fill='#79828a'>可坐封</text><text x='176' y='44' font-size='8' fill='#c9613f'>曾失效</text><text x='60' y='88' font-size='8.5' fill='#79828a'>4 种型号</text><text x='150' y='88' font-size='8.5' fill='#79828a'>3 处隔层</text><text x='240' y='88' font-size='8.5' fill='#79828a'>37 起</text><rect x='290' y='28' width='358' height='76' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='302' y='46' font-size='9.5' fill='#4d565b'>失效案例要记录三件事：失效模式、当时的工况、判据为什么没拦住</text><text x='302' y='64' font-size='9' fill='#4d565b'>· 密封失效（压差超额定 / 坐封段岩性差）</text><text x='302' y='80' font-size='9' fill='#4d565b'>· 型号与井径不匹配 · 高温下胶筒老化</text><text x='302' y='96' font-size='9' fill='#c9613f'>只记「失效了」不记「为什么没拦住」，规则库永远停在初版</text></svg>"
+        },
+        {
+          "name": "可行性剪枝",
+          "role": "算法",
+          "do": "按额定压差、额定耐温、最短坐封段、适用套管逐项校核，剔除不合法的类型—层位组合。",
+          "effect": "几百种组合在这一步通常只剩一小半，后面的优化只在合法空间里进行。",
+          "trap": "把「不满足」的项静默丢弃，工程师会以为空间本来就小，需要在界面上标出被剔除的原因。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='可行性剪枝'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>额定校核：压差 ×1.25 安全系数，耐温 +10 ℃ 余量，逐型号逐隔层过一遍</text><text x='12' y='44' font-size='9' fill='#4d565b'>机械压缩式</text><rect x='96' y='32' width='120' height='14' rx='2' fill='#efece1'/><rect x='96' y='32' width='100' height='14' fill='#41699b'/><text x='222' y='43' font-size='9' fill='#2f7d6b'>压差 35 ✓</text><rect x='300' y='32' width='80' height='14' rx='2' fill='#efece1'/><rect x='300' y='32' width='62' height='14' fill='#2f7d6b'/><text x='386' y='43' font-size='9' fill='#2f7d6b'>耐温 150 ✓</text><text x='470' y='43' font-size='9' fill='#4d565b'>成本 1.00</text><text x='12' y='66' font-size='9' fill='#4d565b'>遇液膨胀式</text><rect x='96' y='54' width='120' height='14' rx='2' fill='#efece1'/><rect x='96' y='54' width='80' height='14' fill='#c9613f'/><text x='222' y='65' font-size='9' fill='#c9613f'>压差 28 ✗</text><rect x='300' y='54' width='80' height='14' rx='2' fill='#efece1'/><rect x='300' y='54' width='50' height='14' fill='#c9613f'/><text x='386' y='65' font-size='9' fill='#c9613f'>耐温 120 ✗</text><text x='470' y='65' font-size='9' fill='#b9c6cf'>不进候选</text><text x='12' y='88' font-size='9' fill='#4d565b'>液压坐封</text><rect x='96' y='76' width='120' height='14' rx='2' fill='#efece1'/><rect x='96' y='76' width='118' height='14' fill='#41699b'/><text x='222' y='87' font-size='9' fill='#2f7d6b'>压差 52 ✓</text><rect x='300' y='76' width='80' height='14' rx='2' fill='#efece1'/><rect x='300' y='76' width='72' height='14' fill='#2f7d6b'/><text x='386' y='87' font-size='9' fill='#2f7d6b'>耐温 175 ✓</text><text x='470' y='87' font-size='9' fill='#4d565b'>成本 1.80</text><line x1='12' y1='98' x2='648' y2='98' stroke='#e2ded0'/><text x='12' y='114' font-size='9' fill='#c9613f'>剪枝发生在量化之前：不合法的型号根本不参与后面的风险比较</text></svg>"
+        },
+        {
+          "name": "窜层风险量化与方案枚举",
+          "role": "算法",
+          "do": "对每个跨越隔层的层间组合，计算层间驱动压差、隔层自身封隔能力与坐封后的残余窜流通道，叠加环空窜槽影响，得到窜层风险指数；再枚举全部配置出前沿。",
+          "effect": "第一次能把「隔层不隔 + 环空窜槽」这类叠加风险标出来，而不是只看单个层间压差。",
+          "trap": "风险只给单点数值，会让设计者误以为它是确定的；输入本来就要按区间处理。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='窜层风险量化与方案枚举'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>风险拆成通道与环空两部分，再枚举 125 种组合出前沿</text><text x='12' y='42' font-size='9' fill='#4d565b'>隔层 A 残余通道</text><rect x='110' y='32' width='180' height='12' rx='2' fill='#efece1'/><rect x='110' y='32' width='36' height='12' fill='#41699b'/><text x='298' y='42' font-size='9' fill='#4d565b'>驱动 × (1−封隔能力) × (1−0.9×坐封有效性)</text><text x='12' y='62' font-size='9' fill='#4d565b'>隔层 C 残余通道</text><rect x='110' y='52' width='180' height='12' rx='2' fill='#efece1'/><rect x='110' y='52' width='152' height='12' fill='#b26a39'/><text x='298' y='62' font-size='9' fill='#c9613f'>隔层薄、岩性差 → 最大一条</text><text x='12' y='82' font-size='9' fill='#4d565b'>环空窜槽</text><rect x='110' y='72' width='180' height='12' rx='2' fill='#efece1'/><rect x='110' y='72' width='72' height='12' fill='#c9613f'/><text x='298' y='82' font-size='9' fill='#4d565b'>由固井质量决定，与选型无关（底噪）</text><line x1='12' y1='94' x2='648' y2='94' stroke='#e2ded0'/><text x='12' y='110' font-size='9' fill='#4d565b'>风险 = 0.72 × 通道 + 0.28 × 环空：合成为一个数之前，先把<tspan font-weight='600'>每一条通道的贡献</tspan>列出来</text></svg>"
+        },
+        {
+          "name": "方案评审与投产后复核",
+          "role": "人工",
+          "do": "评审按附带的额定参数校核表逐行签字；投产后用产液剖面或示踪剂复核隔离效果，结果回填到图谱。",
+          "effect": "失效案例持续补充判据，下一次设计的熔断线更接近实际。",
+          "trap": "复核结果不回填，图谱永远停在第一版规则，几年后被当成「好像也没那么准」而弃用。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='方案评审与投产后复核'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='30' width='112' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='68' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>推荐方案</text><path d='M124 47 L158 47' stroke='#242b2e' marker-end='url(#arN2)'/><defs><marker id='arN2' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='158' y='30' width='112' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='214' y='51' font-size='9.5' fill='#242b2e' text-anchor='middle'>方案评审</text><path d='M270 47 L304 47' stroke='#242b2e' marker-end='url(#arN2)'/><rect x='304' y='30' width='112' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='360' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>投产分层计量</text><path d='M416 47 L450 47' stroke='#242b2e' marker-end='url(#arN2)'/><rect x='450' y='30' width='112' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='506' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>回填图谱</text><path d='M562 47 C 620 47, 626 84, 580 90 C 540 94, 130 96, 68 74' fill='none' stroke='#79828a' stroke-dasharray='4 3'/><rect x='12' y='74' width='300' height='36' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='90' font-size='9' fill='#4d565b'>复核看的是「各层产出是否符合设计预期」，</text><text x='24' y='104' font-size='9' fill='#c9613f'>没做分层计量的井无法复核 → 失效案例永远收集不到</text><rect x='324' y='74' width='324' height='36' rx='4' fill='#dfe6ee' stroke='#d8d2c4'/><text x='336' y='90' font-size='9' fill='#41699b'>判据命中率要按区块分开统计</text><text x='336' y='104' font-size='9' fill='#4d565b'>某条判据在某区块持续失效 → 单独修订，不要全局改阈值</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>历史通过率</b>：把历史失效井的工况代入，看方案是否命中已知的失效判据（召回应 ≥ 80%）；同时不能把所有井都判为有风险（误报 ≤ 30%）。</p><p><b>风险排序能力</b>：预测风险最高的前 20% 的方案里，实际失效井的占比应显著高于随机。</p><p><b>工程可用</b>：推荐方案必须在额定参数校核上全绿；任何一条不满足的方案不应出现在推荐列表里。<b>这是硬门槛。</b></p>"
+      },
+      "fails": [
+        {
+          "name": "额定校核漏做",
+          "why": "额定压差或耐温没有逐项校核，或者在达标边缘工作，压差波动后失效风险大幅上升。"
+        },
+        {
+          "name": "隔层质量被忽略",
+          "why": "只看厚度不看岩性，把胶结差的砂泥互层当成坐封段，封隔器座不住。"
+        },
+        {
+          "name": "风险值被当真值",
+          "why": "输入本身是取值范围，单点输出会让后续的分层治理决策建立在假的确定性上。"
+        },
+        {
+          "name": "失效案例不回填",
+          "why": "规则库停在初版，同样的判据缺失会在下一个区块再犯一次。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "html": "demo/index.html",
+      "label": "可运行示范",
+      "intro": "改层间压差、井底温度、固井质量与预算，点按钮切换型号与坐封位置：三张图给出井身结构与窜流通道、候选组合的成本—风险前沿、以及风险的构成分解（哪条通道贡献多少、环空底噪占多少）与型号额定校核矩阵。",
+      "height": 1300
+    }
+  }
+}

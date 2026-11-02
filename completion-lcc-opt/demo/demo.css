@@ -1,0 +1,55 @@
+/* 示范页样式。运行在沙箱 iframe 里，随便写，不影响主站。 */
+:root{
+  --ink:#242b2e; --ink-2:#4d565b; --ink-3:#79828a;
+  --line:#e9e4d8; --jade:#2f7d6b; --jade-l:#e6f1ec;
+  --clay:#b26a39; --paper:#fbfaf6;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;padding:18px 20px 24px;background:var(--paper);color:var(--ink);
+  font-family:"Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:13px;line-height:1.7;
+}
+.panel{max-width:780px}
+h1{font-size:19px;margin:0 0 6px;letter-spacing:-.01em}
+.lead{margin:0 0 16px;color:var(--ink-2);font-size:12.5px;line-height:1.78}
+.ctl{display:flex;align-items:center;gap:14px;margin-bottom:9px}
+.ctl label{font-size:12px;color:var(--ink-2);display:flex;align-items:center;gap:7px;min-width:170px}
+.ctl output{font-family:ui-monospace,monospace;font-size:13px;color:var(--jade);font-weight:600}
+.ctl input[type=range]{flex:1;accent-color:var(--jade);height:18px}
+svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:#fff}
+svg + svg{margin-top:-1px;border-top-left-radius:0;border-top-right-radius:0}
+.readouts{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;
+  margin-top:12px;
+}
+.ro{background:#fff;padding:9px 12px}
+.ro .k{display:block;font-size:10px;color:var(--ink-3);letter-spacing:.06em}
+.ro b{font-family:ui-monospace,monospace;font-size:13px;font-weight:600}
+.ro b.ok{color:var(--jade)}
+.ro b.bad{color:var(--clay)}
+.note{margin:12px 0 0;font-size:12px;color:var(--ink-3);line-height:1.75}
+.note b{color:var(--ink)}
+
+/* 对账表 */
+.tbl{
+  width:100%;border-collapse:collapse;margin-top:12px;font-size:11.5px;
+  background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;
+}
+.tbl th{
+  text-align:left;font-weight:600;font-size:10.5px;color:var(--ink-3);letter-spacing:.05em;
+  background:#f7f5ef;padding:7px 9px;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+.tbl td{padding:6px 9px;border-bottom:1px solid #f2efe6;color:var(--ink-2);font-family:ui-monospace,monospace;white-space:nowrap}
+.tbl td.nm{font-family:inherit;color:var(--ink)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl caption{caption-side:top;text-align:left;font-size:11.5px;color:var(--ink-3);padding:0 0 6px}
+
+/* 通用小组件 */
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11.5px;color:var(--ink-3)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+/* 智能方法区块 */
+.meth{margin:14px 0 0;border:1px solid var(--line,#e2dccd);border-left:3px solid var(--jade,#2f7d6b);border-radius:9px;background:var(--jade-l,#f4f6f0)}.meth-h{font-size:11.5px;font-weight:700;color:var(--jade,#2f7d6b);letter-spacing:.05em;padding:9px 15px 2px}.meth-g{display:flex;flex-wrap:wrap;padding:0 0 9px}.meth-g>div{flex:1 1 200px;min-width:185px;padding:3px 15px}.meth-g>div+div{border-left:1px dashed var(--line,#e2dccd)}.meth-g b{display:block;font-size:11px;color:var(--clay,#8a6a3a);margin:3px 0 2px}.meth-g ul{margin:0;padding-left:14px}.meth-g li{font-size:11.6px;line-height:1.62;color:var(--ink-2,#3d4a48);margin:1px 0}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：完井液体系智能优选与配方设计</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>完井液体系智能优选 · 伤害构成与配方寻优</h1>
+  <p class="lead">产能低的时候真正难的是回答「伤害到底来自哪里」。这里把伤害拆成五类机理，用图谱给出的配伍性做可行域剪枝，
+  再在滤失与预算约束内做配方寻优——<b>输出的是成本—恢复率的取舍曲线，不是一个数字</b>。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>知识图谱推理（体系 → 伤害机理）</li><li>约束寻优</li><li>岩心驱替实验设计</li></ul></div><div><b>为什么起作用</b><ul><li>五类伤害由配方与工况共同决定，图谱把「添加剂 → 机理 → 禁忌」显式化</li><li>密度、流变、相容是硬门槛，先筛可行再最小化总伤害</li></ul></div><div><b>在示范里怎么看</b><ul><li>调粘土含量与温度，看伤害构成与推荐配方同步变</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>储层粘土含量 <output id="out-clay">14 %</output></label>
+    <input type="range" id="clay" min="4" max="28" step="1" value="14">
+  </div>
+  <div class="ctl">
+    <label>地层温度 <output id="out-temp">120 ℃</output></label>
+    <input type="range" id="temp" min="60" max="175" step="5" value="120">
+  </div>
+  <div class="ctl">
+    <label>作业压差 <output id="out-dp">12 MPa</output></label>
+    <input type="range" id="dp" min="2" max="25" step="1" value="12">
+  </div>
+  <div class="ctl">
+    <label>暂堵剂加量 <output id="out-fps">1.5 %</output></label>
+    <input type="range" id="fps" min="0" max="5" step="0.25" value="1.5">
+  </div>
+  <div class="ctl">
+    <label>防膨剂加量 <output id="out-stab">0.8 %</output></label>
+    <input type="range" id="stab" min="0" max="3" step="0.1" value="0.8">
+  </div>
+  <div class="ctl">
+    <label>单方预算上限 <output id="out-bg">2.8</output></label>
+    <input type="range" id="bg" min="1.5" max="5" step="0.1" value="2.8">
+  </div>
+  <div class="btnrow" id="fluidrow"></div>
+
+  <svg id="dm" viewBox="0 0 720 200" role="img" aria-label="伤害机理构成"></svg>
+
+  <svg id="kg" viewBox="0 0 720 220" role="img" aria-label="敏感档与体系的配伍矩阵与剪枝清单"></svg>
+
+  <svg id="pf" viewBox="0 0 720 260" role="img" aria-label="候选配方的成本与渗透率恢复率关系"></svg>
+
+  <div class="legend">
+    <span><i style="background:#b9c6cf"></i>可行候选配方</span>
+    <span><i style="background:#41699b"></i>帕累托前沿（同成本下恢复率最高）</span>
+    <span><i style="background:#242b2e"></i>当前配方</span>
+    <span><i style="background:#2f7d6b"></i>预算内最优</span>
+  </div>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">渗透率恢复值</span><b id="ro-krec">—</b></div>
+    <div class="ro"><span class="k">主要伤害机理</span><b id="ro-main">—</b></div>
+    <div class="ro"><span class="k">滤失 / 单方成本</span><b id="ro-cons">—</b></div>
+    <div class="ro"><span class="k">预算内还可拿回</span><b id="ro-gain">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

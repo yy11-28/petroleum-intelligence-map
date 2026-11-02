@@ -1,0 +1,145 @@
+{
+  "id": "cementing-param-opt",
+  "sceneId": "co29",
+  "title": "固井施工参数智能优化",
+  "version": "1.0.0",
+  "updated": "2026-10-30",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "顶替效率决定水泥环是否连续，排量大了压漏、小了顶不净，窄间隙与套管偏心会把问题放大。现场按经验窗口取中值排量，扶正器用常规间距，顶替效率与漏失风险从未联合评估。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "几何 + 流变",
+          "desc": "井径、偏心度、流体流变、排量"
+        },
+        {
+          "label": "标注成本",
+          "value": "低",
+          "desc": "评价结果来自 CBL 测井"
+        },
+        {
+          "label": "可见收益",
+          "value": "快",
+          "desc": "参数在施工前确定，改起来成本低"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "顶替与压漏是一对矛盾"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>做法是排量取经验窗口中值，扶正器按每 2—3 根套管一只布置，隔离液用量按容积倍数算。</p><p>问题是：<b>两个风险分开看</b>——顶替效率靠经验估算、压漏风险单独校核，没人算两者此消彼长的交点；<b>偏心没有进模型</b>——套管贴壁一侧的钻井液根本顶不动，窄间隙段常常留槽；<b>结果评价滞后</b>——固井质量要等测井才知道，下一次还是按老参数打。</p><p><b>固井在做什么</b>：套管下到位后，要把水泥浆从套管内泵入、从底部返到套管与井壁之间的环形空间（环空），把里面的钻井液完全顶替掉，水泥凝固后形成连续的水泥环，起到封隔地层与支撑保护套管的作用。</p><p><b>顶替为什么难</b>：套管在井里往往贴着一侧井壁（偏心），窄的一侧钻井液被卡住顶不动（滞留），宽的一侧水泥浆窜得快；结果是水泥环出现沟槽，层间封隔失效——这正是后续环空带压与窜流的根源。</p><svg viewBox='0 0 660 230' role='img' aria-label='环空与顶替：为什么套管偏心是麻烦的根源' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='230' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>环空与顶替：为什么套管偏心是麻烦的根源</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>左：居中（理想）　右：偏心（现场常见）</text><circle cx='110' cy='121' r='74' fill='#E0A188'/><circle cx='110' cy='121' r='54.76' fill='#2F7D6B'/><circle cx='110' cy='121' r='35.519999999999996' fill='#8A97A6'/><circle cx='110' cy='121' r='26.64' fill='#fff'/><line x1='110' y1='87.92' x2='232' y2='40' stroke='#C9C3B4' stroke-width='1'/><circle cx='232' cy='40' r='3' fill='#fff'/><text x='240' y='44' font-size='10.5' fill='#4A4A45'>套管内</text><line x1='110' y1='73.86' x2='232' y2='62' stroke='#C9C3B4' stroke-width='1'/><circle cx='232' cy='62' r='3' fill='#8A97A6'/><text x='240' y='66' font-size='10.5' fill='#4A4A45'>套管壁</text><line x1='110' y1='54.620000000000005' x2='232' y2='84' stroke='#C9C3B4' stroke-width='1'/><circle cx='232' cy='84' r='3' fill='#2F7D6B'/><text x='240' y='88' font-size='10.5' fill='#4A4A45'>水泥环</text><line x1='110' y1='45' x2='232' y2='106' stroke='#C9C3B4' stroke-width='1'/><circle cx='232' cy='106' r='3' fill='#E0A188'/><text x='240' y='110' font-size='10.5' fill='#4A4A45'>地层</text><text x='380' y='44' font-size='10.5' fill='#6B6B66'>居中：环空四周间隙均匀，钻井液被均匀顶走</text><text x='380' y='63' font-size='10.5' fill='#6B6B66'>偏心：窄间隙侧流速低，钻井液滞留成槽</text><text x='380' y='82' font-size='10.5' fill='#6B6B66'>滞留后果：水泥环不连续 → 层间窜流、环空带压</text><text x='380' y='101' font-size='10.5' fill='#6B6B66'>可调手段：扶正器加密、排量、流变、旋转套管</text></svg><div class='viz-cap'>图：环空与顶替：为什么套管偏心是麻烦的根源</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>智能方法把顶替过程建模：输入井眼几何（井径、偏心度）、流体流变与排量，用顶替模型算各井段的顶替效率，同时算环空循环压耗与压漏裕度；再在「不压漏」约束下寻优排量、流变与扶正器布置。</p><p>输出是分段的施工参数：例如「2800—3100 m 窄间隙段排量控制在 1.2 m³/min（压漏裕度 1.8 MPa），该段扶正器加密至每根一只，顶替效率预计从 68% 提到 86%」。</p><p><b>两个风险此消彼长</b>：排量越大，顶替越干净，但环空循环压耗随之上升，一旦超过薄弱层的承压能力就压漏地层——顶替效率与压漏风险是一对矛盾，取中值排量只是把两边的风险都蒙在鼓里。</p><p><b>智能方法做什么</b>：用顶替模型按井段算顶替效率，同时算环空压耗与薄弱层的压漏裕度；在「不压漏」这个硬约束下逐段寻优排量与扶正器布置，输出分段的施工参数而不是一个全局中值。</p><svg viewBox='0 0 660 220' role='img' aria-label='排量的两难：顶替效率与压漏裕度的交叉' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='220' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>排量的两难：顶替效率与压漏裕度的交叉</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>可行区间是两条曲线夹出来的窗口</text><rect x='298.1379310344828' y='34' width='142.41379310344826' height='150' fill='#2F7D6B' opacity='0.16'/><text x='369.3448275862069' y='46' font-size='9.5' fill='#6B6B66' text-anchor='middle'>可行窗口</text><line x1='54' y1='34' x2='644' y2='34' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='37.5' font-size='9.5' fill='#93938C' text-anchor='end'>100</text><line x1='54' y1='71.5' x2='644' y2='71.5' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='75' font-size='9.5' fill='#93938C' text-anchor='end'>75</text><line x1='54' y1='109' x2='644' y2='109' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='112.5' font-size='9.5' fill='#93938C' text-anchor='end'>50</text><line x1='54' y1='146.5' x2='644' y2='146.5' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='150' font-size='9.5' fill='#93938C' text-anchor='end'>25</text><line x1='54' y1='184' x2='644' y2='184' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='187.5' font-size='9.5' fill='#93938C' text-anchor='end'>0</text><text x='54' y='199' font-size='9.5' fill='#93938C' text-anchor='middle'>0.5</text><text x='338.82758620689657' y='199' font-size='9.5' fill='#93938C' text-anchor='middle'>1.7</text><text x='644' y='199' font-size='9.5' fill='#93938C' text-anchor='middle'>3.0 m³/min</text><line x1='54' y1='184' x2='644' y2='184' stroke='#C9C3B4'/><line x1='54' y1='34' x2='54' y2='184' stroke='#C9C3B4'/><line x1='54' y1='56.5' x2='644' y2='56.5' stroke='#2F7D6B' stroke-width='1.4' stroke-dasharray='5 4'/><text x='641' y='51.5' font-size='9.5' fill='#2F7D6B' text-anchor='end'>效率≥85%</text><line x1='54' y1='154' x2='644' y2='154' stroke='#C1613F' stroke-width='1.4' stroke-dasharray='5 4'/><text x='641' y='149' font-size='9.5' fill='#C1613F' text-anchor='end'>裕度≥20%</text><polyline points='54.0,93.9 74.3,89.9 94.7,86.3 115.0,82.9 135.4,79.8 155.7,76.9 176.1,74.3 196.4,71.8 216.8,69.5 237.1,67.4 257.4,65.5 277.8,63.7 298.1,62.0 318.5,60.5 338.8,59.0 359.2,57.7 379.5,56.5 399.9,55.4 420.2,54.3 440.6,53.4 460.9,52.5 481.2,51.6 501.6,50.9 521.9,50.2 542.3,49.5 562.6,48.9 583.0,48.4 603.3,47.8 623.7,47.4 644.0,46.9' fill='none' stroke='#2F7D6B' stroke-width='2' stroke-linejoin='round'/><polyline points='54.0,42.1 74.3,42.8 94.7,43.5 115.0,44.3 135.4,45.2 155.7,46.1 176.1,47.1 196.4,48.2 216.8,49.3 237.1,50.5 257.4,51.7 277.8,53.0 298.1,54.4 318.5,55.8 338.8,57.2 359.2,58.7 379.5,60.3 399.9,61.9 420.2,63.5 440.6,65.2 460.9,67.0 481.2,68.8 501.6,70.6 521.9,72.5 542.3,74.5 562.6,76.4 583.0,78.5 603.3,80.6 623.7,82.7 644.0,84.8' fill='none' stroke='#C1613F' stroke-width='2' stroke-linejoin='round'/><circle cx='359.1724137931035' cy='67' r='2.8' fill='#1A4779'/><text x='359.1724137931035' y='82' font-size='10' fill='#1A4779'>推荐排量 ~1.8</text><text x='349' y='214' font-size='10' fill='#93938C' text-anchor='middle'>施工排量</text><text x='14' y='30' font-size='10' fill='#93938C'>效率 (%) / 裕度 (%)</text><rect x='54' y='201' width='10' height='10' rx='2' fill='#2F7D6B'/><text x='68' y='210' font-size='10' fill='#6B6B66'>顶替效率</text><rect x='107.6' y='201' width='10' height='10' rx='2' fill='#C1613F'/><text x='121.6' y='210' font-size='10' fill='#6B6B66'>压漏裕度</text></svg><div class='viz-cap'>图：排量的两难：顶替效率与压漏裕度的交叉</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>井眼与套管几何</b>（井径曲线、套管尺寸、偏心度）；<b>流体流变与排量</b>（钻井液、隔离液、水泥浆的流变参数与实际排量）；<b>固井质量与漏失记录</b>（CBL 结果、漏失位置与漏失量）。</p><p>样本 200—400 井次；偏心度若无实测可用井径曲线与扶正器布置估算，但要在结论里注明。</p><p><b>需要三类数据</b>：井眼与套管几何（井径曲线、套管尺寸、偏心度）、三段流体的流变参数（钻井液/隔离液/水泥浆）与实际排量、以及固井质量与漏失记录（CBL 结果、漏失位置与漏失量）。井径曲线噪声大，直接用会让间隙算错，必须先平滑。</p><p><b>智能方法的落地路径</b>：几何与流变 → 顶替效率计算 → 压漏裕度校核 → 排量与扶正器寻优 → 施工后 CBL 回填。回填这一步是模型越用越准的关键，缺了它误差永远修不掉。</p><svg viewBox='0 0 660 220' role='img' aria-label='从几何与流变到分段施工参数' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='220' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>从几何与流变到分段施工参数</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>压漏裕度是硬约束，不参与打分</text><line x1='88' y1='62' x2='250' y2='105' stroke='#C9C3B4' stroke-width='1.4'/><rect x='158.8' y='74.5' width='20.4' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='169' y='86.5' font-size='9' fill='#6B6B66' text-anchor='middle'>间隙</text><line x1='88' y1='148' x2='250' y2='105' stroke='#C9C3B4' stroke-width='1.4'/><rect x='158.8' y='117.5' width='20.4' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='169' y='129.5' font-size='9' fill='#6B6B66' text-anchor='middle'>流态</text><line x1='250' y1='105' x2='410' y2='105' stroke='#C9C3B4' stroke-width='1.4'/><line x1='410' y1='105' x2='562' y2='62' stroke='#C9C3B4' stroke-width='1.4'/><rect x='466.5' y='74.5' width='39' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='486' y='86.5' font-size='9' fill='#6B6B66' text-anchor='middle'>约束内寻优</text><line x1='562' y1='62' x2='562' y2='152' stroke='#C9C3B4' stroke-width='1.4'/><rect x='545.6' y='98' width='32.8' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='562' y='110' font-size='9' fill='#6B6B66' text-anchor='middle'>闭环校准</text><circle cx='88' cy='62' r='32' fill='#2F567D' opacity='0.28'/><circle cx='88' cy='62' r='32' fill='none' stroke='#2F567D' stroke-width='1.4'/><text x='88' y='66' font-size='10' fill='#2A2A28' text-anchor='middle'>井径/偏心</text><circle cx='88' cy='148' r='32' fill='#2F567D' opacity='0.28'/><circle cx='88' cy='148' r='32' fill='none' stroke='#2F567D' stroke-width='1.4'/><text x='88' y='152' font-size='10' fill='#2A2A28' text-anchor='middle'>流变参数</text><circle cx='250' cy='105' r='34' fill='#2F7D6B' opacity='0.28'/><circle cx='250' cy='105' r='34' fill='none' stroke='#2F7D6B' stroke-width='1.4'/><text x='250' y='109' font-size='10' fill='#2A2A28' text-anchor='middle'>顶替模型</text><circle cx='410' cy='105' r='34' fill='#C1613F' opacity='0.28'/><circle cx='410' cy='105' r='34' fill='none' stroke='#C1613F' stroke-width='1.4'/><text x='410' y='109' font-size='10' fill='#2A2A28' text-anchor='middle'>压漏校核</text><circle cx='562' cy='62' r='34' fill='#E8B444' opacity='0.28'/><circle cx='562' cy='62' r='34' fill='none' stroke='#E8B444' stroke-width='1.4'/><text x='562' y='66' font-size='10' fill='#2A2A28' text-anchor='middle'>分段参数</text><circle cx='562' cy='152' r='32' fill='#8A97A6' opacity='0.28'/><circle cx='562' cy='152' r='32' fill='none' stroke='#8A97A6' stroke-width='1.4'/><text x='562' y='156' font-size='10' fill='#2A2A28' text-anchor='middle'>CBL 回填</text><text x='14' y='197' font-size='10' fill='#93938C'>样本量：数百井次即可；偏心无实测时可估算，但需标注不确定性</text><text x='14' y='212' font-size='10' fill='#93938C'>输出形态：分段排量 + 扶正器间距，而不是一个全局中值</text></svg><div class='viz-cap'>图：从几何与流变到分段施工参数</div><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>样本井次 340；井径曲线平滑后算环空间隙，钻井液、隔离液、水泥浆三段流变按实测温度拟合。</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>薄弱层漏失压力决定排量上限，压漏裕度不低于 1.5 MPa；扶正器加密必须同步校核下入阻力。</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>顶替效率提升 18 个百分点；输出分段排量与扶正器间距，可直接落到施工指令单。</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度中等：顶替模型本身成熟，难点在井径与偏心的输入质量——井径曲线噪声大，直接用会让效率算偏。</p><p>可参考方向：顶替效率模拟、排量寻优、压漏风险约束。建议先做「分段效率图 + 压漏裕度」，让现场看到哪一段是瓶颈。</p><p><b>难在哪</b>：顶替模型本身成熟，难点在输入质量（井径噪声、漏失压力来自邻井）与两个风险的联合表述。参考方向为顶替效率模拟、排量寻优与压漏风险约束。</p><p><b>与传统做法的本质差别</b>：过去两个风险分开看（效率靠估、压漏单独校核），现在放在同一张图上找交叉窗口，并逐段给出参数。</p><svg viewBox='0 0 660 208' role='img' aria-label='传统做法 vs 智能做法' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='208' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>传统做法 vs 智能做法</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>从「取中值」到「逐段找窗口」</text><rect x='16' y='36' width='307' height='156' rx='8' fill='#8A97A6' opacity='0.12'/><rect x='16' y='36' width='307' height='22' rx='8' fill='#8A97A6' opacity='0.30'/><text x='28' y='51' font-size='11' font-weight='700' fill='#2A2A28'>传统：取经验窗口中值</text><circle cx='32' cy='74' r='2.6' fill='#8A97A6'/><text x='40' y='78' font-size='10.5' fill='#4A4A45'>排量一个值打全井，不分段</text><circle cx='32' cy='96' r='2.6' fill='#8A97A6'/><text x='40' y='100' font-size='10.5' fill='#4A4A45'>扶正器按固定间距（每 2—3 根）</text><circle cx='32' cy='118' r='2.6' fill='#8A97A6'/><text x='40' y='122' font-size='10.5' fill='#4A4A45'>效率靠估，压漏单独校核</text><circle cx='32' cy='140' r='2.6' fill='#8A97A6'/><text x='40' y='144' font-size='10.5' fill='#4A4A45'>结果要等测井才知道，无法闭环</text><rect x='337' y='36' width='307' height='156' rx='8' fill='#2F7D6B' opacity='0.12'/><rect x='337' y='36' width='307' height='22' rx='8' fill='#2F7D6B' opacity='0.30'/><text x='349' y='51' font-size='11' font-weight='700' fill='#2A2A28'>智能：约束下逐段寻优</text><circle cx='353' cy='74' r='2.6' fill='#2F7D6B'/><text x='361' y='78' font-size='10.5' fill='#4A4A45'>按井段算效率与裕度，定位瓶颈段</text><circle cx='353' cy='96' r='2.6' fill='#2F7D6B'/><text x='361' y='100' font-size='10.5' fill='#4A4A45'>窄间隙与偏心段单独加密扶正器</text><circle cx='353' cy='118' r='2.6' fill='#2F7D6B'/><text x='361' y='122' font-size='10.5' fill='#4A4A45'>两个风险同图比较，窗口可视化</text><circle cx='353' cy='140' r='2.6' fill='#2F7D6B'/><text x='361' y='144' font-size='10.5' fill='#4A4A45'>CBL 结果回填校准，逐井收敛</text><path d='M329 104 l12 -8 l0 16 z' fill='#2F7D6B'/></svg><div class='viz-cap'>图：传统做法 vs 智能做法</div>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "固井施工参数优化怎么做",
+      "lead": [
+        "核心是把「取中值排量」换成「在不压漏的约束下逐段寻优」，让顶替效率与压漏裕度同时可见。",
+        "下面的示范是第 2—3 步：改变排量与间隙，看顶替效率怎么变、压漏裕度什么时候被吃掉。"
+      ],
+      "stats": [
+        [
+          "样本井次",
+          "340"
+        ],
+        [
+          "顶替效率提升",
+          "+18 pp"
+        ],
+        [
+          "压漏裕度",
+          "≥ 1.5 MPa"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "井眼几何与流变整理",
+          "role": "数据",
+          "do": "整理井径曲线、套管外径与扶正器位置算出环空间隙和偏心度，再把钻井液、前置液、水泥浆三段的流变参数按实测温度拟合。",
+          "effect": "得到随井深变化的间隙剖面与三段流体的流变参数表，是顶替模型的直接输入。",
+          "trap": "井径曲线噪声大，直接拿原始曲线算间隙会把扩径段当成真实间隙；要先平滑，扩径超过 15% 的井段单独标注。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='井径曲线平滑后算环空间隙，三段流体流变按实测温度拟合'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>井径曲线先平滑再算间隙：扩径段单独标注，别把大肚子当成真实间隙</text><line x1='60' y1='30' x2='60' y2='100' stroke='#242b2e' stroke-width='1'/><text x='40' y='34' font-size='8' fill='#4d565b'>0</text><text x='34' y='99' font-size='8' fill='#4d565b'>3000</text><text x='36' y='112' font-size='8' fill='#79828a'>深度</text><polyline points='64,44 100,46 140,48 158,44 176,32 196,28 216,34 236,48 280,50 330,48' fill='none' stroke='#242b2e' stroke-width='1.5'/><path d='M64 46 C 130 48 240 50 330 49' fill='none' stroke='#41699b' stroke-width='1.5' stroke-dasharray='4 3'/><rect x='166' y='28' width='60' height='24' fill='none' stroke='#c9613f' stroke-width='1'/><text x='232' y='36' font-size='8.5' fill='#c9613f'>扩径 18%</text><text x='244' y='62' font-size='8' fill='#242b2e'>实测井径</text><text x='244' y='74' font-size='8' fill='#41699b'>平滑后</text><rect x='370' y='26' width='278' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='382' y='44' font-size='9' fill='#4d565b'>三段流体流变（按实测温度拟合）</text><rect x='382' y='54' width='10' height='10' fill='#8a93a5'/><text x='398' y='63' font-size='9' fill='#4d565b'>钻井液 n=0.62 k=0.48</text><rect x='382' y='68' width='10' height='10' fill='#c8a24a'/><text x='398' y='77' font-size='9' fill='#4d565b'>隔离液 n=0.75 k=0.21</text><rect x='382' y='82' width='10' height='10' fill='#7d8f7a'/><text x='398' y='91' font-size='9' fill='#4d565b'>水泥浆 n=0.84 k=0.12</text><text x='12' y='114' font-size='8.5' fill='#79828a'>环空间隙与偏心度是顶替模型的直接输入：几何错一步，效率判断全错</text></svg>"
+        },
+        {
+          "name": "顶替效率计算",
+          "role": "算法",
+          "do": "按 5—10 m 一段计算顶替界面的推进速度与壁面剪应力，识别窄间隙、大肚子井段和偏心造成的钻井液滞留段。",
+          "effect": "直接定位顶不动的瓶颈段在多少米到多少米、滞留有多厚，而不是给一个全井平均效率。",
+          "trap": "偏心度若按经验估算，滞留段位置会整段跑偏，必须在图上一并给出不确定性范围，别把估算值当实测值。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='顶替界面推进与滞留段定位'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>按 5—10 m 一段算顶替界面推进速度与壁面剪应力 → 滞留段定位到米，不给全井平均数</text><rect x='60' y='48' width='240' height='26' fill='#dfe6ee'/><polygon points='300,48 322,48 300,74' fill='#bcd9cf'/><rect x='300' y='48' width='220' height='26' fill='#bcd9cf'/><ellipse cx='400' cy='61' rx='30' ry='24' fill='#f4e3d3' stroke='#c9613f' stroke-dasharray='3 2'/><rect x='386' y='68' width='30' height='7' fill='#c9613f'/><text x='436' y='74' font-size='8.5' fill='#c9613f'>大肚子 · 滞留 8 mm</text><rect x='180' y='48' width='44' height='6' fill='#c9613f'/><text x='176' y='42' font-size='8.5' fill='#c9613f'>窄间隙段 1830—1870 m</text><line x1='300' y1='40' x2='300' y2='80' stroke='#2f7d6b' stroke-width='1.4'/><text x='268' y='36' font-size='8.5' fill='#2f7d6b'>顶替界面</text><text x='80' y='90' font-size='8.5' fill='#79828a'>钻井液</text><text x='420' y='90' font-size='8.5' fill='#79828a'>水泥浆</text><rect x='546' y='26' width='102' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='556' y='44' font-size='8.5' fill='#4d565b'>偏心度若按</text><text x='556' y='58' font-size='8.5' fill='#4d565b'>经验估算，</text><text x='556' y='72' font-size='8.5' fill='#4d565b'>滞留段位置</text><text x='556' y='86' font-size='8.5' fill='#c9613f'>会整段跑偏</text><text x='12' y='114' font-size='8.5' fill='#79828a'>输出：瓶颈段米位 + 滞留厚度 + 不确定范围，图上直接着色而不是一段文字结论</text></svg>"
+        },
+        {
+          "name": "压漏裕度校核",
+          "role": "算法",
+          "do": "按宾汉或幂律模式算环空循环压耗沿井深分布，与薄弱层漏失压力逐点比较，给出各段压漏裕度与全井排量上限。",
+          "effect": "把「排量经验窗口」换成随井深变化的压耗曲线与明确的排量上限值，越界段在图上直接着色。",
+          "trap": "薄弱层漏失压力多来自邻井换算或地层完整性试验，取值偏差会直接抬高或压低排量上限，必须注明来源与置信度。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='环空压耗对漏失压力逐点比较，排量上限由最薄段决定'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>环空循环压耗沿井深分布，逐点对漏失压力 → 各段裕度 + 全井排量上限（由最薄段决定）</text><line x1='70' y1='30' x2='70' y2='104' stroke='#242b2e' stroke-width='1'/><text x='30' y='34' font-size='8' fill='#4d565b'>0</text><text x='26' y='59' font-size='8' fill='#4d565b'>1500</text><text x='26' y='84' font-size='8' fill='#4d565b'>2500</text><text x='26' y='107' font-size='8' fill='#4d565b'>3500</text><path d='M120 30 C 150 55 190 80 222 104' fill='none' stroke='#41699b' stroke-width='2'/><text x='196' y='62' font-size='8.5' fill='#41699b'>环空压耗</text><path d='M250 30 L 254 52 L 262 58 L 252 68 L 258 104' fill='none' stroke='#c9613f' stroke-width='1.6' stroke-dasharray='5 3'/><text x='266' y='66' font-size='8.5' fill='#c9613f'>漏失压力（薄弱层骤降）</text><rect x='74' y='52' width='184' height='14' fill='#f4ded4'/><text x='96' y='62' font-size='8' fill='#c9613f'>裕度最薄段</text><line x1='228' y1='58' x2='252' y2='58' stroke='#242b2e' stroke-width='1'/><text x='206' y='52' font-size='8.5' fill='#c9613f'>1.2 MPa</text><rect x='420' y='26' width='228' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='432' y='44' font-size='9' fill='#4d565b'>当前排量下最薄裕度 1.2 MPa</text><text x='432' y='62' font-size='9' fill='#c9613f'>低于 1.5 MPa 阈值 → 排量超限</text><text x='432' y='80' font-size='9' fill='#4d565b'>全井排量上限 2.1 m³/min</text><text x='432' y='96' font-size='8.5' fill='#79828a'>漏失压力来源须注明置信度</text><text x='12' y='118' font-size='8.5' fill='#79828a'>「排量经验窗口」换成随井深变化的压耗曲线与一个明确的数字上限</text></svg>"
+        },
+        {
+          "name": "排量与扶正器寻优",
+          "role": "算法",
+          "do": "以顶替效率最高为目标、压漏裕度不低于阈值为约束，逐段寻优排量、前置液用量与扶正器间距，给出分段可执行参数表。",
+          "effect": "输出分段排量与扶正器布置方案，可直接落到施工指令单，而不是一个全井统一的排量。",
+          "trap": "扶正器加密会显著增加下入阻力，必须同步校核下入能力；只看顶替效率，会把套管卡在半路。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='分段排量与扶正器间距，直接落到施工指令单'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>以顶替效率最高为目标、压漏裕度为约束 → 分段排量 + 扶正器间距（窄间隙段自动加密）</text><rect x='60' y='44' width='120' height='24' fill='#cfe0d6'/><rect x='180' y='44' width='120' height='24' fill='#a9c9ba'/><rect x='300' y='44' width='120' height='24' fill='#7fae9b'/><rect x='420' y='44' width='120' height='24' fill='#5f9683'/><text x='92' y='60' font-size='9' fill='#2f5a4d'>1.6</text><text x='212' y='60' font-size='9' fill='#2f5a4d'>1.9</text><text x='332' y='60' font-size='9' fill='#f2f5f0'>2.1</text><text x='452' y='60' font-size='9' fill='#f2f5f0'>1.8</text><text x='92' y='38' font-size='7.5' fill='#79828a'>m³/min</text><polygon points='150,44 154,36 158,44' fill='#c9613f'/><polygon points='170,44 174,36 178,44' fill='#c9613f'/><polygon points='270,44 274,36 278,44' fill='#c9613f'/><polygon points='290,44 294,36 298,44' fill='#c9613f'/><polygon points='310,44 314,36 318,44' fill='#c9613f'/><polygon points='430,44 434,36 438,44' fill='#c9613f'/><polygon points='470,44 474,36 478,44' fill='#c9613f'/><text x='160' y='30' font-size='8' fill='#c9613f'>▲ 扶正器：窄段加密</text><text x='60' y='88' font-size='8.5' fill='#4d565b'>分段参数可直接落施工指令单，而不是全井一个排量</text><rect x='60' y='96' width='560' height='16' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='72' y='108' font-size='8.5' fill='#c9613f'>注意：扶正器加密会显著增加下入阻力，必须同步校核下入能力——只看顶替效率，套管会卡在半路</text></svg>"
+        },
+        {
+          "name": "施工确认与质量回填",
+          "role": "人工",
+          "do": "工程师确认后按分段参数施工，固井后把 CBL／VDL 的分段解释结果与实钻复杂情况回填，校准顶替模型。",
+          "effect": "每口井都成为下一口井的校准样本，预测滞留段的命中率随井数增加而上升。",
+          "trap": "不做质量回填，模型永远不知道哪段判断错了；只回填合格／不合格也不够，要回填分段解释结果。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='CBL 分段解释回填，逐口井校准顶替模型'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>固井后把 CBL/VDL 分段解释与实钻复杂情况回填 → 每口井都成为下一口井的校准样本</text><line x1='60' y1='30' x2='60' y2='100' stroke='#242b2e' stroke-width='1'/><rect x='62' y='34' width='9' height='26' fill='#7fae9b'/><text x='78' y='44' font-size='8' fill='#2f7d6b'>胶结优</text><rect x='62' y='62' width='9' height='18' fill='#d9c27a'/><text x='78' y='72' font-size='8' fill='#8a6a3a'>合格</text><rect x='62' y='82' width='9' height='16' fill='#c9613f'/><text x='78' y='92' font-size='8' fill='#c9613f'>差 · 对应滞留段</text><path d='M74 40 C 96 44 110 58 118 84 C 124 96 128 96 132 88' fill='none' stroke='#242b2e' stroke-width='1.4'/><text x='60' y='112' font-size='8' fill='#79828a'>CBL 声幅</text><rect x='240' y='34' width='116' height='40' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='254' y='50' font-size='9' fill='#4d565b'>按分段参数施工</text><text x='254' y='64' font-size='8' fill='#79828a'>实际排量记录</text><line x1='358' y1='54' x2='390' y2='54' stroke='#8a8f80' stroke-width='1.4'/><polygon points='390,54 384,50.5 384,57.5' fill='#8a8f80'/><rect x='392' y='34' width='116' height='40' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='406' y='50' font-size='9' fill='#4d565b'>CBL 分段解释</text><text x='406' y='64' font-size='8' fill='#79828a'>优 / 合格 / 差 + 米位</text><line x1='510' y1='54' x2='542' y2='54' stroke='#8a8f80' stroke-width='1.4'/><polygon points='542,54 536,50.5 536,57.5' fill='#8a8f80'/><rect x='544' y='34' width='104' height='40' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='558' y='50' font-size='9' fill='#4d565b'>回填数据集</text><text x='558' y='64' font-size='8' fill='#79828a'>模型逐口校准</text><path d='M596 76 C 590 96 300 100 254 78' fill='none' stroke='#8a8f80' stroke-width='1.2' stroke-dasharray='4 3'/><text x='360' y='104' font-size='8.5' fill='#c9613f'>不做回填，模型永远不知道哪段判断错了；只回填合格 / 不合格也不够</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>效率提升</b>：采用优化参数的井，CBL 评价优良段比例相对邻井提升 ≥ 10 个百分点。</p><p><b>压漏遵循</b>：施工中出现漏失的井次比例应为 0（压漏裕度作为硬约束）。</p><p><b>效率预测误差</b>：预测顶替效率与测井反推的平均偏差 ≤ 12 个百分点。</p>"
+      },
+      "fails": [
+        {
+          "name": "井径噪声未处理",
+          "why": "原始井径曲线直接进模型，间隙算错，效率预测失真。"
+        },
+        {
+          "name": "漏失压力偏差",
+          "why": "薄弱层漏失压力来自邻井经验，实际更低导致施工中压漏。"
+        },
+        {
+          "name": "忽略下入阻力",
+          "why": "扶正器加密提高顶替效率却增加下入阻力，导致下不到位。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 640,
+      "intro": "改变排量与环空间隙，看压耗裕度沿井深怎么变化——曲线越过阈值线的区间就是可能压漏的位置。",
+      "html": "demo/index.html"
+    }
+  }
+}

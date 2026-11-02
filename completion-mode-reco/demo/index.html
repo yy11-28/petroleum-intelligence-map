@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：完井方式智能优选</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>完井方式智能优选 · 相似案例检索</h1>
+  <p class="lead">一口新井要选完井方式（裸眼 / 射孔 / 筛管 / 砾石充填），最可靠的依据是「地质条件相近的老井当年怎么选、后来产得怎么样」。
+  这里把 32 口邻井的「储层特征—完井方式—产能表现」组织成案例库，按加权相似度挑出最像的几口，用它们的投票给出候选排序。
+  拖动滑杆改变待钻井的条件，看推荐怎么变、什么时候变成「样本不足」。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>案例推理（32 口邻井相似度检索）</li><li>知识图谱 + 多准则排序</li><li>一票否决项</li></ul></div><div><b>为什么起作用</b><ul><li>完井方式高度依赖区块经验，相似井的实测结果比通用公式更可信</li><li>否决项先剔掉不适用方案，避免「高分但不该用」</li></ul></div><div><b>在示范里怎么看</b><ul><li>拉高出砂倾向，看检索到的井变化、否决项亮起</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>出砂指数 <output id="out-sand">0.45</output></label>
+    <input type="range" id="sand" min="0" max="1" step="0.01" value="0.45">
+  </div>
+  <div class="ctl">
+    <label>距底水距离 <output id="out-dw">8 m</output></label>
+    <input type="range" id="dw" min="0" max="40" step="0.5" value="8">
+  </div>
+  <div class="ctl">
+    <label>渗透率 <output id="out-perm">— mD</output></label>
+    <input type="range" id="perm" min="0" max="100" step="1" value="55">
+  </div>
+  <div class="ctl">
+    <label>储层厚度 <output id="out-h">14.0 m</output></label>
+    <input type="range" id="thick" min="4" max="30" step="0.5" value="14">
+  </div>
+  <div class="ctl">
+    <label>邻井数 K <output id="out-k">6</output></label>
+    <input type="range" id="kval" min="3" max="15" step="1" value="6">
+  </div>
+
+  <svg id="bars" viewBox="0 0 720 200" role="img" aria-label="候选完井方式排序"></svg>
+
+  <svg id="dist" viewBox="0 0 720 190" role="img" aria-label="32 口邻井的相似度排序分布"></svg>
+
+  <svg id="feat" viewBox="0 0 720 200" role="img" aria-label="待钻井与最近邻井在四个特征上的对比"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">推荐方式</span><b id="ro-mode">—</b></div>
+    <div class="ro"><span class="k">置信度</span><b id="ro-conf">—</b></div>
+    <div class="ro"><span class="k">参与投票</span><b id="ro-vote">—</b></div>
+    <div class="ro"><span class="k">次优候选</span><b id="ro-next">—</b></div>
+  </div>
+
+  <table class="tbl" id="topk"></table>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+{
+  "id": "annulus-pressure-anomaly",
+  "sceneId": "co42",
+  "title": "完井投产前环空压力异常识别：温度胀还是真窜流",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "投产前发现环空带压，常见的解释是「温度胀」，但其中有相当比例是窜流或密封失效。直接投产等于把问题带进生产期，事后处理要动管柱——而判断目前靠人工对比几次读数，同一个读数不同人结论不同。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "时序",
+          "desc": "环空压力、温度、作业与产量时序"
+        },
+        {
+          "label": "标注成本",
+          "value": "低",
+          "desc": "结论可从后续核实结果自动整理"
+        },
+        {
+          "label": "可见收益",
+          "value": "中",
+          "desc": "把问题拦在投产前，避免动管柱"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "温度效应与真实窜流的形态部分重叠"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>做法是人工对比几次读数：投产前读一次环空压力，过几小时或隔天再读一次，看涨了没有、放压后回不回升，凭经验判断是不是温度胀。</p><p>问题有三个：<b>温度效应与真实窜流分不清</b>——两者都表现为压力上升，放压后的回升速度才是关键，而这个特征需要连续曲线才能看清；<b>没有基线与阈值</b>——没有这口井正常的压力—温度关系，读数只能跟\"感觉\"比；<b>工期压力下容易放行</b>——判断不确定时，投产工期往往比核实更重要，问题就带进生产期了。</p><svg viewBox='0 0 660 154' role='img' aria-label='温度胀与真实窜流：形态相似，放压后的回升才是判据' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='154' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>两种升压在「压力上升」这一点上完全相同：区别在放压后回不回升、回升多快</text><text x='50' y='42' font-size='10' fill='#3d4a48'>人工对比几次读数（现状）</text><rect x='50' y='50' width='250' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='66' y='68' font-size='8.5' fill='#4d565b'>读两次压力：涨了？涨多少？</text><text x='66' y='84' font-size='8.5' fill='#4d565b'>放压一次：回不回升？</text><text x='66' y='100' font-size='8.5' fill='#8a6a3a'>凭经验判：多数说「温度胀」</text><text x='66' y='116' font-size='8.5' fill='#c9613f'>→ 无基线、无阈值，结论因人而异</text><text x='66' y='132' font-size='8.5' fill='#c9613f'>→ 工期压力下倾向放行</text><text x='330' y='42' font-size='10' fill='#3d4a48'>基线建模 + 回升判据（本方法）</text><rect x='330' y='50' width='300' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='346' y='68' font-size='9' fill='#4d565b'>建立压力—温度基线（可恢复部分）</text><text x='346' y='84' font-size='9' fill='#4d565b'>扣除温度贡献 → 残余升压速率</text><text x='346' y='100' font-size='9' fill='#2f7d6b'>放压后回升速率 → 是否有持续来源</text><text x='346' y='116' font-size='9' fill='#2f7d6b'>→ 给出是否具备投产条件 + 需核实层位</text><text x='346' y='132' font-size='9' fill='#2f7d6b'>→ 结论带判据，可复核</text><text x='12' y='148' font-size='8.5' fill='#79828a'>差别不在看得更仔细，而在有基线、有判据、结论可复核</text></svg><div class='viz-cap'>图：温度胀与真实窜流：形态相似，放压后的回升才是判据</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>投产前对环空压力做基线建模，区分温度引起的可恢复升压与持续性压力来源（窜流、密封失效、残余气体），给出是否具备投产条件与需要核实的层位。</p><p>关键在两点：<b>把温度贡献扣掉</b>——用这口井自己的压力—温度关系把可恢复部分算出来，剩下的才是需要解释的部分；<b>用放压—回升特征判来源</b>——回升快且持续说明有持续气源，回升慢趋于平缓则更像残余气体或温度滞后。</p><svg viewBox='0 0 660 168' role='img' aria-label='三类来源的判据：扣除温度后的残余升压与回升特征' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='168' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>扣除温度贡献后，用「残余升压速率 + 放压回升形态」区分三类来源</text><rect x='20' y='34' width='200' height='84' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='32' y='52' font-size='9.5' fill='#4d565b'>① 温度胀（可恢复）</text><polyline points='32,96 70,92 110,88 150,84 190,82 210,82' fill='none' stroke='#2f7d6b' stroke-width='1.8'/><text x='32' y='112' font-size='8.5' fill='#2f7d6b'>随温度升降，扣除后残余≈0</text><rect x='230' y='34' width='200' height='84' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='242' y='52' font-size='9.5' fill='#4d565b'>② 窜流（持续性）</text><polyline points='242,96 280,86 320,72 360,58 400,44 420,40' fill='none' stroke='#c9613f' stroke-width='2'/><text x='242' y='112' font-size='8.5' fill='#c9613f'>放压后快速回升，有持续气源</text><rect x='440' y='34' width='208' height='84' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='452' y='52' font-size='9.5' fill='#4d565b'>③ 残余气体（衰减）</text><polyline points='452,96 490,84 530,76 570,70 610,66 630,65' fill='none' stroke='#41699b' stroke-width='1.8'/><text x='452' y='112' font-size='8.5' fill='#41699b'>回升趋缓，几轮后衰减</text><text x='20' y='132' font-size='9.5' fill='#4d565b'>判据：残余升压速率 + 放压后回升斜率 + 多轮放压的衰减趋势</text><text x='20' y='148' font-size='8.5' fill='#2f7d6b'>三类来源对应三种处置：放行 / 核实层位 / 放喷观察</text><text x='12' y='162' font-size='8.5' fill='#79828a'>把「是不是温度胀」这个判断题，换成有判据、有阈值的分类题</text></svg><div class='viz-cap'>图：三类来源的判据：扣除温度后的残余升压与回升特征</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>环空压力与温度时序</b>（投产前连续监测，含放压操作记录）；<b>井身与完井结构</b>（套管层次、水泥返高、封隔器位置与额定压差）；<b>作业与生产记录</b>（试压、替浆、坐封、邻井生产与注采情况）；<b>核实结果</b>（后期是否确认窜流、层位与处置）。</p><p>有连续监测与放压记录的井优先；核实结果是训练与校验的关键，缺了它模型只能给分类不能给概率。</p><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>压力 0.01 MPa、温度 0.1℃ 分辨率，投产前连续监测 ≥ 24 h；放压操作记录到时间与放压量</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>必须先扣温度贡献再判来源；放压—回升至少两轮才判衰减趋势；结论给分类 + 概率而非二值</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>给出是否具备投产条件 + 疑似来源与概率 + 需要核实的层位与核实方式</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度中等：三类来源的物理机制清楚，难在形态重叠——小流量窜流的早期与温度滞后很像，残余气体的衰减初期也像窜流；另外监测时长不足时特征没展开就下结论，误判率上升。</p><p><b>难在哪</b>：投产前的监测窗口往往只有十几小时，而区分可靠与否需要的放压—回升特征要两轮以上；工期压力下容易在数据不足时定论。参考方向为时序基线建模、来源分类与概率化输出。</p><p><b>与传统做法的本质差别</b>：过去是「凭几次读数判是不是温度胀」，现在是「扣温度 + 看回升 + 给概率与核实层位」——差别不在更谨慎，而在结论有据、可以顶住工期压力。</p>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "环空压力异常识别怎么做",
+      "lead": [
+        "核心是把「人工对比几次读数」换成「建基线扣温度、用放压—回升特征分来源」。",
+        "下面的示范是第 2—4 步：切换来源类型、调整温度幅度与放压轮次，看残余升压与分类概率怎么变。"
+      ],
+      "stats": [
+        [
+          "来源类型",
+          "3 类"
+        ],
+        [
+          "监测时长",
+          "≥ 24 h"
+        ],
+        [
+          "判据",
+          "残余速率 + 回升斜率"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "压力温度时序整理",
+          "role": "数据",
+          "do": "整理环空压力与温度时序、放压操作记录与井身结构，统一时间基准。",
+          "effect": "得到带操作标记的连续时序，放压点与温度转折点都可定位。",
+          "trap": "压力与温度采样不同步会让扣除温度时在时间上错位，残余升压算出来是假的。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='压力温度时序对齐：同步是扣除温度的前提' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>两路时序必须同步：错位会让「扣除温度」扣错时段，残余升压是算出来的假象</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><text x='46' y='40' font-size='8.5' fill='#79828a'>压力</text><polyline points='64,80 100,76 140,70 180,62 220,54 260,48 300,44 340,42 380,41' fill='none' stroke='#c9613f' stroke-width='2'/><text x='300' y='38' font-size='8.5' fill='#c9613f'>环空压力</text><polyline points='64,86 100,84 140,80 180,74 220,68 260,62 300,58 340,56 380,55' fill='none' stroke='#41699b' stroke-width='1.6'/><text x='240' y='66' font-size='8.5' fill='#41699b'>温度（同步）</text><line x1='220' y1='30' x2='220' y2='96' stroke='#8a6a3a' stroke-width='1' stroke-dasharray='4 3'/><text x='228' y='40' font-size='8' fill='#8a6a3a'>放压操作点</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='9' fill='#4d565b'>同步要求</text><text x='442' y='70' font-size='8.5' fill='#79828a'>压力与温度同一时间基准</text><text x='442' y='88' font-size='8.5' fill='#c9613f'>错位 → 残余升压是假象</text><text x='12' y='124' font-size='8.5' fill='#79828a'>整理阶段的质量决定后面所有判据的可信度：这里错一处，分类就偏一类</text></svg><div class='viz-cap'>图：压力温度时序对齐：同步是扣除温度的前提</div>"
+        },
+        {
+          "name": "基线建模与温度扣除",
+          "role": "算法",
+          "do": "用本井投产前的压力—温度关系建立基线，把温度引起的可恢复升压扣除，得到残余升压。",
+          "effect": "得到扣除温度后的残余升压速率，这是判断是否有持续来源的核心量。",
+          "trap": "用邻井或通用系数扣温度会系统性偏差：每口井的环空容积与流体膨胀系数不同。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='基线建模：把可恢复的温度贡献扣掉，剩下的才需要解释' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>基线用本井自己的数据建：环空容积与流体膨胀系数各井不同，通用系数会偏</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>时间 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>压力</text><polyline points='70,84 110,80 150,74 190,66 230,58 270,52 310,48 350,46 385,45' fill='none' stroke='#c9613f' stroke-width='2'/><text x='280' y='42' font-size='8.5' fill='#c9613f'>实测压力</text><polyline points='70,84 110,82 150,80 190,78 230,76 270,74 310,72 350,70 385,69' fill='none' stroke='#41699b' stroke-width='1.6' stroke-dasharray='5 3'/><text x='300' y='76' font-size='8.5' fill='#41699b'>温度预测（基线）</text><rect x='230' y='58' width='155' height='34' fill='#f4ded4' opacity='0.45'/><text x='246' y='74' font-size='8.5' fill='#8a3d20'>残余升压：实测 − 基线</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#c9613f'>基线必须本井自建</text><text x='442' y='70' font-size='8.5' fill='#c9613f'>通用系数 → 系统性偏差</text><text x='442' y='88' font-size='8.5' fill='#2f7d6b'>残余速率是核心判据</text><text x='12' y='124' font-size='8.5' fill='#79828a'>扣得准不准决定分类准不准：基线偏移 1 MPa，分类就可能从窜流变成温度胀</text></svg><div class='viz-cap'>图：基线建模：把可恢复的温度贡献扣掉，剩下的才需要解释</div>"
+        },
+        {
+          "name": "放压回升特征识别",
+          "role": "算法",
+          "do": "识别放压操作后的回升斜率与多轮衰减趋势，区分持续气源与残余气体。",
+          "effect": "每轮放压的回升速率与衰减趋势可查，来源分类有据。",
+          "trap": "只放一轮压就下结论不可靠：残余气体与缓慢窜流在单轮形态上几乎一样。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='放压回升：至少两轮才看得出衰减趋势' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>单轮看形态、两轮看趋势：一轮放压分不出残余气体与缓慢窜流</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>时间 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>压力</text><polyline points='70,40 100,44 130,50 150,86 170,84 200,62 230,44 250,42' fill='none' stroke='#c9613f' stroke-width='2'/><line x1='150' y1='30' x2='150' y2='96' stroke='#8a6a3a' stroke-width='1' stroke-dasharray='3 3'/><text x='156' y='34' font-size='8' fill='#8a6a3a'>放压 ①</text><polyline points='250,42 280,46 310,52 330,84 350,82 380,58 400,46' fill='none' stroke='#41699b' stroke-width='2'/><line x1='330' y1='30' x2='330' y2='96' stroke='#8a6a3a' stroke-width='1' stroke-dasharray='3 3'/><text x='336' y='34' font-size='8' fill='#8a6a3a'>放压 ②</text><text x='200' y='60' font-size='8.5' fill='#c9613f'>回升快 → 持续气源（窜流）</text><text x='360' y='62' font-size='8.5' fill='#41699b'>回升趋缓 → 残余气体</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#c9613f'>单轮判据不可靠</text><text x='442' y='70' font-size='8.5' fill='#2f7d6b'>至少两轮看衰减趋势</text><text x='442' y='88' font-size='8.5' fill='#c9613f'>监测窗口不足时须标注</text><text x='12' y='124' font-size='8.5' fill='#79828a'>放压轮次是判据的一部分：数据不足时宁可标注不确定，不要硬判</text></svg><div class='viz-cap'>图：放压回升：至少两轮才看得出衰减趋势</div>"
+        },
+        {
+          "name": "来源分类与投产结论",
+          "role": "算法",
+          "do": "按残余升压速率与回升特征给出三类来源的概率，输出是否具备投产条件与需核实层位。",
+          "effect": "给出分类 + 概率 + 需核实层位，而不是一句「可能是温度胀」。",
+          "trap": "输出二值结论（能投 / 不能投）会掩盖不确定性：概率 60% 与 95% 的处置完全不同。",
+          "viz": "<svg viewBox='0 0 660 140' role='img' aria-label='来源分类：给概率而不是二值结论' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='140' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>概率化输出：60% 与 95% 的处置完全不同，二值结论会掩盖这个差别</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>来源 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>概率</text><rect x='90' y='40' width='60' height='52' fill='#a9c9ba'/><text x='102' y='36' font-size='9' fill='#2f5a4d'>72%</text><text x='88' y='104' font-size='8.5' fill='#4d565b'>窜流</text><rect x='180' y='58' width='60' height='34' fill='#d9c27a'/><text x='192' y='54' font-size='9' fill='#8a6a3a'>21%</text><text x='178' y='104' font-size='8.5' fill='#4d565b'>残余气体</text><rect x='270' y='74' width='60' height='18' fill='#c3d2e2'/><text x='282' y='70' font-size='9' fill='#2c3d57'>7%</text><text x='268' y='104' font-size='8.5' fill='#4d565b'>温度胀</text><text x='90' y='116' font-size='9' fill='#c9613f'>结论：不具备投产条件，需核实 2180—2320 m 层位</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='8.5' fill='#c9613f'>二值结论的代价</text><text x='442' y='70' font-size='8.5' fill='#c9613f'>60% 与 95% 处置不同</text><text x='442' y='88' font-size='8.5' fill='#2f7d6b'>必须给概率 + 核实方式</text><text x='12' y='132' font-size='8.5' fill='#79828a'>结论要能顶住工期压力：有概率、有层位、有核实方式才站得住</text></svg><div class='viz-cap'>图：来源分类：给概率而不是二值结论</div>"
+        },
+        {
+          "name": "核实处置与回填",
+          "role": "人工",
+          "do": "工程师按提示做核实（分层试压、取样、噪声测井），把核实结果回填用于修正判据。",
+          "effect": "每口井的核实结果都在修正来源分类的判据阈值，后续井的概率更可信。",
+          "trap": "核实结果不回填，概率就永远是先验值，判据无法随区块经验收敛。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='核实处置与回填：让概率从先验走向后验' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>回填核实结果，是把「先验概率」变成「这个区块的后验概率」的唯一途径</text><rect x='20' y='40' width='140' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='58' font-size='9.5' fill='#4d565b'>模型给出提示</text><text x='34' y='74' font-size='8.5' fill='#79828a'>来源概率 + 核实层位</text><line x1='162' y1='62' x2='194' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='194,62 188,58.5 188,65.5' fill='#8a8f80'/><rect x='196' y='40' width='140' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='210' y='58' font-size='9.5' fill='#4d565b'>现场核实</text><text x='210' y='74' font-size='8.5' fill='#79828a'>分层试压 / 取样 / 测井</text><line x1='338' y1='62' x2='370' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='370,62 364,58.5 364,65.5' fill='#8a8f80'/><rect x='372' y='40' width='140' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='386' y='58' font-size='9.5' fill='#4d565b'>处置与定论</text><text x='386' y='74' font-size='8.5' fill='#79828a'>放行 / 处理 / 动管柱</text><line x1='514' y1='62' x2='546' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='546,62 540,58.5 540,65.5' fill='#8a8f80'/><rect x='548' y='40' width='100' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='562' y='58' font-size='9.5' fill='#4d565b'>结果回填</text><text x='562' y='74' font-size='8.5' fill='#79828a'>修正判据阈值</text><path d='M596 86 C 588 108 100 108 84 88' fill='none' stroke='#8a8f80' stroke-width='1.2' stroke-dasharray='4 3'/><text x='280' y='112' font-size='8' fill='#79828a'>回填闭环：判据阈值随区块经验收敛，概率才真正可用</text><rect x='20' y='92' width='628' height='16' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='32' y='104' font-size='8.5' fill='#c9613f'>核实结果不回填 → 概率永远是先验值，判据不会随区块经验收敛</text></svg><div class='viz-cap'>图：核实处置与回填：让概率从先验走向后验</div>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>分类命中</b>：给出的最高概率来源与后续核实结果一致的井占比 ≥ 80%。</p><p><b>不漏判窜流</b>：核实确认为窜流的井中，模型给出「窜流概率 > 50%」的比例 ≥ 90%（漏判代价最高）。</p><p><b>投产安全</b>：按结论放行后，生产期因环空带压动管柱的次数为 0。</p>"
+      },
+      "fails": [
+        {
+          "name": "用通用系数扣温度",
+          "why": "环空容积与流体膨胀系数各井不同，残余升压系统性偏差。"
+        },
+        {
+          "name": "只放一轮压就定论",
+          "why": "残余气体与缓慢窜流单轮形态几乎一样，必须看衰减趋势。"
+        },
+        {
+          "name": "输出二值结论",
+          "why": "60% 与 95% 的处置不同，二值化掩盖不确定性。"
+        },
+        {
+          "name": "核实结果不回填",
+          "why": "概率永远停在先验值，判据不随区块经验收敛。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 700,
+      "intro": "切换压力来源、调整温度幅度与放压轮次，看残余升压、回升形态与来源概率怎么变——只放一轮压时，注意概率是否可信。",
+      "html": "demo/index.html"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：多井组完井协同开发优化</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>多井组完井协同开发优化</h1>
+  <p class="lead">一个井组共用一套压力系统。每口井按自己最优的方式选层完井投产，叠加起来可能出现层间干扰、某一层压降过快，
+  最终采收率反而不如协调后的方案。这里把井组的开发指标当整体目标：每口井决定<b>射开哪一层、第几批投产</b>，
+  用逐月物质平衡算出五年累计产量，再穷举所有层位分配找出最好的一种；最后与「每口井各自挑最好的层」的<b>逐井最优</b>放在一起对比。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>组合优化</li><li>快速评价代理模型</li><li>压力干扰分析</li></ul></div><div><b>为什么起作用</b><ul><li>逐井最优会造成井间干扰与层间矛盾，井组层面必须整体分配</li><li>代理模型让上百种组合在浏览器里可算，才有「换个参数再看一次」的价值</li></ul></div><div><b>在示范里怎么看</b><ul><li>调连通性与井数，看「逐井最优」与「井组最优」两条曲线分叉</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>井数 <output id="out-n">7 口</output></label>
+    <input type="range" id="nw" min="4" max="8" step="1" value="7">
+  </div>
+  <div class="ctl">
+    <label>层间非均质程度 <output id="out-het">0.45</output></label>
+    <input type="range" id="het" min="0" max="1" step="0.02" value="0.45">
+  </div>
+  <div class="ctl">
+    <label>层间连通性 <output id="out-con">0.35</output></label>
+    <input type="range" id="con" min="0" max="1" step="0.02" value="0.35">
+  </div>
+  <div class="ctl">
+    <label>压力保持水平 <output id="out-eng">0.55</output></label>
+    <input type="range" id="eng" min="0" max="1" step="0.02" value="0.55">
+  </div>
+  <div class="ctl">
+    <label>评价年限 <output id="out-yr">5 年</output></label>
+    <input type="range" id="yr" min="3" max="8" step="1" value="5">
+  </div>
+
+  <svg id="map" viewBox="0 0 720 205" role="img" aria-label="逐井最优与协同方案的层位分配对比"></svg>
+  <svg id="prod" viewBox="0 0 720 195" role="img" aria-label="两种方案的井组产量曲线对比"></svg>
+  <svg id="cmp" viewBox="0 0 720 195" role="img" aria-label="累计产量、层系动用均衡度与压力消耗对比"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">五年累计产量</span><b id="ro-cum">—</b></div>
+    <div class="ro"><span class="k">协同增益</span><b id="ro-gain">—</b></div>
+    <div class="ro"><span class="k">层系动用均衡度</span><b id="ro-bal">—</b></div>
+    <div class="ro"><span class="k">压力消耗</span><b id="ro-pr">—</b></div>
+  </div>
+
+  <table class="tbl" id="tbl"></table>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

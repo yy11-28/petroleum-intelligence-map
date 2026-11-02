@@ -1,0 +1,15 @@
+{
+  "name": "石油勘探开发的智能化可能性地图 · Petro × AI Atlas",
+  "short_name": "Petro×AI 地图",
+  "description": "按石油作业链条逐环节展示可被智能化方法改造的候选场景，标注技术介入点、数据条件与难度等级。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F7FAFC",
+  "theme_color": "#0A2038",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

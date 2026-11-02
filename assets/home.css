@@ -1,0 +1,247 @@
+/* =========================================================
+   首页新增模块样式
+   ---------------------------------------------------------
+   01 平台适合谁 · 痛点   02 三步快速上手   03 精选案例
+   07 常见问题 FAQ        08 引用 / 致谢
+   另：速览面板的指标口径（ⓘ 悬浮 + 可展开口径表）
+   所有颜色只用 tokens.css 里的变量，暗色主题自动跟随
+   ========================================================= */
+
+/* ---------------- 01 平台适合谁 · 解决什么痛点 ---------------- */
+.who-pain{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:11px 14px;margin-bottom:14px;
+  border:1px solid rgba(185,122,72,.26);border-left:3px solid var(--clay);
+  border-radius:var(--r-s);background:var(--warn-bg);
+}
+.who-pain .wp-k{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--clay-d);
+  border:1px solid rgba(154,90,40,.32);border-radius:999px;padding:2px 9px;flex-shrink:0;
+}
+.who-pain .wp-t{font-size:13px;color:var(--ink-2);line-height:1.6}
+.who-pain .wp-t b{color:var(--clay-d)}
+
+.who-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.who-card{
+  display:flex;flex-direction:column;gap:9px;min-width:0;
+  padding:15px 16px 14px;background:var(--card);
+  border:1px solid var(--line-2);border-top:2px solid var(--blue);border-radius:var(--r-m);
+  box-shadow:var(--sh-1);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.who-card:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--blue-2)}
+.wc-h{display:flex;align-items:center;gap:9px}
+.wc-ic{
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:28px;height:28px;border-radius:var(--r-s);
+  background:var(--blue-l);color:var(--blue);border:1px solid rgba(26,71,121,.16);
+}
+.wc-ic svg{display:block}
+.wc-h h3{font-size:14px;font-weight:650;letter-spacing:-.01em;line-height:1.35}
+.wc-h .wc-en{
+  margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  color:var(--ink-4);text-transform:uppercase;flex-shrink:0;
+}
+.who-card p{font-size:12.3px;line-height:1.75;color:var(--ink-2);flex:1}
+.wc-go{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  font-size:12px;font-weight:500;color:var(--blue);
+  border-top:1px solid var(--line);padding-top:9px;
+}
+.wc-go .ar{font-family:var(--mono);font-size:10px;opacity:.6}
+.wc-go:hover{color:var(--blue-2)}
+.wc-go:hover .ar{opacity:1}
+
+/* ---------------- 02 三步快速上手 ---------------- */
+.steps3{
+  display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr) 28px minmax(0,1fr);
+  align-items:stretch;
+}
+.st3{
+  display:flex;flex-direction:column;gap:7px;min-width:0;
+  padding:14px 16px 15px;background:var(--card);
+  border:1px solid var(--line-2);border-top:2px solid var(--blue);border-radius:var(--r-m);
+  box-shadow:var(--sh-1);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.st3:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--blue-2)}
+.st3-top{display:flex;align-items:center;gap:9px}
+.st3-n{font-family:var(--mono);font-size:16px;font-weight:650;color:var(--blue);line-height:1}
+.st3-k{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--clay-d);
+  background:var(--clay-l);border:1px solid rgba(154,90,40,.24);border-radius:999px;padding:2px 9px;
+}
+.st3 h4{font-size:14px;font-weight:650;letter-spacing:-.01em}
+.st3 p{font-size:12px;line-height:1.75;color:var(--ink-3);flex:1}
+.st3-go{
+  font-size:12px;font-weight:500;color:var(--blue);
+  border-top:1px solid var(--line);padding-top:9px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.st3-go .ar{font-family:var(--mono);font-size:10px;opacity:.6}
+.st3-go:hover .ar{opacity:1}
+.st3-arr{display:flex;align-items:center;justify-content:center;color:var(--line-3)}
+.st3-arr svg{display:block}
+.steps-note{
+  margin-top:12px;font-size:11.5px;line-height:1.8;color:var(--ink-3);
+}
+.steps-note b{color:var(--ink-2)}
+
+/* ---------------- 03 精选案例 ---------------- */
+.fx-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.fx-card{
+  display:flex;flex-direction:column;gap:8px;min-width:0;
+  padding:14px 15px 13px;background:var(--card);
+  border:1px solid var(--line-2);border-top:2px solid var(--blue);border-radius:var(--r-m);
+  box-shadow:var(--sh-1);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.fx-card:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--blue-2)}
+.fx-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.fx-stage{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--steel);
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-s);padding:2px 8px;
+}
+.fx-title{font-size:13.5px;font-weight:650;line-height:1.5;letter-spacing:-.01em;color:var(--ink)}
+.fx-card:hover .fx-title{color:var(--blue)}
+.fx-eff{
+  font-size:11.8px;line-height:1.7;color:var(--ink-2);
+  border-left:2px solid var(--jade);padding:2px 0 2px 9px;flex:1;
+}
+.fx-eff b{
+  display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  color:var(--jade-d);font-weight:600;margin-bottom:2px;
+}
+.fx-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  border-top:1px solid var(--line);padding-top:9px;flex-wrap:wrap;
+}
+.fx-chips{display:flex;gap:5px;flex-wrap:wrap}
+.fx-go{font-size:11.5px;color:var(--blue);white-space:nowrap}
+.fx-go .ar{font-family:var(--mono);font-size:10px;opacity:.6}
+.fx-card:hover .fx-go .ar{opacity:1}
+.fx-empty{
+  padding:18px;border:1px dashed var(--line-2);border-radius:var(--r-m);
+  background:var(--card);font-size:12px;color:var(--ink-3);line-height:1.8;
+}
+
+/* ---------------- 常见问题 FAQ ---------------- */
+.faq{
+  border:1px solid var(--line-2);border-radius:var(--r-m);
+  background:var(--card);box-shadow:var(--sh-1);overflow:hidden;
+}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-item:last-child{border-bottom:0}
+.faq-item>summary{
+  display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;
+  padding:12px 16px;font-size:13px;font-weight:600;color:var(--ink);line-height:1.5;
+}
+.faq-item>summary::-webkit-details-marker{display:none}
+.faq-item>summary:hover{background:var(--paper-2)}
+.faq-item[open]>summary{background:var(--card-soft)}
+.fq-m{
+  flex-shrink:0;width:19px;height:19px;border-radius:var(--r-s);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  background:var(--blue-l);color:var(--blue);border:1px solid rgba(26,71,121,.18);
+}
+.faq-item>summary::after{
+  content:'＋';margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-4);flex-shrink:0;
+}
+.faq-item[open]>summary::after{content:'－'}
+.faq-a{
+  padding:0 16px 15px 45px;font-size:12.3px;line-height:1.85;color:var(--ink-2);
+}
+.faq-a b{color:var(--ink);font-weight:600}
+.faq-a .fa-a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:19px;height:19px;border-radius:var(--r-s);margin-right:8px;
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  background:var(--jade-l);color:var(--jade-d);border:1px solid rgba(35,136,104,.2);
+  vertical-align:-4px;
+}
+
+/* ---------------- 08 引用 / 致谢 ---------------- */
+.cite-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.cite-box{
+  padding:15px 16px 16px;background:var(--card);
+  border:1px solid var(--line-2);border-radius:var(--r-m);box-shadow:var(--sh-1);
+}
+.cb-h{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--ink-4);
+  text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.cite-txt{
+  font-family:var(--mono);font-size:11px;line-height:1.85;color:var(--ink-2);
+  background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-s);
+  padding:9px 11px;white-space:pre-wrap;word-break:break-word;
+}
+.cite-row{display:flex;align-items:baseline;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.cite-row:last-of-type{border-bottom:0}
+.cite-row span{font-size:11.5px;color:var(--ink-3);flex-shrink:0;width:62px}
+.cite-row b{font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.6}
+.cite-row b.todo{color:var(--ink-4);font-weight:400}
+.cite-box p{font-size:11.8px;line-height:1.8;color:var(--ink-2)}
+.cb-note{margin-top:9px;font-size:10.8px;line-height:1.7;color:var(--ink-4)}
+.cite-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center}
+
+/* ---------------- 指标口径：ⓘ 悬浮 + 可展开口径表 ---------------- */
+/* 速览面板页脚：导出入口与页脚呼应 */
+.spec-f a{color:var(--ink-3);transition:color .2s}
+.spec-f a:hover{color:var(--blue)}
+
+.cal-i{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:13px;height:13px;margin-left:4px;vertical-align:1px;
+  border-radius:50%;border:1px dashed var(--line-3);color:var(--ink-4);
+  font-family:var(--mono);font-size:9.5px;line-height:1;cursor:help;
+  transition:color .2s,border-color .2s;
+}
+.cal-i:hover,.cal-i:focus-visible{border-color:var(--blue);border-style:solid;color:var(--blue)}
+.cal-tip{
+  position:fixed;z-index:4000;max-width:290px;pointer-events:none;
+  padding:9px 11px;border-radius:var(--r-m);
+  background:var(--navy);color:var(--on-d);
+  font-size:11.5px;line-height:1.8;white-space:pre-line;
+  box-shadow:var(--sh-3);opacity:0;transform:translateY(-3px);
+  transition:opacity .14s ease,transform .14s ease;
+}
+.cal-tip.on{opacity:1;transform:none}
+
+/* 速览面板内的口径表（触屏 / 键盘用户用） */
+.cal-det{margin:4px 14px 0;border-top:1px solid var(--line);padding-top:8px}.cal-det>summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-4);
+}
+.cal-det>summary::-webkit-details-marker{display:none}
+.cal-det>summary:hover{color:var(--blue)}
+.cal-det>summary::after{content:'▾';font-size:10.5px}
+.cal-det[open]>summary::after{content:'▴'}
+.cal-body{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.cal-r{display:flex;gap:8px;font-size:10.5px;line-height:1.65;color:var(--ink-3)}
+.cal-r b{
+  font-family:var(--mono);font-size:10px;flex-shrink:0;padding-top:1px;color:var(--ink-2);
+}
+.cal-r[data-d="低"] b{color:var(--ok)}
+.cal-r[data-d="中"] b{color:var(--warn)}
+.cal-r[data-d="高"] b{color:var(--bad)}
+
+/* ---------------- 响应式 ---------------- */
+@media (max-width:1080px){
+  .who-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .fx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cite-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps3{grid-template-columns:minmax(0,1fr);gap:10px}
+  .st3-arr{transform:rotate(90deg);height:20px}
+}
+@media (max-width:760px){
+  .who-grid{grid-template-columns:minmax(0,1fr)}
+  .fx-grid{grid-template-columns:minmax(0,1fr)}
+  .cite-grid{grid-template-columns:minmax(0,1fr)}
+  .faq-a{padding-left:16px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .who-card,.st3,.fx-card{transition:none}
+}

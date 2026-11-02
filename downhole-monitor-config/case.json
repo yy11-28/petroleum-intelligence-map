@@ -1,0 +1,122 @@
+{
+  "id": "downhole-monitor-config",
+  "sceneId": "co13",
+  "methods": ["kg", "opt"],
+  "title": "井下监测仪器配套方案智能配置",
+  "version": "1.0.0",
+  "updated": "2026-10-25",
+
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "智能完井要把压力、温度、流量与光纤传感器长期放在高温高压的井筒里，数据经电缆或光纤回到地面控制系统。麻烦在两处：一是能不能活下来——同一支电子压力计在 120 ℃ 与 170 ℃ 下的寿命能差好几倍；二是钱花在哪——全井段铺满当然最好，成本却容易失控。而仪器一旦失效，往往不能单独更换，只能等下一次修井。",
+      "judge": [
+        { "label": "数据形态", "value": "结构化清单 + 规则", "desc": "选型依据写在厂家手册与维护记录里" },
+        { "label": "标注成本", "value": "中", "desc": "失效样本靠长期运行积累，不靠人工标注" },
+        { "label": "可见收益", "value": "中", "desc": "先给可行候选，再由人按预算裁定" },
+        { "label": "难度", "value": "中", "desc": "多目标互相牵制，真值以年为单位积累" }
+      ],
+      "sections": [
+        {
+          "no": 1,
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p><b>现在的做法</b>：开发部提出监测需求（要压力、要流量），完井工程师拿厂家手册选仪器，再与供应商确认能不能装。供应商按自家产品清单推荐，天然倾向于能卖的；需求、井型、预算三件事被拆给三个部门，往往到采购会议上才第一次碰面。</p><p><b>三种典型的坏结果</b>：<b>① 全井段铺满</b>——数据很好看，预算超一倍；<b>② 只装单点</b>——成本压下去了，层间差异永远解释不清；<b>③ 装了活不久</b>——没有校核耐温裕量，两年不到就失效，而下一次能换的机会要等三年后的修井。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='同一口水平井的三种仪器配置对比'><rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/><text x='16' y='17' font-size='11' fill='#242b2e'>同一口水平井：钱、覆盖率与寿命三者不可兼得</text><rect x='16' y='30' width='212' height='180' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='48' font-size='10' fill='#242b2e'>① 全井段铺满</text><path d='M60 68 L60 172' stroke='#41699b' stroke-width='6'/><path d='M60 172 Q 60 132 108 132 L188 132' fill='none' stroke='#41699b' stroke-width='6'/><circle cx='60' cy='86' r='4' fill='#41699b'/><circle cx='60' cy='108' r='4' fill='#41699b'/><circle cx='60' cy='130' r='4' fill='#41699b'/><circle cx='60' cy='154' r='4' fill='#41699b'/><circle cx='84' cy='132' r='4' fill='#41699b'/><circle cx='110' cy='132' r='4' fill='#41699b'/><circle cx='136' cy='132' r='4' fill='#41699b'/><circle cx='162' cy='132' r='4' fill='#41699b'/><circle cx='186' cy='132' r='4' fill='#41699b'/><text x='28' y='192' font-size='9' fill='#79828a'>覆盖率 100%　可靠性 0.91</text><text x='28' y='208' font-size='9' fill='#c9613f'>成本 286 万（预算 160 万）</text><text x='28' y='224' font-size='9' fill='#79828a'>结论：预算直接否掉</text><rect x='240' y='30' width='212' height='180' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='252' y='48' font-size='10' fill='#242b2e'>② 只装单点</text><path d='M284 68 L284 172' stroke='#41699b' stroke-width='6'/><path d='M284 172 Q 284 132 332 132 L410 132' fill='none' stroke='#41699b' stroke-width='6'/><circle cx='284' cy='150' r='5' fill='#41699b'/><text x='252' y='192' font-size='9' fill='#79828a'>覆盖率 25%　可靠性 0.93</text><text x='252' y='208' font-size='9' fill='#2f7d6b'>成本 62 万</text><text x='252' y='224' font-size='9' fill='#c9613f'>结论：层间矛盾解释不清，等于没装</text><rect x='464' y='30' width='220' height='180' rx='5' fill='#e6f1ec' stroke='#2f7d6b'/><text x='476' y='48' font-size='10' fill='#242b2e'>③ 按层段分组（本案例做法）</text><path d='M508 68 L508 172' stroke='#41699b' stroke-width='6'/><path d='M508 172 Q 508 132 556 132 L636 132' fill='none' stroke='#41699b' stroke-width='6'/><circle cx='508' cy='106' r='5' fill='#41699b'/><circle cx='508' cy='150' r='5' fill='#41699b'/><circle cx='556' cy='132' r='5' fill='#41699b'/><circle cx='612' cy='132' r='5' fill='#41699b'/><text x='476' y='192' font-size='9' fill='#79828a'>覆盖率 75%　可靠性 0.88</text><text x='476' y='208' font-size='9' fill='#2f7d6b'>成本 148 万</text><text x='476' y='224' font-size='9' fill='#2f7d6b'>结论：每段有一组，够解释层间差异</text><text x='16' y='240' font-size='9' fill='#79828a'>关键点：要决定的是「分几组、每组配什么」，而不是简单地「选几支仪器」。</text></svg><span class='viz-cap'>三种配置的取舍：铺满超预算、单点无解释力，只有按层段分组落在可行区间。</span></div>"
+        },
+        {
+          "no": 2,
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>这同样不是「端到端预测最优方案」的任务：候选组合只有几十个，但每条组合的可行性由一堆硬规则决定。合适的做法是<b>两层</b>——<b>知识图谱</b>把「监测需求 → 仪器类型 → 井筒条件 → 测控链路」的可行性写清（耐温上限、解调仪厂家互斥、水平段禁用电子类），先把不可行的组合删掉；<b>多目标寻优</b>再在剩下的组合上计算覆盖率、可靠性与成本，给出帕累托前沿而不是一个孤零零的答案。</p><p>输出是三件事：<b>推荐组合与布点分组</b>、<b>每条被排除选项的排除理由</b>、<b>成本与可靠性的取舍曲线</b>。被替掉的只是「翻手册、打电话确认能不能装」这一步；预算怎么取舍仍然是人的决定。</p><div class='viz'><svg viewBox='0 0 700 215' role='img' aria-label='两层结构：图谱硬约束与多目标寻优'><rect x='0' y='0' width='700' height='215' fill='#fbfaf6'/><text x='16' y='18' font-size='11' fill='#242b2e'>上层删掉不可行，下层在可行的里面找最划算</text><defs><marker id='mgB' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='16' y='32' width='106' height='52' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='69' y='52' font-size='9.5' fill='#242b2e' text-anchor='middle'>需求清单</text><text x='69' y='68' font-size='8.5' fill='#79828a' text-anchor='middle'>压力 / 温度 / 流量</text><path d='M122 58 L150 58' stroke='#242b2e' marker-end='url(#mgB)'/><rect x='150' y='32' width='112' height='52' rx='5' fill='#41699b' opacity='0.9'/><text x='206' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>知识图谱层</text><text x='206' y='68' font-size='8.5' fill='#fff' text-anchor='middle'>23 条硬约束</text><path d='M262 58 L290 58' stroke='#242b2e' marker-end='url(#mgB)'/><rect x='290' y='32' width='112' height='52' rx='5' fill='#c9613f' opacity='0.85'/><text x='346' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>剔除不可行</text><text x='346' y='68' font-size='8.5' fill='#fff' text-anchor='middle'>并给出理由</text><path d='M402 58 L430 58' stroke='#242b2e' marker-end='url(#mgB)'/><rect x='430' y='32' width='112' height='52' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='486' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>多目标寻优</text><text x='486' y='68' font-size='8.5' fill='#cfe4dc' text-anchor='middle'>覆盖 / 可靠 / 成本</text><path d='M542 58 L570 58' stroke='#242b2e' marker-end='url(#mgB)'/><rect x='570' y='26' width='114' height='64' rx='5' fill='#fbfaf6' stroke='#e2ded0'/><text x='627' y='44' font-size='9' fill='#4d565b' text-anchor='middle'>输出</text><text x='627' y='60' font-size='8.5' fill='#79828a' text-anchor='middle'>推荐组合 + 分组</text><text x='627' y='74' font-size='8.5' fill='#79828a' text-anchor='middle'>帕累托前沿</text><text x='627' y='86' font-size='8.5' fill='#79828a' text-anchor='middle'>排除理由</text><rect x='16' y='104' width='326' height='94' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='122' font-size='9.5' fill='#242b2e'>图谱层在做什么</text><text x='28' y='140' font-size='9' fill='#4d565b'>· 耐温：电子类上限 175 ℃，本井 178 ℃ → 不可选</text><text x='28' y='156' font-size='9' fill='#4d565b'>· 链路：光纤解调仪不可混用两家</text><text x='28' y='172' font-size='9' fill='#4d565b'>· 井型：水平段超过 1000 m 禁用电子类</text><text x='28' y='188' font-size='9' fill='#c9613f'>这些规则不来自数据，来自手册与教训</text><rect x='358' y='104' width='326' height='94' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='370' y='122' font-size='9.5' fill='#242b2e'>为什么不给单一最优解</text><text x='370' y='140' font-size='9' fill='#4d565b'>覆盖率、可靠性、成本不能简单加权求和——</text><text x='370' y='156' font-size='9' fill='#4d565b'>预算权重不同的人要的答案不同。给前沿、</text><text x='370' y='172' font-size='9' fill='#4d565b'>让决策者按偏好选点，比替他定权重要诚实。</text><text x='370' y='188' font-size='9' fill='#41699b'>示范里拖动「预算权重」就能看到选点移动</text><text x='16' y='210' font-size='8.5' fill='#79828a'>尺度提醒：候选组合只有几十个，这是典型的「约束 + 枚举」问题，不需要训练模型。</text></svg><span class='viz-cap'>图谱层负责删去不可行组合，多目标层在可行域上给出帕累托前沿而非单一答案。</span></div>"
+        },
+        {
+          "no": 3,
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p><b>① 需求清单</b>：要测什么（压力 / 温度 / 流量 / 含水）、精度要求、采样频率、必须连续还是可以周期性。<b>② 井筒条件</b>：井深、井型、井斜与狗腿度、井底温度压力、完井管柱结构与流体性质。<b>③ 仪器与链路库</b>：型号、成本、量程精度、耐温耐压、标称寿命、所属厂家与解调仪要求。<b>④ 运行与失效记录</b>：在线率、漂移、累计运行时间、故障位置与更换时间。</p><p><b>量级</b>：仪器库几十支就能起步；真正的门槛是<b>失效记录</b>——需要同型号仪器在相近温度下跑够三年才有可信寿命。<b>坑</b>：厂家标称寿命多为常温工况下的值，直接拿来用会系统性高估。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='四类输入数据与各自的难点'><rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/><text x='16' y='18' font-size='11' fill='#242b2e'>四类输入：前三类是清单，第四类才是真正难积累的资产</text><rect x='16' y='30' width='160' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='96' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>需求清单</text><text x='28' y='68' font-size='9' fill='#4d565b'>测点参数 · 精度 · 频率</text><text x='28' y='84' font-size='9' fill='#4d565b'>必须 vs 可选</text><line x1='28' y1='94' x2='164' y2='94' stroke='#d8d2c4'/><text x='28' y='110' font-size='9' fill='#79828a'>最容易整理，却常被写漏</text><text x='28' y='126' font-size='9' fill='#c9613f'>坑：没区分必须 / 可选</text><rect x='188' y='30' width='160' height='112' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='268' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>井筒条件</text><text x='200' y='68' font-size='9' fill='#4d565b'>井深 · 井斜 · 狗腿度</text><text x='200' y='84' font-size='9' fill='#4d565b'>温度 / 压力剖面</text><line x1='200' y1='94' x2='336' y2='94' stroke='#d8d2c4'/><text x='200' y='110' font-size='9' fill='#79828a'>来自设计书，结构化</text><text x='200' y='126' font-size='9' fill='#41699b'>坑：温度常取区块均值</text><rect x='360' y='30' width='160' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='440' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>仪器与链路库</text><text x='372' y='68' font-size='9' fill='#4d565b'>型号 · 成本 · 精度</text><text x='372' y='84' font-size='9' fill='#4d565b'>耐温耐压 · 厂家</text><line x1='372' y1='94' x2='508' y2='94' stroke='#d8d2c4'/><text x='372' y='110' font-size='9' fill='#79828a'>几十支即可起步</text><text x='372' y='126' font-size='9' fill='#c9613f'>坑：标称寿命是常温值</text><rect x='532' y='30' width='152' height='112' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='608' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>运行与失效记录</text><text x='544' y='68' font-size='9' fill='#4d565b'>在线率 · 漂移 · 年限</text><text x='544' y='84' font-size='9' fill='#4d565b'>故障位置与更换</text><line x1='544' y1='94' x2='672' y2='94' stroke='#e2ded0'/><text x='544' y='110' font-size='9' fill='#c9613f'>需要三年以上积累</text><text x='544' y='126' font-size='9' fill='#79828a'>这是唯一的护城河</text><rect x='16' y='156' width='668' height='34' rx='5' fill='#fbfaf6' stroke='#e2ded0'/><text x='30' y='174' font-size='9.5' fill='#4d565b'>最难的一件事：攒够<b>同型号仪器在相近温度下的累计运行时间</b>——它决定了寿命模型是经验公式还是真实资产。</text><text x='30' y='186' font-size='9' fill='#79828a'>没有它时，先用厂家手册的加速老化曲线做一个保守版本，并在每年回看时更新。</text></svg><span class='viz-cap'>四类输入：需求、井筒、仪器库都好整理，难的是长期失效记录——寿命模型的真值来源。</span></div>"
+        },
+        {
+          "no": 4,
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p><b>难点一：三个目标不可比。</b>覆盖率是比例、可靠性是概率、成本是钱，把它们压成一个加权和，等于偷偷替决策者定了偏好。正确做法是给前沿、让人选点，同时把预算权重做成一个可调滑杆。</p><p><b>难点二：厂家链路锁定。</b>光纤解调仪不能混用两家，一旦选定，后续升级成本极高。这类约束必须放在图谱的<b>硬边</b>里，而不是当成推荐软提示。<b>难点三：寿命真值滞后。</b>今天的推荐对不对，要三年后才知道；第一版只能用保守曲线，并把每年回看做成流程的一部分。</p><p><b>参考顺序</b>：① 先把仪器库与井筒条件做成结构化表；② 把二十多条可行性规则写成可执行断言（这一步最枯燥也最关键）；③ 用保守寿命曲线跑第一版；④ 每口井投产后回填在线率与故障，逐年替换曲线。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='三个难点：目标不可比、链路锁定、寿命滞后'><rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/><text x='16' y='17' font-size='11' fill='#242b2e'>三个难点与对应的处理办法</text><rect x='16' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10' fill='#242b2e'>① 三个目标不可比</text><text x='28' y='64' font-size='9' fill='#79828a'>加权和 vs 帕累托前沿</text><text x='34' y='84' font-size='8.5' fill='#4d565b'>硬压成一个数</text><rect x='120' y='74' width='108' height='12' rx='2' fill='#efece1'/><rect x='120' y='74' width='34' height='12' rx='2' fill='#41699b'/><text x='34' y='102' font-size='8.5' fill='#c9613f'>丢掉了「多花钱买到什么」的信息</text><line x1='34' y1='120' x2='214' y2='120' stroke='#242b2e'/><line x1='34' y1='108' x2='34' y2='152' stroke='#242b2e'/><polyline points='40,148 70,134 104,126 140,120 180,116 210,114' fill='none' stroke='#2f7d6b' stroke-width='2'/><text x='118' y='110' font-size='8.5' fill='#2f7d6b'>帕累托前沿</text><text x='28' y='172' font-size='9' fill='#4d565b'>把偏好留给决策者，算法只负责</text><text x='28' y='186' font-size='9' fill='#4d565b'>把不可行的部分先删干净。</text><rect x='244' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='46' font-size='10' fill='#242b2e'>② 厂家链路锁定</text><text x='256' y='64' font-size='9' fill='#79828a'>解调仪不可混用两家</text><rect x='262' y='76' width='60' height='32' rx='3' fill='#41699b' opacity='0.9'/><text x='292' y='96' font-size='8.5' fill='#fff' text-anchor='middle'>光纤 A</text><rect x='340' y='76' width='60' height='32' rx='3' fill='#b26a39' opacity='0.9'/><text x='370' y='96' font-size='8.5' fill='#fff' text-anchor='middle'>光纤 B</text><path d='M324 84 L338 100 M324 100 L338 84' stroke='#c9613f' stroke-width='1.6'/><text x='256' y='126' font-size='8.5' fill='#c9613f'>互斥：一旦选 A，后期不能混 B</text><text x='256' y='148' font-size='9' fill='#4d565b'>必须放进硬约束——软提示会被</text><text x='256' y='162' font-size='9' fill='#4d565b'>采购环节以价格为由推翻。</text><text x='256' y='182' font-size='9' fill='#79828a'>同理：井下安全阀、化学注入阀同类互斥</text><rect x='472' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='46' font-size='10' fill='#242b2e'>③ 寿命真值滞后</text><line x1='490' y1='146' x2='666' y2='146' stroke='#242b2e'/><line x1='490' y1='66' x2='490' y2='146' stroke='#242b2e'/><path d='M496 144 C 540 100, 580 96, 626 142' fill='none' stroke='#41699b' stroke-width='1.4'/><text x='556' y='92' font-size='8.5' fill='#41699b'>厂家手册曲线</text><path d='M496 144 C 540 122, 580 118, 626 142' fill='none' stroke='#2f7d6b' stroke-width='2'/><text x='552' y='116' font-size='8.5' fill='#2f7d6b'>实测回填（第 3 年）</text><text x='484' y='164' font-size='9' fill='#4d565b'>第一版用保守曲线，三年后才有</text><text x='484' y='178' font-size='9' fill='#4d565b'>实测可替换；不回填则停在首版。</text><text x='484' y='194' font-size='8.5' fill='#79828a'>横轴：温度占耐温上限比例；纵轴：寿命（年）</text></svg><span class='viz-cap'>难点：多目标不可比（给前沿不给单一答案）、链路互斥（必须硬约束）、寿命真值滞后（需逐年回填）。</span></div>"
+        }
+      ]
+    },
+
+    "workflow": {
+      "label": "案例流程",
+      "title": "从监测需求到布点方案的落地流程",
+      "lead": [
+        "这条流程的价值不在算法，而在于把本来只存在于厂家手册和几位工程师脑子里的可行性规则，变成可执行的断言。有了这张规则网，仪器选型从四天的反复确认，压缩成一小时内出方案、再由人按预算裁定。",
+        "下面的示范演示第 2 到第 4 步：选择监测需求与井型，拖动井底温度、水平段长度与设计寿命，看哪些仪器被判为不可行、推荐组合怎么变，以及成本与覆盖率在帕累托前沿上的取舍。"
+      ],
+      "stats": [
+        ["仪器库规模", "48 支 / 12 类"],
+        ["可行性规则", "23 条"],
+        ["设计周期", "4 天 → 0.5 天"]
+      ],
+      "steps": [
+        {
+          "name": "需求与井筒条件结构化",
+          "role": "数据",
+          "do": "把监测需求写成「参数 + 精度 + 频率 + 必须/可选」，把井筒条件落成井深、井斜、温度压力剖面与管柱结构。",
+          "effect": "需求和条件都成为可枚举字段，后续所有判断都能自动执行。",
+          "trap": "不区分「必须有」与「最好有」，寻优会为了凑覆盖率去加没人用的监测项。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='需求与井筒条件结构化'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>把口头需求变成可枚举字段</text><rect x='12' y='28' width='140' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='82' y='46' font-size='9' fill='#242b2e' text-anchor='middle'>需求（4 项）</text><text x='24' y='60' font-size='8.5' fill='#4d565b'>压力 必须 · 温度 必须</text><rect x='164' y='28' width='140' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='234' y='46' font-size='9' fill='#242b2e' text-anchor='middle'>井筒条件</text><text x='176' y='60' font-size='8.5' fill='#4d565b'>3820 m · 井底 118 ℃</text><rect x='316' y='28' width='140' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='386' y='46' font-size='9' fill='#242b2e' text-anchor='middle'>完井方式</text><text x='328' y='60' font-size='8.5' fill='#4d565b'>筛管 + 滑套分采</text><path d='M152 48 L164 48' stroke='#79828a'/><path d='M304 48 L316 48' stroke='#79828a'/><rect x='468' y='28' width='180' height='40' rx='4' fill='#41699b' opacity='0.9'/><text x='558' y='46' font-size='9' fill='#fff' text-anchor='middle'>结构化入库</text><text x='558' y='60' font-size='8.5' fill='#fff' text-anchor='middle'>每口完井一行记录</text><rect x='12' y='80' width='636' height='30' rx='4' fill='#c9613f' opacity='0.85'/><text x='24' y='99' font-size='9' fill='#fff'>必须标注「必需 vs 可选」：否则寻优会为了凑覆盖率加一堆没人看的传感器</text></svg>"
+        },
+        {
+          "name": "图谱规则抽取与硬约束校验",
+          "role": "数据",
+          "do": "把厂家手册与历史教训里的可行性写清：耐温上限、链路互斥、井型禁用——逐条做成可执行断言。",
+          "effect": "不可行的组合在进入寻优前就被删掉，并自带排除理由。",
+          "trap": "把「链路互斥」当成软提示，采购环节会以价格为由推翻，最后现场装不起来。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='硬约束过滤候选组合'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>23 条断言把 15 个候选组合筛到 6 个可行解</text><text x='12' y='38' font-size='9' fill='#4d565b'>全部组合</text><rect x='76' y='28' width='180' height='12' rx='2' fill='#efece1'/><rect x='76' y='28' width='180' height='12' rx='2' fill='#41699b' opacity='0.5'/><text x='262' y='38' font-size='8.5' fill='#4d565b'>15</text><text x='12' y='58' font-size='9' fill='#4d565b'>耐温不可行</text><rect x='76' y='48' width='180' height='12' rx='2' fill='#efece1'/><rect x='76' y='48' width='86' height='12' rx='2' fill='#c9613f'/><text x='262' y='58' font-size='8.5' fill='#c9613f'>剔除 7</text><text x='12' y='78' font-size='9' fill='#4d565b'>链路互斥</text><rect x='76' y='68' width='180' height='12' rx='2' fill='#efece1'/><rect x='76' y='68' width='30' height='12' rx='2' fill='#c9613f'/><text x='262' y='78' font-size='8.5' fill='#c9613f'>再剔除 2</text><text x='12' y='98' font-size='9' fill='#4d565b'>可行解</text><rect x='76' y='88' width='180' height='12' rx='2' fill='#efece1'/><rect x='76' y='88' width='72' height='12' rx='2' fill='#2f7d6b'/><text x='262' y='98' font-size='8.5' fill='#2f7d6b'>6 个进多目标寻优</text><line x1='300' y1='28' x2='300' y2='100' stroke='#e2ded0'/><rect x='320' y='26' width='328' height='82' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='332' y='44' font-size='9' fill='#242b2e'>断言示例</text><text x='332' y='62' font-size='8.5' fill='#4d565b'>· 若 电子类 且 温度 &gt; 175 ℃ → 不可选</text><text x='332' y='78' font-size='8.5' fill='#4d565b'>· 若 水平段 &gt; 1000 m → 禁用电子类</text><text x='332' y='94' font-size='8.5' fill='#4d565b'>· 若 已选 A 厂家光纤 → 禁 B 厂家</text></svg>"
+        },
+        {
+          "name": "寿命与可靠性模型标定",
+          "role": "算法",
+          "do": "把厂家加速老化曲线转成「温度裕量 → 寿命折半」的经验函数，并叠加在线率与漂移超差记录。",
+          "effect": "每支仪器能给出本井预期能活几年，而不是厂家标称的常温寿命。",
+          "trap": "直接套用厂家常温寿命，会在高温井上系统性高估，第一口井就翻车。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='温度裕量与寿命折半关系'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>寿命模型：温度每逼近上限一截，寿命大致折半</text><line x1='60' y1='96' x2='400' y2='96' stroke='#242b2e'/><line x1='60' y1='30' x2='60' y2='96' stroke='#242b2e'/><polyline points='64,94 110,80 156,66 202,52 248,40 294,32 340,30 386,29' fill='none' stroke='#41699b' stroke-width='2'/><text x='250' y='46' font-size='8.5' fill='#41699b'>预期寿命（年）</text><circle cx='110' cy='80' r='3.5' fill='#2f7d6b'/><text x='118' y='84' font-size='8.5' fill='#2f7d6b'>裕量小 → 3.2 年</text><circle cx='340' cy='30' r='3.5' fill='#2f7d6b'/><text x='348' y='34' font-size='8.5' fill='#2f7d6b'>裕量大 → 11.5 年</text><text x='60' y='110' font-size='8.5' fill='#79828a'>横轴：温度占耐温上限比例（越靠右越接近上限）</text><rect x='420' y='28' width='228' height='82' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='432' y='46' font-size='9' fill='#4d565b'>寿命 = 标称寿命 × 0.5^((1 − 裕量) × 6)</text><text x='432' y='64' font-size='8.5' fill='#79828a'>裕量 =（耐温上限 − 井底温度）/ 耐温上限</text><text x='432' y='80' font-size='8.5' fill='#4d565b'>再叠加在线率、漂移超差作为扣分项</text><text x='432' y='96' font-size='8.5' fill='#c9613f'>第一版取保守参数，实测回填后再放宽松</text></svg>"
+        },
+        {
+          "name": "多目标寻优与帕累托前沿",
+          "role": "算法",
+          "do": "在可行组合上计算覆盖率、可靠性与成本，取非支配解构成前沿，并把预算权重做成可选偏好点。",
+          "effect": "决策者看到的是「多花 40 万，覆盖率能提 20 个点」这样的取舍，而不是黑箱答案。",
+          "trap": "只输出一个加权最优解，等于替业务部门定了预算偏好，方案会被反复推翻。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='帕累托前沿与偏好选点'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>前沿上每个点都是「既没法更便宜、也没法更好」的方案</text><line x1='60' y1='96' x2='420' y2='96' stroke='#242b2e'/><line x1='60' y1='28' x2='60' y2='96' stroke='#242b2e'/><polyline points='70,92 120,74 180,60 250,50 320,44 390,41' fill='none' stroke='#2f7d6b' stroke-dasharray='4 3' stroke-width='1.6'/><circle cx='70' cy='92' r='3' fill='#b9c6cf'/><circle cx='180' cy='60' r='3' fill='#b9c6cf'/><circle cx='250' cy='50' r='5' fill='#c9613f'/><circle cx='320' cy='44' r='3' fill='#b9c6cf'/><circle cx='390' cy='41' r='3' fill='#b9c6cf'/><text x='258' y='46' font-size='8.5' fill='#c9613f'>当前偏好点（预算权重 0.45）</text><text x='60' y='112' font-size='8.5' fill='#79828a'>横轴：总成本 ↑</text><text x='420' y='112' font-size='8.5' fill='#79828a' text-anchor='end'>综合得分 ↑</text><rect x='440' y='28' width='208' height='82' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='452' y='46' font-size='9' fill='#4d565b'>为什么给前沿而不是单一解</text><text x='452' y='64' font-size='8.5' fill='#79828a'>预算权重不同的人要的答案不同；</text><text x='452' y='78' font-size='8.5' fill='#79828a'>把偏好做成滑杆让现场可调，比替他</text><text x='452' y='92' font-size='8.5' fill='#79828a'>定权重要诚实，也更容易被采纳。</text></svg>"
+        },
+        {
+          "name": "方案裁定与逐年回填",
+          "role": "人工",
+          "do": "完井工程师按预算与风险偏好在前沿上选点；投产后把在线率、漂移与失效时间回填到寿命模型。",
+          "effect": "第三年起，寿命曲线从厂家手册值转向本区块实测值，推荐逐渐变得可信。",
+          "trap": "装完就算结项、不回填，第二口井又会回到「按经验选」的起点。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='方案裁定与逐年回填闭环'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='28' width='104' height='32' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='64' y='48' font-size='9' fill='#fff' text-anchor='middle'>前沿选点</text><path d='M116 44 L146 44' stroke='#242b2e'/><rect x='146' y='28' width='104' height='32' rx='4' fill='#41699b' opacity='0.9'/><text x='198' y='48' font-size='9' fill='#fff' text-anchor='middle'>下入并投产</text><path d='M250 44 L280 44' stroke='#242b2e'/><rect x='280' y='28' width='104' height='32' rx='4' fill='#b26a39' opacity='0.85'/><text x='332' y='48' font-size='9' fill='#fff' text-anchor='middle'>在线率 / 故障回填</text><path d='M384 44 L414 44' stroke='#242b2e'/><rect x='414' y='28' width='104' height='32' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='466' y='48' font-size='9' fill='#242b2e' text-anchor='middle'>更新寿命曲线</text><path d='M518 44 C 580 44, 590 78, 540 86 C 490 94, 120 96, 64 72' fill='none' stroke='#79828a' stroke-dasharray='4 3'/><text x='250' y='98' font-size='9' fill='#79828a'>闭环：每次失效都是一条校准数据，三年后手册曲线被本区块实测替换</text><line x1='12' y1='106' x2='470' y2='106' stroke='#e2ded0'/><text x='12' y='117' font-size='9' fill='#4d565b'>第 1 年：手册曲线（保守）→ 第 3 年：实测 62 台次 → <tspan font-weight='600' fill='#2f7d6b'>误差 ±18%</tspan></text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算「做对了」",
+        "html": "<p><b>需求覆盖率</b>：推荐方案实际测到的需求项占「必须有」清单的比例。注意分母只用必须有项，否则为了凑数加传感器会让这个指标虚高。</p><p><b>三年在线率</b>：投产三年后仍在线且漂移不超差的仪器占比。这是唯一能校验寿命模型对不对的硬指标，也是最慢的一个。</p><p><b>预算偏差</b>：实际采购价与推荐方案估算成本的差，控制在 ±15% 以内说明成本函数是准的——很多项目的成本库从建库那天就过期了。</p><p><b>年维护工时</b>：维护与更换带来的人工投入。监测方案真正的成本往往不在采购，而在三年后的那次修井。</p>"
+      },
+      "fails": [
+        { "name": "套用厂家常温寿命", "why": "常温寿命与 170 ℃ 工况能差三倍，高温井第一年就失效，而下一次可更换窗口要等修井。" },
+        { "name": "把链路互斥当软提示", "why": "采购按价格换厂家后，现场解调仪不兼容，整条监测链路报废。" },
+        { "name": "只给单一最优解", "why": "等于替业务部门定了预算偏好，方案会被反复推翻，最后又回到人工查手册。" },
+        { "name": "装完即结项", "why": "没有在线率与故障回填，寿命曲线停在首版，第二口井的推荐质量不会比第一口井更好。" }
+      ]
+    },
+
+    "demo": {
+      "mode": "auto",
+      "html": "demo/index.html",
+      "js": "demo/demo.js",
+      "label": "可运行示范",
+      "intro": "选择监测需求与井型，拖动井底温度、水平段长度、设计寿命与预算权重：看哪些仪器被硬约束判为不可行、推荐组合与布点分组怎么变，以及成本—得分在帕累托前沿上的取舍。",
+      "height": 1180
+    }
+  }
+}

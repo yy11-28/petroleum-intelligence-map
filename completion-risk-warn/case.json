@@ -1,0 +1,169 @@
+{
+ "id": "completion-risk-warn",
+ "sceneId": "co12",
+ "methods": [
+  "kg"
+ ],
+ "title": "完井作业施工风险智能预警与工况推荐",
+ "version": "1.0.0",
+ "updated": "2026-10-25",
+ "tabs": {
+  "background": {
+   "label": "专业背景",
+   "lede": "完井是「把管柱、封隔器与射孔枪依次下到预定深度」的一串不可逆动作。下入遇阻、卡管、坐封失效、起爆异常往往在几分钟内成形，代价是一趟起下钻甚至丢井；现场能实时看到的只有大钩载荷、扭矩、张力与循环压力这四条 1 s 曲线，而判据多半是老师傅的经验口诀，事后又只剩完工报告里的几句话。",
+   "judge": [
+    {
+     "label": "数据形态",
+     "value": "1 s 时序 + 文本",
+     "desc": "曲线是连续的，结论却写在完工报告里"
+    },
+    {
+     "label": "标注成本",
+     "value": "高",
+     "desc": "正样本极少，要对着工单逐段回看"
+    },
+    {
+     "label": "可见收益",
+     "value": "快",
+     "desc": "替掉的是盯屏与翻报告这两步"
+    },
+    {
+     "label": "难度",
+     "value": "中",
+     "desc": "低频事件 + 误报代价高，卡在可用门槛"
+    }
+   ],
+   "sections": [
+    {
+     "no": 1,
+     "en": "PROBLEM",
+     "title": "当前做法与问题",
+     "html": "<p><b>现场怎么干</b>：班长盯大钩载荷表与扭矩，感觉「有点卡」就上提下放——判定依据是经验，不是数据。一口井出问题后，记录先进完工报告：「某时下入遇阻，循环后通过」，通常一句话，既不写当时的曲线，也不写后来回看的结论。</p><p><b>三个问题</b>：<b>① 发现晚</b>——等表针明显跳动时，管柱已经在卡；<b>② 判不准</b>——「遇阻」和「卡管」的曲线长得很像，处置方式却完全不同；<b>③ 不沉淀</b>——同类事故在同一区块一年内反复发生，每次都靠现场重新判断。</p><div class='viz'><svg viewBox='0 0 700 235' role='img' aria-label='一段下入过程的大钩载荷曲线：异常在曲线上早已成形，现场数分钟后才察觉'><rect x='0' y='0' width='700' height='235' fill='#fbfaf6'/><text x='16' y='17' font-size='11' fill='#242b2e'>同一段下入：左边是曲线看到的，右边是现场察觉到的——中间差了三分钟</text><rect x='40' y='36' width='80' height='18' rx='3' fill='#e9e4d8'/><text x='80' y='49' font-size='9' fill='#242b2e' text-anchor='middle'>下入</text><rect x='120' y='36' width='80' height='18' rx='3' fill='#e9e4d8'/><text x='160' y='49' font-size='9' fill='#242b2e' text-anchor='middle'>接单根</text><rect x='200' y='36' width='80' height='18' rx='3' fill='#e9e4d8'/><text x='240' y='49' font-size='9' fill='#242b2e' text-anchor='middle'>循环</text><rect x='280' y='36' width='80' height='18' rx='3' fill='#c9613f' opacity='0.85'/><text x='320' y='49' font-size='9' fill='#fff' text-anchor='middle'>遇阻 → 卡管</text><rect x='360' y='36' width='80' height='18' rx='3' fill='#b9c6cf'/><text x='400' y='49' font-size='9' fill='#242b2e' text-anchor='middle'>解卡作业</text><line x1='40' y1='150' x2='660' y2='150' stroke='#242b2e'/><line x1='40' y1='70' x2='40' y2='150' stroke='#242b2e'/><text x='34' y='112' font-size='9' fill='#79828a' text-anchor='end'>载荷</text><polyline points='40,132 60,131 80,134 100,130 120,133 140,129 160,132 180,130 200,131 220,129 240,132 260,130 280,131 300,133 320,128 340,124 360,118 380,110 400,104 420,112 440,98 460,116 480,92 500,120 520,86 540,124 560,96 580,118 600,104 620,120 640,116' fill='none' stroke='#41699b' stroke-width='1.6'/><path d='M40 128 L300 132' stroke='#2f7d6b' stroke-dasharray='4 3'/><text x='170' y='145' font-size='9' fill='#2f7d6b'>正常下入（载荷平稳）</text><circle cx='320' cy='128' r='4' fill='#c9613f'/><line x1='320' y1='60' x2='320' y2='168' stroke='#c9613f' stroke-dasharray='3 3'/><text x='326' y='66' font-size='9' fill='#c9613f'>异常在曲线上成形</text><text x='326' y='78' font-size='8.5' fill='#c9613f'>（均值抬升 + 振荡放大）</text><circle cx='520' cy='86' r='4' fill='#242b2e'/><line x1='520' y1='60' x2='520' y2='168' stroke='#242b2e' stroke-dasharray='3 3'/><text x='526' y='66' font-size='9' fill='#242b2e'>现场察觉 / 停钻处理</text><path d='M320 176 L520 176' stroke='#79828a' stroke-width='1'/><path d='M320 172 L320 180 M520 172 L520 180' stroke='#79828a'/><text x='420' y='192' font-size='9' fill='#c9613f' text-anchor='middle'>Δt ≈ 3 min（这段正是算法能提前的地方）</text><rect x='40' y='204' width='300' height='22' rx='4' fill='#efece1'/><text x='52' y='219' font-size='9' fill='#4d565b'>事后报告只有一句：「下入遇阻，循环后通过」</text><rect x='352' y='204' width='308' height='22' rx='4' fill='#dfe6ee'/><text x='364' y='219' font-size='9' fill='#41699b'>曲线本身没有例外地没被保存成样本</text></svg><span class='viz-cap'>下入过程的大钩载荷曲线：均值抬升与振荡放大在先，人工察觉在后——中间的三分钟就是预警的空间。</span></div>"
+    },
+    {
+     "no": 2,
+     "en": "INTERVENTION",
+     "title": "AI 能做什么",
+     "html": "<p>这里不需要「端到端判别事故类型」的大模型：单井样本极少，一个区块一年也就几起。真正可用的是<b>两层结构</b>：下层用<b>滑窗特征 + 无监督打分</b>回答「这段是不是不对劲」——它不需要正样本，因为正常工况的样本是大量存在的；上层用<b>知识图谱</b>回答「不对劲的这条曲线，历史上对应哪一起事故、当初怎么处置的」。</p><p>输出不是报警灯，而是四件事：<b>风险等级</b>、<b>失事类别</b>、<b>三条最像的历史事故（带相似度）</b>、<b>推荐工况</b>。被替掉的是「盯屏 + 翻报告」，被留下的是「要不要停止下入」这个决策权和它的责任。</p><div class='viz'><svg viewBox='0 0 700 215' role='img' aria-label='两层结构：滑窗异常打分加知识图谱检索'><rect x='0' y='0' width='700' height='215' fill='#fbfaf6'/><text x='16' y='18' font-size='11' fill='#242b2e'>下层答「哪儿不对」，上层答「这种情况以前怎么处理过」</text><defs><marker id='arA' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='16' y='32' width='112' height='52' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='72' y='52' font-size='9.5' fill='#242b2e' text-anchor='middle'>1 s 曲线</text><text x='72' y='68' font-size='8.5' fill='#79828a' text-anchor='middle'>载荷/扭矩/张力/泵压</text><path d='M128 58 L158 58' stroke='#242b2e' marker-end='url(#arA)'/><rect x='158' y='32' width='118' height='52' rx='5' fill='#41699b' opacity='0.9'/><text x='217' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>滑窗三项特征</text><text x='217' y='68' font-size='8.5' fill='#fff' text-anchor='middle'>均值σ / 斜率 / 振荡</text><path d='M276 58 L306 58' stroke='#242b2e' marker-end='url(#arA)'/><rect x='306' y='32' width='118' height='52' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='365' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>无监督异常分</text><text x='365' y='68' font-size='8.5' fill='#cfe4dc' text-anchor='middle'>不需要正样本</text><path d='M424 58 L454 58' stroke='#242b2e' marker-end='url(#arA)'/><rect x='454' y='32' width='112' height='52' rx='5' fill='#b26a39' opacity='0.9'/><text x='510' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>知识图谱检索</text><text x='510' y='68' font-size='8.5' fill='#fff' text-anchor='middle'>形态对齐</text><path d='M566 58 L596 58' stroke='#242b2e' marker-end='url(#arA)'/><rect x='596' y='26' width='88' height='64' rx='5' fill='#fbfaf6' stroke='#e2ded0'/><text x='640' y='44' font-size='9' fill='#4d565b' text-anchor='middle'>输出卡片</text><text x='640' y='60' font-size='8.5' fill='#79828a' text-anchor='middle'>风险等级</text><text x='640' y='74' font-size='8.5' fill='#79828a' text-anchor='middle'>事故类别</text><text x='640' y='86' font-size='8.5' fill='#79828a' text-anchor='middle'>推荐工况</text><rect x='16' y='104' width='330' height='96' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='122' font-size='9.5' fill='#242b2e'>下层为什么必须无监督</text><text x='28' y='140' font-size='9' fill='#4d565b'>正常工况样本：每口井每道工序都有，成千上万段</text><text x='28' y='156' font-size='9' fill='#4d565b'>事故样本：一个区块一年只有几起，而且形态各异</text><text x='28' y='174' font-size='9' fill='#c9613f'>用正常样本定义「正常」，剩下的就是异常</text><text x='28' y='190' font-size='9' fill='#79828a'> Isolation Forest / 重构误差都属于这一类</text><rect x='358' y='104' width='326' height='96' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='370' y='122' font-size='9.5' fill='#242b2e'>上层为什么要用图谱</text><text x='370' y='140' font-size='9' fill='#4d565b'>比的是「偏离的方向 + 速度 + 振荡」这三项形态，</text><text x='370' y='156' font-size='9' fill='#4d565b'>不是比数值大小：卡管是「陡升 + 高频抖动」</text><text x='370' y='172' font-size='9' fill='#4d565b'>失封是「缓降 + 不再回升」，两者判据完全不同</text><text x='370' y='190' font-size='9' fill='#41699b'>图谱节点：工序 / 井型 / 异常形态 / 处置措施 / 结果</text><text x='16' y='212' font-size='8.5' fill='#79828a'>尺度提醒：这里的最小单元是「一段窗口」而不是一口井，所以样本量其实不小。</text></svg><span class='viz-cap'>下层滑窗打分（不需要正样本）＋ 上层图谱检索（按形态对齐而非数值），最后落到一张输出卡片。</span></div><p><b>并入专项 · 大位移井完井风险预控方案推荐</b>：智能方法把风险项形式化成可计算规则：把井眼轨迹与管柱组合代入摩阻扭矩模型，算出沿井深的大钩载荷曲线，与实测下入载荷对比反演摩擦系数，再预演屈曲临界与磨损量。输出不是「注意摩阻」，而是「在 3200—3600 m 狗腿段下入载荷余量不足 12%，建议：① 该段降狗腿至 3°/30m；② 或改用低摩阻扶正器（会牺牲顶替效率 8%）」——每条措施都带代价，供决策方取舍。。</p>"
+    },
+    {
+     "no": 3,
+     "en": "DATA",
+     "title": "需要准备什么",
+     "html": "<p><b>① 实时曲线</b>：大钩载荷、扭矩、张力、泵压、排量，1 s 采样，随工单落到时间轴上。<b>② 工单与工序记录</b>：管柱结构、封隔器型号、坐封吨位、钻井液性能——没有它们就无法把曲线切成工序。<b>③ 历史事故报告（文本）</b>：复杂情况记录与完工报告，用于抽取「发生了什么 + 怎么处置的 + 结果如何」。<b>④ 少量事件标注</b>：每条事故标记起止时刻，用于校准阈值与评估。</p><p><b>量级</b>：同工序历史 100 井次以上才能建出可信的±2σ 带；事故样本 30–60 条足够撑起第一版图谱。<b>坑</b>：单位、采样率、深度基准必须统一；不同年份的钻机仪表不同，混着建模会让基线整体漂移。</p><div class='viz'><svg viewBox='0 0 700 205' role='img' aria-label='四类数据来源与各自的规模、难点'><rect x='0' y='0' width='700' height='205' fill='#fbfaf6'/><text x='16' y='18' font-size='11' fill='#242b2e'>四类输入：曲线是主体，工单是切片依据，文本才是结论来源</text><rect x='16' y='30' width='160' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='96' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>实时曲线</text><text x='28' y='68' font-size='9' fill='#4d565b'>载荷 / 扭矩 / 张力</text><text x='28' y='84' font-size='9' fill='#4d565b'>泵压 / 排量</text><text x='28' y='100' font-size='9' fill='#4d565b'>1 s 采样</text><line x1='28' y1='110' x2='164' y2='110' stroke='#d8d2c4'/><text x='28' y='126' font-size='9' fill='#79828a'>量很大，但需要切分工序</text><text x='28' y='138' font-size='9' fill='#c9613f'>难点：停泵/换班空段</text><rect x='188' y='30' width='160' height='112' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='268' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>工单 / 工序记录</text><text x='200' y='68' font-size='9' fill='#4d565b'>下入 / 坐封 / 射孔起止</text><text x='200' y='84' font-size='9' fill='#4d565b'>管柱结构、器具型号</text><text x='200' y='100' font-size='9' fill='#4d565b'>设计与实际对照</text><line x1='200' y1='110' x2='336' y2='110' stroke='#d8d2c4'/><text x='200' y='126' font-size='9' fill='#79828a'>结构化，但没有它就是一片曲线</text><text x='200' y='138' font-size='9' fill='#41699b'>难点：时间戳经常错位</text><rect x='360' y='30' width='160' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='440' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>历史事故报告</text><text x='372' y='68' font-size='9' fill='#4d565b'>「下入至 2840 m 遇阻」</text><text x='372' y='84' font-size='9' fill='#4d565b'>「提至 32 t 解卡成功」</text><line x1='372' y1='94' x2='508' y2='94' stroke='#d8d2c4'/><text x='372' y='110' font-size='9' fill='#4d565b'>结论都在文本里</text><text x='372' y='126' font-size='9' fill='#c9613f'>难点：需抽取成结构化字段</text><text x='372' y='138' font-size='9' fill='#79828a'>30–60 条即可起步</text><rect x='532' y='30' width='152' height='112' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='608' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>事件标注</text><text x='544' y='68' font-size='9' fill='#4d565b'>每条事故的起止时刻</text><text x='544' y='84' font-size='9' fill='#4d565b'>与之对应的曲线窗口</text><line x1='544' y1='94' x2='672' y2='94' stroke='#e2ded0'/><text x='544' y='110' font-size='9' fill='#79828a'>只用于校准阈值与评测</text><text x='544' y='126' font-size='9' fill='#c9613f'>漏标会把误报算成真事件</text><rect x='16' y='156' width='668' height='38' rx='5' fill='#fbfaf6' stroke='#e2ded0'/><text x='30' y='174' font-size='9.5' fill='#4d565b'>统一三件事再谈建模：<tspan font-weight='600'>单位</tspan>（kN 与 t 混用最常见）、<tspan font-weight='600'>采样率</tspan>（1 s 与 5 s 混存会让斜率不可比）、<tspan font-weight='600'>钻机年份</tspan>（不同仪表基线不同）。</text><text x='30' y='188' font-size='9' fill='#79828a'>这三条没统一时，模型学到的第一件事就是「今年换了一台钻机」。</text></svg><span class='viz-cap'>四类输入：曲线（量大但要切片）、工单（切片依据）、文本（结论来源）、标注（只用于校准）。</span></div>"
+    },
+    {
+     "no": 4,
+     "en": "DIFFICULTY",
+     "title": "难度与参考方向",
+     "html": "<p><b>难点一：误报代价不对称。</b>这是一个「狼来了」效应的典型场景——多报两次，班长就把系统摘了。所以阈值不能按准确率调，要按<b>每天的告警次数</b>反向定：一个班组一天可接受 2–3 次。</p><p><b>难点二：基线随井型漂移。</b>水平井的下入阻力本来就比直井大，用同一条基线会把正常的摩阻判成异常；必须按<b>井型 × 工序 × 井深段</b>分组建基线。<b>难点三：正负样本极度不平衡。</b>几千段窗口里可能只有一两个真事故，任何「按事故数量训练」的路线都会失败。</p><p><b>参考顺序</b>：① 先做分工序基线带 + 三项滑窗特征，把 ROC 曲线画出来；② 用历史文本建最小图谱（30 条事故）；③ 旁跑一个月的影子模式，只记录不打扰；④ 影子期之后再开放实时推荐。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='三个难点：误报疲劳、基线漂移、样本不平衡'><rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/><text x='16' y='17' font-size='11' fill='#242b2e'>三个会把项目做黄的地方</text><rect x='16' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10' fill='#242b2e'>① 误报疲劳</text><text x='28' y='66' font-size='9' fill='#79828a'>每天告警次数 vs 采纳率</text><line x1='40' y1='150' x2='210' y2='150' stroke='#242b2e'/><line x1='40' y1='72' x2='40' y2='150' stroke='#242b2e'/><rect x='48' y='100' width='18' height='50' rx='2' fill='#2f7d6b'/><rect x='78' y='112' width='18' height='38' rx='2' fill='#b26a39'/><rect x='108' y='128' width='18' height='22' rx='2' fill='#b26a39'/><rect x='138' y='138' width='18' height='12' rx='2' fill='#c9613f'/><rect x='168' y='145' width='18' height='5' rx='2' fill='#c9613f'/><text x='52' y='164' font-size='8' fill='#79828a'>2/天</text><text x='172' y='164' font-size='8' fill='#c9613f'>20/天</text><text x='28' y='182' font-size='9' fill='#c9613f'>告警越多，采纳率越低，</text><text x='28' y='194' font-size='9' fill='#c9613f'>到某个点之后系统就形同虚设。</text><rect x='244' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='46' font-size='10' fill='#242b2e'>② 基线漂移</text><text x='256' y='66' font-size='9' fill='#79828a'>直井 vs 水平井的下入载荷</text><path d='M266 140 L340 134' stroke='#41699b' stroke-width='2'/><path d='M266 116 L340 86' stroke='#b26a39' stroke-width='2'/><rect x='262' y='128' width='84' height='22' fill='none' stroke='#41699b' stroke-dasharray='3 2'/><text x='346' y='138' font-size='8.5' fill='#41699b'>直井正常带</text><text x='346' y='94' font-size='8.5' fill='#b26a39'>水平井（同工况就偏高）</text><line x1='266' y1='150' x2='404' y2='150' stroke='#242b2e'/><line x1='266' y1='76' x2='266' y2='150' stroke='#242b2e'/><text x='256' y='176' font-size='9' fill='#4d565b'>不分组就把水平井整体判为异常，</text><text x='256' y='190' font-size='9' fill='#4d565b'>按【井型×工序×井深段】分别建带。</text><rect x='472' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='46' font-size='10' fill='#242b2e'>③ 样本不平衡</text><rect x='484' y='60' width='186' height='10' rx='2' fill='#e9e4d8'/><rect x='484' y='60' width='184' height='10' rx='2' fill='#41699b' opacity='0.75'/><text x='484' y='82' font-size='8.5' fill='#79828a'>正常窗口 6,180 段</text><rect x='484' y='92' width='186' height='10' rx='2' fill='#e9e4d8'/><rect x='484' y='92' width='2' height='10' fill='#c9613f'/><text x='484' y='114' font-size='8.5' fill='#c9613f'>事故窗口 46 段（0.74%）</text><text x='484' y='136' font-size='9' fill='#4d565b'>任何按样本量训练的分类器都会学到</text><text x='484' y='150' font-size='9' fill='#4d565b'>「永远预测正常」并且准确率 99.3%。</text><text x='484' y='170' font-size='9' fill='#2f7d6b'>正确做法：只用正常样本定义边界，</text><text x='484' y='184' font-size='9' fill='#2f7d6b'>异常由距离/重构误差给出。</text></svg><span class='viz-cap'>难点：误报疲劳（按每天可接受次数定阈值）、基线漂移（分层建带）、样本不平衡（不能监督训练）。</span></div>"
+    }
+   ]
+  },
+  "workflow": {
+   "label": "案例流程",
+   "title": "从施工曲线到工况推荐的落地流程",
+   "lead": [
+    "这条流程把「班长凭手感判断」拆成五个可验证的环节：先要有干净的工序切片，才谈得上基线；有了基线，异常分才有意义；有了异常形态，图谱才检索得准。核心资产不是模型，是把 186 井次历史作业切成「工序—正常带—事故形态」的结构化账本。",
+    "下面的示范演示第 2 到第 4 步：拖动摩阻系数、狗腿度与操作激进程度，合成一条工序曲线，看异常分在事故成形前多久越过阈值、图谱把它判成哪一类事故、最终推荐什么工况。"
+   ],
+   "stats": [
+    [
+     "历史作业井次",
+     "186 井次"
+    ],
+    [
+     "平均预警提前量",
+     "42 s"
+    ],
+    [
+     "误报率",
+     "8.4%"
+    ],
+    [
+     "下入记录",
+     "120 井次"
+    ]
+   ],
+   "steps": [
+    {
+     "name": "数据接入与时间对齐",
+     "role": "数据",
+     "do": "把录井仪的四条曲线按工单时间戳对齐，剔除停泵与换班的空段，统一单位与采样率。",
+     "effect": "一口井一段连续的工序序列，每条曲线都有可信的时间轴。",
+     "trap": "空段不剔除会让滑窗跨越停工期，均值与斜率同时失真。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='四条曲线对齐到同一时间轴'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>四条曲线 + 工单切片 = 可分析的工序序列</text><rect x='12' y='28' width='96' height='22' rx='3' fill='#e9e4d8' stroke='#d8d2c4'/><text x='60' y='43' font-size='9' fill='#242b2e' text-anchor='middle'>大钩载荷</text><rect x='12' y='54' width='96' height='22' rx='3' fill='#e9e4d8' stroke='#d8d2c4'/><text x='60' y='69' font-size='9' fill='#242b2e' text-anchor='middle'>扭矩 / 张力</text><rect x='12' y='80' width='96' height='22' rx='3' fill='#e9e4d8' stroke='#d8d2c4'/><text x='60' y='95' font-size='9' fill='#242b2e' text-anchor='middle'>泵压 / 排量</text><path d='M108 39 L150 58' stroke='#79828a'/><path d='M108 65 L150 62' stroke='#79828a'/><path d='M108 91 L150 66' stroke='#79828a'/><rect x='150' y='44' width='120' height='38' rx='4' fill='#41699b' opacity='0.9'/><text x='210' y='60' font-size='9.5' fill='#fff' text-anchor='middle'>时间对齐 + 剔空段</text><text x='210' y='74' font-size='8.5' fill='#fff' text-anchor='middle'>统一采样率到 1 s</text><path d='M270 63 L306 63' stroke='#242b2e'/><rect x='306' y='28' width='220' height='70' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='318' y='44' font-size='9' fill='#4d565b'>下入段 0–2840 m（含两次接单根）</text><path d='M318 56 L520 56' stroke='#41699b' stroke-width='1.4'/><path d='M318 68 L520 68' stroke='#2f7d6b' stroke-width='1.4'/><path d='M318 80 L520 80' stroke='#b26a39' stroke-width='1.4'/><text x='318' y='94' font-size='8.5' fill='#79828a'>三条曲线共用一条时间轴，滑窗才成立</text><rect x='540' y='40' width='108' height='46' rx='4' fill='#c9613f' opacity='0.85'/><text x='594' y='60' font-size='9' fill='#fff' text-anchor='middle'>停泵空段必须剔除</text><text x='594' y='76' font-size='8.5' fill='#fff' text-anchor='middle'>否则窗口跨工期</text><text x='12' y='114' font-size='9' fill='#79828a'>单位统一：kN 与 t、MPa 与 psi 混存是最常见的低级错误。</text></svg>"
+    },
+    {
+     "name": "工序切分与正常基线",
+     "role": "算法",
+     "do": "按工单把序列切成下入 / 循环 / 坐封 / 射孔 / 起钻，用历史正常井的同一工序建均值±2σ 带。",
+     "effect": "每个动作都有「正常长什么样」的参考区间，而不是全局一个阈值。",
+     "trap": "水平井与直井用同一条基线，等于把正常的摩阻判成异常。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='分工序建立基线带'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>同一口井，不同工序的正常带完全不同</text><line x1='40' y1='92' x2='630' y2='92' stroke='#242b2e'/><rect x='40' y='62' width='150' height='20' fill='#e6f1ec'/><polyline points='44,72 70,70 96,74 122,69 148,73 176,71' fill='none' stroke='#41699b' stroke-width='1.5'/><text x='115' y='106' font-size='8.5' fill='#4d565b' text-anchor='middle'>下入（平稳窄带）</text><rect x='206' y='40' width='150' height='34' fill='#e6f1ec'/><polyline points='210,58 240,56 270,60 300,54 330,58 348,56' fill='none' stroke='#41699b' stroke-width='1.5'/><text x='281' y='106' font-size='8.5' fill='#4d565b' text-anchor='middle'>循环（排量大，带宽且高）</text><rect x='372' y='24' width='150' height='26' fill='#e6f1ec'/><polyline points='376,40 400,36 424,42 448,34 472,44 496,38 518,36' fill='none' stroke='#41699b' stroke-width='1.5'/><text x='447' y='106' font-size='8.5' fill='#4d565b' text-anchor='middle'>坐封（压力台阶上升）</text><rect x='538' y='52' width='92' height='26' fill='#f2efe6' stroke='#d8d2c4' stroke-dasharray='3 2'/><polyline points='542,66 560,64 580,70 600,62 620,68' fill='none' stroke='#79828a' stroke-width='1.2' stroke-dasharray='3 2'/><text x='584' y='106' font-size='8.5' fill='#c9613f' text-anchor='middle'>射孔（待积累）</text><rect x='12' y='24' width='14' height='62' fill='none' stroke='#e2ded0'/><text x='19' y='20' font-size='8.5' fill='#79828a' text-anchor='middle'>载荷</text><text x='632' y='116' font-size='8.5' fill='#79828a'>分层：井型 × 工序 × 井深段，至少三层交叉</text></svg>"
+    },
+    {
+     "name": "滑窗特征与异常打分",
+     "role": "算法",
+     "do": "14 s 滑窗取三个特征：窗内均值偏离几个 σ、上升斜率多少 σ/s、振荡放大几倍；三项加权合成 0–1 的异常分。",
+     "effect": "只瞄幅度会漏，只瞄斜率会飘；三项同时印证才计分，单点尖刺被自动忽略。",
+     "trap": "只看瞬时幅度会把工具面调整时的正常抖动全部报成异常。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='三项滑窗特征与加权合成'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='16' font-size='10' fill='#4d565b'>三个特征：异常不是「值大」，而是「持续偏离 + 在爬升 + 抖动变了」</text><rect x='12' y='26' width='140' height='40' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='42' font-size='9' fill='#4d565b'>① 均值偏离 z</text><text x='24' y='58' font-size='9' fill='#41699b'>+2.4σ（持续 8 s）</text><rect x='12' y='72' width='140' height='40' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='88' font-size='9' fill='#4d565b'>② 上升斜率 σ/s</text><text x='24' y='104' font-size='9' fill='#41699b'>+0.058（在爬不是跳）</text><rect x='164' y='26' width='140' height='40' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='176' y='42' font-size='9' fill='#4d565b'>③ 振荡倍数</text><text x='176' y='58' font-size='9' fill='#41699b'>2.1×（抖动加剧）</text><rect x='164' y='72' width='140' height='40' rx='4' fill='#c9613f' opacity='0.85'/><text x='176' y='88' font-size='9' fill='#fff'>反例：单点尖刺</text><text x='176' y='104' font-size='8.5' fill='#fff'>z=3.1 但斜率/振荡正常 → 不计分</text><path d='M152 46 L164 46' stroke='#79828a'/><line x1='330' y1='26' x2='330' y2='108' stroke='#e2ded0'/><text x='342' y='40' font-size='9.5' fill='#4d565b'>合成：raw = 0.55·max(0,|z|−1.1) + 0.42·max(0,osc−1.15) + 0.34·max(0,|slope|−0.035)·12</text><text x='342' y='56' font-size='9.5' fill='#4d565b'>score = 1 − e^(−raw) ∈ [0,1)</text><line x1='342' y1='76' x2='640' y2='76' stroke='#242b2e'/><line x1='342' y1='62' x2='342' y2='108' stroke='#242b2e'/><path d='M346 104 C 400 66, 460 60, 520 78 C 570 92, 600 96, 638 97' fill='none' stroke='#2f7d6b' stroke-width='1.8'/><text x='470' y='56' font-size='8.5' fill='#2f7d6b'>异常分爬升</text><path d='M342 82 L640 82' stroke='#c9613f' stroke-dasharray='4 3'/><text x='596' y='72' font-size='8.5' fill='#c9613f'>阈值 0.55</text><text x='342' y='118' font-size='8.5' fill='#79828a'>三项都扣超过减去后方可计分，各自都是可调权重（用影子期的结果反向标定）。</text></svg>"
+    },
+    {
+     "name": "图谱检索事故匹配",
+     "role": "算法",
+     "do": "把当时的异常形态（z / 斜率 / 振荡）与图谱里历史事故的同名特征做距离，取最像的 Top-3。",
+     "effect": "报警从「有异常」变成「像 ACC-047 那次卡管」，并自带当时怎么处置的。",
+     "trap": "图谱只收录成功处置的案例，推荐会系统性偏保守。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='形态向量与历史事故对齐'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='16' font-size='10' fill='#4d565b'>比的是「形态」不是「大小」：同样 +3σ，爬升型与跳变型完全不是一类事故</text><text x='12' y='38' font-size='9' fill='#4d565b'>当前窗口</text><rect x='76' y='28' width='60' height='10' rx='2' fill='#efece1'/><rect x='76' y='28' width='44' height='10' rx='2' fill='#41699b'/><text x='142' y='38' font-size='8.5' fill='#4d565b'>z +2.4</text><rect x='186' y='28' width='60' height='10' rx='2' fill='#efece1'/><rect x='186' y='28' width='36' height='10' rx='2' fill='#41699b'/><text x='252' y='38' font-size='8.5' fill='#4d565b'>slope +0.058</text><rect x='330' y='28' width='60' height='10' rx='2' fill='#efece1'/><rect x='330' y='28' width='48' height='10' rx='2' fill='#41699b'/><text x='396' y='38' font-size='8.5' fill='#4d565b'>osc 2.1×</text><line x1='12' y1='50' x2='648' y2='50' stroke='#e2ded0'/><text x='12' y='68' font-size='9' fill='#4d565b'>ACC-047 卡管</text><rect x='110' y='58' width='200' height='12' rx='2' fill='#2f7d6b'/><text x='318' y='68' font-size='8.5' fill='#2f7d6b'>86%</text><text x='12' y='86' font-size='9' fill='#4d565b'>ACC-021 遇阻</text><rect x='110' y='76' width='118' height='12' rx='2' fill='#b9c6cf'/><text x='236' y='86' font-size='8.5' fill='#4d565b'>51%</text><text x='12' y='104' font-size='9' fill='#4d565b'>ACC-063 坐封失封</text><rect x='110' y='94' width='42' height='12' rx='2' fill='#e9e4d8'/><text x='160' y='104' font-size='8.5' fill='#79828a'>18%</text><rect x='380' y='56' width='268' height='50' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='392' y='72' font-size='9' fill='#242b2e'>命中 = exp(−‖形态差‖²/2)</text><text x='392' y='88' font-size='8.5' fill='#4d565b'>事故失败案例也要入库，否则推荐只会越来越保守</text><text x='392' y='102' font-size='8.5' fill='#c9613f'>交叉：不同工序的事故不参与投票</text></svg>"
+    },
+    {
+     "name": "工况推荐与确认回填",
+     "role": "人工",
+     "do": "输出风险等级、事故类别、三条证据与推荐工况；班长确认或推翻，并把结论与最终结果回填图谱。",
+     "effect": "影子期一个月后误报率从 21% 降到 8.4%，Top-3 命中率升到 74%。",
+     "trap": "只显示等级不给证据，班长不会信；不回填则会一直停在首版水平。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='推荐确认与回填闭环'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='26' width='96' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='60' y='47' font-size='9' fill='#fff' text-anchor='middle'>异常越过阈值</text><path d='M108 43 L138 43' stroke='#242b2e'/><rect x='138' y='26' width='96' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='186' y='47' font-size='9' fill='#fff' text-anchor='middle'>输出证据卡</text><path d='M234 43 L264 43' stroke='#242b2e'/><rect x='264' y='26' width='96' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='312' y='47' font-size='9' fill='#242b2e' text-anchor='middle'>班长确认 / 推翻</text><path d='M360 43 L390 43' stroke='#242b2e'/><rect x='390' y='26' width='96' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='438' y='47' font-size='9' fill='#fff' text-anchor='middle'>回填图谱</text><path d='M486 43 C 560 43, 570 74, 520 82 C 470 90, 120 92, 60 70' fill='none' stroke='#79828a' stroke-dasharray='4 3'/><text x='250' y='96' font-size='9' fill='#79828a'>闭环：每一次确认/推翻都会改变下一次检索的证据权重</text><rect x='496' y='26' width='152' height='34' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='572' y='42' font-size='9' fill='#4d565b' text-anchor='middle'>证据卡内容</text><text x='572' y='55' font-size='8.5' fill='#79828a' text-anchor='middle'>等级 / 类别 / Top-3 / 工况</text><line x1='12' y1='104' x2='470' y2='104' stroke='#e2ded0'/><text x='12' y='116' font-size='9' fill='#4d565b'>影子期：误报率 21% → <tspan font-weight='600' fill='#2f7d6b'>8.4%</tspan>　Top-3 命中率 61% → <tspan font-weight='600' fill='#2f7d6b'>74%</tspan></text></svg>"
+    },
+    {
+     "name": "摩阻扭矩正反演",
+     "role": "算法",
+     "do": "用软杆模型算沿井深载荷，再用实测下入载荷反演摩擦系数。",
+     "effect": "把「经验摩阻」变成标定过的参数。",
+     "trap": "反演出的摩擦系数只对同类井眼有效，换区块要重新标定。"
+    }
+   ],
+   "metrics": {
+    "title": "怎么算「做对了」",
+    "html": "<p><b>预警提前量</b>：报警时刻到「工单记录的事故起时刻」的时间差，按工序分别统计中位数——这是唯一直接对应现场价值的一条。</p><p><b>Top-1 / Top-3 命中率</b>：图谱给出的第一 / 前三候选里是否包含现场最终认定的事故类别。评测用留出的 20% 事故，不能拿参与过构建的事故自测。</p><p><b>每天告警次数</b>：不是准确率指标，而是可用性开关。超过 5 次/班组·天，现场就会主动放弃使用，此时任何准确率都失去意义。</p><p><b>采纳率</b>：现场按推荐工况执行的比例，一个月后低于 30% 说明输出形式不对（多半是只给了等级、没给证据）。</p>"
+   },
+   "fails": [
+    {
+     "name": "按事故数量训练分类器",
+     "why": "几千段正常窗口对几十段事故，模型学到「永远预测正常」也能拿 99% 准确率。必须用正常样本定义边界。"
+    },
+    {
+     "name": "全井一条基线",
+     "why": "循环与下入的载荷根本不在同一量级，水平井与直井更是两套东西，不分层建模等于完全不成立。"
+    },
+    {
+     "name": "只收集成功处置案例",
+     "why": "图谱里没有失败教训，检索出的推荐永远是「继续加点/再等等」这类保守动作，遇到硬卡反而不敢给硬建议。"
+    },
+    {
+     "name": "上线就实时推送",
+     "why": "首版误报率通常超过 20%，直接推送会在第一周耗尽现场信任。必须先跑一个月影子模式。"
+    }
+   ]
+  },
+  "demo": {
+   "mode": "auto",
+   "html": "demo/index.html",
+   "js": "demo/demo.js",
+   "label": "可运行示范",
+   "intro": "选择工序并拖动摩阻系数、狗腿度与操作激进程度，合成一条工序曲线：看 ±2σ 正常带被突破后，异常分在事故正式成形前多久越过阈值、图谱把它判成哪类历史事故，以及系统最终给出什么工况建议。",
+   "height": 1120
+  }
+ }
+}

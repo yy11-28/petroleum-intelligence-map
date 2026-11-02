@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：储层压裂增产智能方案设计</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>压裂方案寻优 · 簇间距 / 排量 / 加砂程序</h1>
+  <p class="lead">水平段 1200 m、20 段压裂。簇间距决定簇数与簇间竞争，排量决定缝高与施工压力，加砂程序决定导流能力——
+  三者互相牵制。这里把<b>施工压力、缝高、携砂窗口</b>当作硬约束先做剪枝，再在剩余的合法组合里给出「EUR — 成本」前沿。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>裂缝数值模拟</li><li>代理模型</li><li>多目标优化</li></ul></div><div><b>为什么起作用</b><ul><li>裂缝形态由排量、加砂强度、前置液比例共同决定，经验配比无法量化</li><li>代理模型把模拟结果变成可搜索的响应面，成本约束下才谈得上寻优</li></ul></div><div><b>在示范里怎么看</b><ul><li>调簇间距与排量，看裂缝形态与产能—成本前沿移动</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>簇间距 <output id="out-sp">12 m</output></label>
+    <input type="range" id="sp" min="4" max="30" step="1" value="12">
+  </div>
+  <div class="ctl">
+    <label>施工排量 <output id="out-q">14.0 m³/min</output></label>
+    <input type="range" id="q" min="6" max="20" step="0.5" value="14">
+  </div>
+  <div class="ctl">
+    <label>单段加砂强度 <output id="out-m">60 t</output></label>
+    <input type="range" id="m" min="20" max="140" step="5" value="60">
+  </div>
+  <div class="ctl">
+    <label>前置液比例 <output id="out-pad">50 %</output></label>
+    <input type="range" id="pad" min="20" max="60" step="2" value="50">
+  </div>
+  <div class="ctl">
+    <label>单井成本上限 <output id="out-bg">700 万元</output></label>
+    <input type="range" id="bg" min="400" max="1200" step="20" value="700">
+  </div>
+  <div class="btnrow" id="moderow"></div>
+
+  <svg id="geo" viewBox="0 0 720 250" role="img" aria-label="单段裂缝形态与层位关系"></svg>
+
+  <svg id="sch" viewBox="0 0 720 200" role="img" aria-label="泵注程序：砂比与施工压力随时间的变化"></svg>
+
+  <svg id="pf" viewBox="0 0 720 230" role="img" aria-label="候选方案的单井成本与 EUR 关系"></svg>
+
+  <div class="legend">
+    <span><i style="background:#b9c6cf"></i>可行组合</span>
+    <span><i style="background:#41699b"></i>帕累托前沿</span>
+    <span><i style="background:#242b2e"></i>当前方案</span>
+    <span><i style="background:#2f7d6b"></i>预算内最优</span>
+    <span><i style="background:#c9613f"></i>违反约束</span>
+  </div>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">EUR 相对指数</span><b id="ro-eur">—</b></div>
+    <div class="ro"><span class="k">单井成本</span><b id="ro-cost">—</b></div>
+    <div class="ro"><span class="k">硬约束校核</span><b id="ro-chk">—</b></div>
+    <div class="ro"><span class="k">预算内最优</span><b id="ro-best">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

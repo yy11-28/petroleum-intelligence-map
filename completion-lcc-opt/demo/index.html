@@ -1,0 +1,41 @@
+<!-- 整页示范：完井全生命周期成本测算（运行在沙箱 iframe 里） -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：完井全生命周期成本测算与方案经济性优选</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>完井全生命周期成本测算</h1>
+  <p class="lead">同一口井三套方案：<b>A 射孔完井</b>（初始 580 万，便宜但无防砂）、<b>B 筛管完井</b>（920 万，产能最好但独立筛管防细粉砂不可靠）、<b>C 砾石充填</b>（1,240 万，防砂最可靠、产能略降）。
+  账不止初始投资：月度现金流按「产量 × 油价 − 操作成本 − 期望修井费」逐月累计并按月折现，
+  期望修井次数 = 出砂倾向 ×（1 − 方案防砂能力），每次修井另计 3 个月停产损失。
+  拉动滑杆，看方案排名什么时候翻转——「初始最便宜」和「全生命周期最省」往往不是同一个方案。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>现金流建模（折现到同一时点）</li><li>多目标比选</li><li>敏感性分析</li></ul></div><div><b>为什么起作用</b><ul><li>完井成本在前期、收益在后期，不折现的对比会系统性偏向低投入方案</li><li>油价与递减率不确定，敏感性给出「结论何时翻转」的边界</li></ul></div><div><b>在示范里怎么看</b><ul><li>调油价与折现率，看三套方案累计现金流的交叉点移动</li></ul></div></div></div>
+
+  <div class="ctl"><label>油价 <output id="out-oil">65 美元/桶</output></label><input type="range" id="oil" min="40" max="100" step="1" value="65"></div>
+  <div class="ctl"><label>评价年限 <output id="out-yr">5 年</output></label><input type="range" id="yr" min="3" max="10" step="1" value="5"></div>
+  <div class="ctl"><label>年递减率 <output id="out-dec">20%</output></label><input type="range" id="dec" min="8" max="35" step="1" value="20"></div>
+  <div class="ctl"><label>出砂倾向 <output id="out-sand">0.45</output></label><input type="range" id="sand" min="0" max="1" step="0.02" value="0.45"></div>
+  <div class="ctl"><label>折现率（年） <output id="out-disc">8%</output></label><input type="range" id="disc" min="0" max="12" step="0.5" value="8"></div>
+
+  <svg id="cum" viewBox="0 0 720 215" role="img" aria-label="三方案累计净现金流对比与回收期"></svg>
+  <svg id="cost" viewBox="0 0 720 200" role="img" aria-label="三方案全生命周期成本构成"></svg>
+  <svg id="sens" viewBox="0 0 720 205" role="img" aria-label="NPV 对油价的敏感性与方案交叉点"></svg>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">推荐方案</span><b id="ro-best">—</b></div>
+    <div class="ro"><span class="k">NPV（推荐）</span><b id="ro-npv">—</b></div>
+    <div class="ro"><span class="k">较基线 A</span><b id="ro-gain">—</b></div>
+    <div class="ro"><span class="k">期望修井（推荐）</span><b id="ro-work">—</b></div>
+  </div>
+
+  <table class="tbl" id="tbl"></table>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

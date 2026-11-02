@@ -1,0 +1,122 @@
+{
+  "id": "completion-startup-opt",
+  "sceneId": "co14",
+  "methods": ["opt"],
+  "title": "完井投产制度智能优化",
+  "version": "1.0.0",
+  "updated": "2026-10-25",
+
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "完井投产不是「打开生产阀就完事」。生产压差提得快，短期产量好看，却容易把地层砂带出来、或者让底水提前窜上来；提得慢，产能迟迟放不出来。每个台阶保持多久、每次抬多少，过去写在作业指导书里，靠现场一次一次试——而试错成本就是产量本身。",
+      "judge": [
+        { "label": "数据形态", "value": "少量时序 + 模拟器", "desc": "现场试验不可重来，样本靠数值模拟补" },
+        { "label": "标注成本", "value": "中", "desc": "出砂与见水要靠化验和计量确认" },
+        { "label": "可见收益", "value": "快", "desc": "直接换算成这 90 天多产了多少" },
+        { "label": "难度", "value": "高", "desc": "出砂代价没有客观单位，奖励难写" }
+      ],
+      "sections": [
+        {
+          "no": 1,
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p><b>现在的做法</b>：作业指导书写一套压差序列（例如每三天提 0.5 MPa），现场照做；遇到含砂或含水异常就把阀门关小一点。<b>三个问题</b>：<b>① 不可回头</b>——出砂一旦发生，地层伤害已经造成，降压只能止损；<b>② 判据靠手感</b>——「含砂有点高」不是定量判据；<b>③ 两个时间尺度的目标打架</b>——短期产量是每天的考核指标，稳产期长短却要在半年后才知道，没人能在现场同时权衡。</p><div class='viz'><svg viewBox='0 0 700 240' role='img' aria-label='三种投产方式的压差轨道与后果'><rect x='0' y='0' width='700' height='240' fill='#fbfaf6'/><text x='16' y='17' font-size='11' fill='#242b2e'>同样 90 天，三种提法；差别不在某一天产量，而在累计与后果</text><line x1='60' y1='150' x2='470' y2='150' stroke='#242b2e'/><line x1='60' y1='40' x2='60' y2='150' stroke='#242b2e'/><text x='54' y='46' font-size='8.5' fill='#79828a' text-anchor='end'>压差</text><path d='M60 148 L120 100 L180 92 L240 88 L300 86 L360 84 L420 84 L460 84' fill='none' stroke='#c9613f' stroke-width='2'/><text x='384' y='76' font-size='9' fill='#c9613f'>一步提到位</text><path d='M60 148 L120 138 L180 128 L240 118 L300 108 L360 98 L420 90 L460 86' fill='none' stroke='#41699b' stroke-width='2'/><text x='300' y='120' font-size='9' fill='#41699b'>慢慢提（现行做法）</text><path d='M60 148 L120 118 L180 96 L240 92 L300 96 L360 112 L420 120 L460 124' fill='none' stroke='#2f7d6b' stroke-width='2.2'/><text x='240' y='86' font-size='9' fill='#2f7d6b'>优化制度（先放后收）</text><text x='60' y='166' font-size='8.5' fill='#79828a'>0 d</text><text x='460' y='166' font-size='8.5' fill='#79828a'>90 d</text><rect x='490' y='36' width='196' height='94' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='502' y='54' font-size='9.5' fill='#242b2e'>三种做法的结果（本例）</text><text x='502' y='72' font-size='8.5' fill='#c9613f'>一步提到位：油 2062 m³，出砂高</text><text x='502' y='88' font-size='8.5' fill='#41699b'>慢慢提：油 1381 m³，出砂为零</text><text x='502' y='104' font-size='8.5' fill='#2f7d6b'>优化：油 1924 m³，出砂几乎为零</text><text x='502' y='120' font-size='8.5' fill='#4d565b'>净收益排序：优化 &gt; 慢提 &gt; 一步到位</text><rect x='16' y='180' width='668' height='48' rx='5' fill='#c9613f' opacity='0.08'/><text x='28' y='198' font-size='9.5' fill='#242b2e'>现场真正的难处：这三种做法都没有错，错的是「只能选一个然后看结果」——没有地方试。</text><text x='28' y='214' font-size='9' fill='#4d565b'>优化要回答的不是「提多少」，而是「在什么条件下，下一步抬多少、什么时候该回头降一点」。</text><text x='28' y='228' font-size='9' fill='#c9613f'>注意：本项目落成纸面的是一整套压差序列 + 每步依据，仍然由人决定是否执行。</text></svg><span class='viz-cap'>三种投产方式：一步到位冒出砂风险、慢慢提损失产能，优化制度先放后收。</span></div>"
+        },
+        {
+          "no": 2,
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>投产过程天然是一个<b>序贯决策</b>：每天看着产量、含水与含砂决定下一步压差。把它写成强化学习很直接——<b>状态</b>是当前压差、累计采出程度与已积累伤害，<b>动作</b>是压差抬/降几档，<b>回报</b>是当期产油减去出砂与水处理的代价。关键在于：这里的状态转移是<b>确定性</b>的（由产能方程与含水规律给出），所以不需要海量试错，直接做<b>价值迭代</b>就能解出最优策略。</p><p>输出不是一句「建议提 0.5 MPa」，而是<b>一整套分阶段的压差序列 + 每一步的依据 + 对参数变化的敏感性</b>。被替掉的是「照指导书执行、出事再补救」；被保留的是人对安全边界的决定权——出砂代价权重、能不能降、每天最多抬多少，都是人定的约束。</p><div class='viz'><svg viewBox='0 0 700 215' role='img' aria-label='投产过程的强化学习闭环与回报构成'><rect x='0' y='0' width='700' height='215' fill='#fbfaf6'/><text x='16' y='18' font-size='11' fill='#242b2e'>状态 → 动作 → 回报：闭环一圈就是一步投产决策</text><defs><marker id='stA' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='16' y='32' width='120' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='76' y='52' font-size='9.5' fill='#242b2e' text-anchor='middle'>状态 s</text><text x='76' y='68' font-size='8.5' fill='#79828a' text-anchor='middle'>压差 / 累计采出 / 伤害</text><path d='M136 60 L166 60' stroke='#242b2e' marker-end='url(#stA)'/><rect x='166' y='32' width='112' height='56' rx='5' fill='#41699b' opacity='0.9'/><text x='222' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>动作 a</text><text x='222' y='68' font-size='8.5' fill='#fff' text-anchor='middle'>下一步压差 ±档</text><path d='M278 60 L308 60' stroke='#242b2e' marker-end='url(#stA)'/><rect x='308' y='32' width='112' height='56' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='364' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>产能方程</text><text x='364' y='68' font-size='8.5' fill='#cfe4dc' text-anchor='middle'>确定性转移</text><path d='M420 60 L450 60' stroke='#242b2e' marker-end='url(#stA)'/><rect x='450' y='32' width='112' height='56' rx='5' fill='#b26a39' opacity='0.85'/><text x='506' y='52' font-size='9.5' fill='#fff' text-anchor='middle'>回报 r</text><text x='506' y='68' font-size='8.5' fill='#fff' text-anchor='middle'>产油 − 出砂 − 产水</text><path d='M562 60 C 600 60, 610 92, 560 96 C 500 100, 60 100, 76 88' fill='none' stroke='#79828a' stroke-dasharray='4 3'/><text x='250' y='112' font-size='9' fill='#79828a'>闭环：今天的动作决定了明天的状态（累计采出、含水、伤害），所以必须按序列优化而非单步贪心</text><rect x='16' y='126' width='326' height='80' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='144' font-size='9.5' fill='#242b2e'>回报怎么写，决定了答案是什么</text><text x='28' y='162' font-size='9' fill='#4d565b'>r = 当期产油 − λ砂 × 出砂量 − λ水 × 产水量</text><text x='28' y='178' font-size='9' fill='#4d565b'>λ 不是模型学的，是生产与技术部门约定好的换算比例</text><text x='28' y='194' font-size='9' fill='#c9613f'>λ 定得不对，模型会给出「正确但没用」的答案</text><rect x='358' y='126' width='326' height='80' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='370' y='144' font-size='9.5' fill='#242b2e'>为什么不用「现场 ε-greedy 在线试错」那一套</text><text x='370' y='162' font-size='9' fill='#4d565b'>投产不可能让算法在线乱试——试错成本就是产量。</text><text x='370' y='178' font-size='9' fill='#4d565b'>本例用模拟器给的确定性转移做价值迭代，</text><text x='370' y='194' font-size='9' fill='#41699b'>全程离线求解，现场只负责执行与回填。</text><text x='16' y='212' font-size='8.5' fill='#79828a'>尺度提醒：每 5 天决策一次、18 步、13 个压差档，状态空间不到三千，价值迭代秒级出解。</text></svg><span class='viz-cap'>投产的 RL 闭环：状态—动作—确定性转移—回报；奖励里的代价权重由人设定。</span></div>"
+        },
+        {
+          "no": 3,
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p><b>① 产能与完井参数</b>：储层物性、完井方式、井筒管柱、流体性质——产能方程的骨架。<b>② 历史投产记录</b>：阀位/压差时间序列与对应的产量、含水、含砂，这是唯一真实的样本。<b>③ 出砂与水窜监测</b>：含砂率化验、产液剖面、见水时间标记，用来把「出砂了」变成可计算量。<b>④ 数值模拟样本</b>：不同投产制度下的产量与出砂响应，用来补出历史没试过的那些方案。</p><p><b>量级</b>：历史投产记录有 30–50 口同区块井就很够用；数值模拟几万组即可铺满状态空间。<b>坑</b>：含砂化验多为不定期抽检，缺值严重；见水时间往往只记「某月见水」，需要反推。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='四类输入数据与各自的难点'><rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/><text x='16' y='18' font-size='11' fill='#242b2e'>四类输入：历史记录定真值，模拟器负责补齐没试过的方案</text><rect x='16' y='30' width='160' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='96' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>产能与完井参数</text><text x='28' y='68' font-size='9' fill='#4d565b'>物性 · 完井方式</text><text x='28' y='84' font-size='9' fill='#4d565b'>管柱 · 流体性质</text><line x1='28' y1='94' x2='164' y2='94' stroke='#d8d2c4'/><text x='28' y='110' font-size='9' fill='#79828a'>来自设计书，较完整</text><text x='28' y='126' font-size='8.5' fill='#c9613f'>坑：物性常取区块均值</text><rect x='188' y='30' width='160' height='112' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='268' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>历史投产记录</text><text x='200' y='68' font-size='9' fill='#4d565b'>压差 / 阀位时序</text><text x='200' y='84' font-size='9' fill='#4d565b'>产量 · 含水 · 含砂</text><line x1='200' y1='94' x2='336' y2='94' stroke='#d8d2c4'/><text x='200' y='110' font-size='9' fill='#41699b'>唯一的真实样本</text><text x='200' y='126' font-size='8.5' fill='#c9613f'>坑：只记录了「照指导书」那一种</text><rect x='360' y='30' width='160' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='440' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>出砂与水窜监测</text><text x='372' y='68' font-size='9' fill='#4d565b'>含砂率化验</text><text x='372' y='84' font-size='9' fill='#4d565b'>见水时间 / 产液剖面</text><line x1='372' y1='94' x2='508' y2='94' stroke='#d8d2c4'/><text x='372' y='110' font-size='9' fill='#79828a'>把「出砂了」变成可计算量</text><text x='372' y='126' font-size='8.5' fill='#c9613f'>坑：多为不定期抽检</text><rect x='532' y='30' width='152' height='112' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='608' y='48' font-size='10' fill='#242b2e' text-anchor='middle'>数值模拟样本</text><text x='544' y='68' font-size='9' fill='#4d565b'>不同制度的响应</text><text x='544' y='84' font-size='9' fill='#4d565b'>几万组即可</text><line x1='544' y1='94' x2='672' y2='94' stroke='#e2ded0'/><text x='544' y='110' font-size='9' fill='#79828a'>补齐历史没试过的方案</text><text x='544' y='126' font-size='8.5' fill='#c9613f'>坑：误差会被策略放大</text><rect x='16' y='156' width='668' height='34' rx='5' fill='#fbfaf6' stroke='#e2ded0'/><text x='30' y='174' font-size='9.5' fill='#4d565b'>最容易被忽略的一点：历史记录几乎<b>只有一种政策</b>（照指导书执行）——这意味着数据里没有「如果当时提得更快会怎样」的反事实。</text><text x='30' y='186' font-size='9' fill='#79828a'>所以模拟器不是可选项，而是必须项；同时要在上线前做保守安全校核。</text></svg><span class='viz-cap'>四类输入：历史记录给真值，模拟器补齐历史没试过的那些制度。</span></div>"
+        },
+        {
+          "no": 4,
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p><b>难点一：代价没有统一单位。</b>产油是立方米，出砂是千克，产水是立方米但价值完全不同。λ 是「把一次性地层伤害折成多少产量」的换算，它本质上是企业偏好，不是物理量；λ 定得不同，最优策略会明显不同。</p><p><b>难点二：模拟器的误差会被策略放大。</b>策略会主动走到模拟器最不确定的边界（贴近出砂临界），而那里恰恰是误差最大的地方。所以上线前必须留出安全裕度。<b>难点三：出砂是一次性事件。</b>一旦出砂，这口井的轨迹就终止了，历史数据里几乎没有「出砂之后继续生产」的样本。</p><p><b>参考顺序</b>：① 先用模拟器跑网格（几千组），确认模型行为与现场认识一致；② 与生产部门一起定 λ（这一步是开会不是调参）；③ 离线求解 + 安全动作约束；④ 首 3 口井按推荐执行并回填，再放开更多井。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='三个难点：代价单位、模拟器误差、一次性事件'><rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/><text x='16' y='17' font-size='11' fill='#242b2e'>三个难点：单位不对等、误差被放大、终止事件</text><rect x='16' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10' fill='#242b2e'>① 代价单位不对等</text><text x='28' y='64' font-size='9' fill='#79828a'>同一个 λ，不同答案</text><text x='34' y='84' font-size='8.5' fill='#4d565b'>λ砂 = 0.2</text><rect x='100' y='76' width='140' height='10' rx='2' fill='#efece1'/><rect x='100' y='76' width='112' height='10' rx='2' fill='#c9613f'/><text x='34' y='104' font-size='8.5' fill='#4d565b'>λ砂 = 0.5</text><rect x='100' y='96' width='140' height='10' rx='2' fill='#efece1'/><rect x='100' y='96' width='62' height='10' rx='2' fill='#41699b'/><text x='34' y='124' font-size='8.5' fill='#4d565b'>λ砂 = 0.9</text><rect x='100' y='116' width='140' height='10' rx='2' fill='#efece1'/><rect x='100' y='116' width='26' height='10' rx='2' fill='#2f7d6b'/><text x='28' y='146' font-size='9' fill='#c9613f'>横条＝策略敢提的压差幅度</text><text x='28' y='164' font-size='9' fill='#4d565b'>λ 是偏好不是物理量，必须由生产</text><text x='28' y='178' font-size='9' fill='#4d565b'>与技术部门共同敲定。</text><text x='28' y='192' font-size='8.5' fill='#79828a'>示范里拖动「出砂代价权重」可看到策略变化</text><rect x='244' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='46' font-size='10' fill='#242b2e'>② 误差被策略放大</text><line x1='262' y1='140' x2='438' y2='140' stroke='#242b2e'/><line x1='262' y1='60' x2='262' y2='140' stroke='#242b2e'/><path d='M266 138 C 300 110, 340 100, 382 92' fill='none' stroke='#41699b' stroke-width='1.6'/><rect x='330' y='84' width='114' height='30' fill='#c9613f' opacity='0.15'/><text x='336' y='96' font-size='8.5' fill='#c9613f'>策略爱往这里走</text><text x='336' y='108' font-size='8.5' fill='#c9613f'>（误差也最大）</text><text x='256' y='164' font-size='9' fill='#4d565b'>策略会贴着出砂临界走——那正好是</text><text x='256' y='178' font-size='9' fill='#4d565b'>模拟器最不准的地方，要留安全裕度。</text><rect x='472' y='28' width='212' height='172' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='46' font-size='10' fill='#242b2e'>③ 出砂是一次性事件</text><line x1='490' y1='130' x2='666' y2='130' stroke='#242b2e'/><line x1='490' y1='60' x2='490' y2='130' stroke='#242b2e'/><path d='M494 128 C 530 100, 560 92, 592 88' fill='none' stroke='#41699b' stroke-width='1.8'/><circle cx='592' cy='88' r='4' fill='#c9613f'/><path d='M596 88 L666 88' stroke='#c9613f' stroke-dasharray='4 3'/><text x='606' y='82' font-size='8.5' fill='#c9613f'>轨迹终止</text><text x='484' y='156' font-size='9' fill='#4d565b'>历史里几乎没有「出砂之后继续生产」</text><text x='484' y='170' font-size='9' fill='#4d565b'>的样本，所以必须靠模拟，不能靠数据。</text><text x='484' y='188' font-size='8.5' fill='#79828a'>同理见水：一旦水窜，后续策略空间骤减</text></svg><span class='viz-cap'>难点：代价无统一单位、模拟器误差被策略放大、出砂是一次性终止事件。</span></div>"
+        }
+      ]
+    },
+
+    "workflow": {
+      "label": "案例流程",
+      "title": "从产能方程到可执行投产制度的流程",
+      "lead": [
+        "这条流程的核心不是「训一个策略」，而是把指导书里那套写死的压差序列，换成一套可以随条件重算的制度。中间要过的关卡是把出砂、见水这些定性判断转成可计算的代价项——模型只能优化人已经量化清楚的东西。",
+        "下面的示范演示第 2 到第 4 步：拖动出砂代价权重、水处理成本、水体能量与岩石强度，实时重算价值迭代，看最优压差轨道怎么变、以及与「一步提到位」「慢慢提」相比净收益差多少。"
+      ],
+      "stats": [
+        ["决策粒度", "18 步 × 5 天"],
+        ["代理模型样本", "4.2 万组"],
+        ["净收益提升", "+26%"]
+      ],
+      "steps": [
+        {
+          "name": "投产过程样本生成",
+          "role": "数据",
+          "do": "用数值模拟（或校准后的产能代理模型）批量跑不同投产制度，覆盖历史从未试过的压差组合。",
+          "effect": "得到「任意状态 → 产量、含水、出砂响应」的确定性转移表，作为离线求解的环境。",
+          "trap": "只跑网格而不同时检查极端行为，模型对这个区块的认识容易出现系统性错位。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='批量模拟生成转移样本'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>模拟器一次铺开 4.2 万组，把历史没试过的区域补上</text><rect x='12' y='28' width='150' height='56' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='24' y='46' font-size='9' fill='#4d565b'>压差 × 时间 × 含水</text><text x='24' y='62' font-size='8.5' fill='#79828a'>拉丁超立方采样</text><text x='24' y='76' font-size='8.5' fill='#79828a'>4.2 万组</text><path d='M162 56 L192 56' stroke='#242b2e'/><rect x='192' y='28' width='150' height='56' rx='4' fill='#41699b' opacity='0.9'/><text x='204' y='46' font-size='9' fill='#fff'>产能方程 / 数值模拟</text><text x='204' y='62' font-size='8.5' fill='#fff'>输出 qₒ、qw、含砂</text><text x='204' y='76' font-size='8.5' fill='#fff'>含水率随累计采出上升</text><path d='M342 56 L372 56' stroke='#242b2e'/><rect x='372' y='28' width='150' height='56' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='384' y='46' font-size='9' fill='#fff'>确定性转移表</text><text x='384' y='62' font-size='8.5' fill='#cfe4dc'>可用于离线价值迭代</text><rect x='540' y='28' width='108' height='56' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='552' y='46' font-size='9' fill='#4d565b'>必须做的一件事：</text><text x='552' y='62' font-size='8.5' fill='#79828a'>拿着 10 口历史井</text><text x='552' y='76' font-size='8.5' fill='#c9613f'>回测校准后再用</text></svg>"
+        },
+        {
+          "name": "状态动作与奖励定义",
+          "role": "算法",
+          "do": "把投产过程写成 MDP：状态 =（决策步、压差档位、累计采出），动作 = 压差抬降档数，回报 = 产油减去出砂与产水代价。",
+          "effect": "一个可以在几秒内重算的优化问题；任何约束改动只需要改一处。",
+          "trap": "把出砂写进状态却不写进回报，策略会认为出砂免费，最后必然提到出砂为止。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='状态动作奖励定义'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>定义清楚三者，问题就解了一大半</text><rect x='12' y='28' width='150' height='72' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='24' y='46' font-size='9' fill='#242b2e'>状态 s</text><text x='24' y='62' font-size='8.5' fill='#4d565b'>决策步 t</text><text x='24' y='76' font-size='8.5' fill='#4d565b'>压差档位 i</text><text x='24' y='90' font-size='8.5' fill='#4d565b'>累计采出 b</text><rect x='174' y='28' width='150' height='72' rx='4' fill='#41699b' opacity='0.9'/><text x='186' y='46' font-size='9' fill='#fff'>动作 a</text><text x='186' y='62' font-size='8.5' fill='#fff'>−2 … +2 档（±1.4 MPa）</text><text x='186' y='78' font-size='8.5' fill='#fff'>另加工况约束：</text><text x='186' y='92' font-size='8.5' fill='#fff'>每天最多抬 2 档、可降</text><rect x='336' y='28' width='200' height='72' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='348' y='46' font-size='9' fill='#fff'>回报 r</text><text x='348' y='64' font-size='8.5' fill='#cfe4dc'>当期产油</text><text x='348' y='78' font-size='8.5' fill='#cfe4dc'>− λ砂 × 出砂量</text><text x='348' y='92' font-size='8.5' fill='#cfe4dc'>− λ水 × 产水量</text><rect x='548' y='28' width='100' height='72' rx='4' fill='#c9613f' opacity='0.85'/><text x='560' y='46' font-size='9' fill='#fff'>最常见的错误</text><text x='560' y='64' font-size='8.5' fill='#fff'>只把产量写进回报，</text><text x='560' y='78' font-size='8.5' fill='#fff'>出砂必然被提满</text></svg>"
+        },
+        {
+          "name": "离线求解与策略校核",
+          "role": "算法",
+          "do": "因为转移是确定性的，直接做价值迭代求最优策略；再与「一步提到位」「慢慢提」放在一起对比。",
+          "effect": "得到一整套分阶段压差轨道，以及它比基线好在哪个环节（先用产能、后控含水）。",
+          "trap": "上线前不做安全校核：策略会贴着出砂临界走，而模拟器在那里的误差最大。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='价值迭代求解与安全校核'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>价值迭代：从最后一步倒推，每一步取期望收益最大的动作</text><rect x='12' y='30' width='120' height='40' rx='4' fill='#41699b' opacity='0.9'/><text x='72' y='48' font-size='9' fill='#fff' text-anchor='middle'>t = T−1 .. 0</text><text x='24' y='62' font-size='8.5' fill='#fff' text-anchor='middle'>逐个状态倒推</text><path d='M132 50 L160 50' stroke='#242b2e'/><rect x='160' y='30' width='150' height='40' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='172' y='48' font-size='9' fill='#fff'>V(s) = maxₐ [ r + V(s′) ]</text><path d='M310 50 L338 50' stroke='#242b2e'/><rect x='338' y='30' width='150' height='40' rx='4' fill='#b26a39' opacity='0.85'/><text x='350' y='48' font-size='9' fill='#fff'>安全裕度收紧</text><text x='350' y='62' font-size='8.5' fill='#fff'>临界压差下调 8%</text><path d='M488 50 L516 50' stroke='#242b2e'/><rect x='516' y='30' width='132' height='40' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='528' y='48' font-size='9' fill='#4d565b'>可执行压差序列</text><text x='528' y='62' font-size='8.5' fill='#79828a'>每步 ± MPa + 依据</text><line x1='12' y1='84' x2='648' y2='84' stroke='#e2ded0'/><text x='12' y='100' font-size='9' fill='#4d565b'>本例规模：18 步 × 13 档 × 14 箱 ≈ 3.3 千个状态，5 个动作 → 秒级出解，拖滑杆可以实时重算。</text><text x='12' y='114' font-size='8.5' fill='#79828a'>注意：规模并不会一直线性可控——加入邻井干扰或多目标后，需要换成分层策略或近似动态规划。</text></svg>"
+        },
+        {
+          "name": "现场执行与数据采集",
+          "role": "人工",
+          "do": "按推荐制度执行，加密计量产出剖面与含砂，并逐次记录调阀的时间与原因。",
+          "effect": "第一次有了「非指导书政策」的真实数据，可以检验模拟器偏差到底有多大。",
+          "trap": "只记录产量不记录执行偏差——一旦现场没照做，后面就无法判断错的是模型还是操作。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='现场执行与数据采集'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='28' width='120' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='72' y='49' font-size='9' fill='#fff' text-anchor='middle'>推荐制度下发</text><path d='M132 45 L162 45' stroke='#242b2e'/><rect x='162' y='28' width='120' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='222' y='49' font-size='9' fill='#fff' text-anchor='middle'>按步调阀</text><path d='M282 45 L312 45' stroke='#242b2e'/><rect x='312' y='28' width='120' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='372' y='49' font-size='9' fill='#fff' text-anchor='middle'>加密计量含砂</text><path d='M432 45 L462 45' stroke='#242b2e'/><rect x='462' y='28' width='120' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='522' y='49' font-size='9' fill='#242b2e' text-anchor='middle'>记录执行偏差</text><line x1='12' y1='78' x2='648' y2='78' stroke='#e2ded0'/><text x='12' y='96' font-size='9' fill='#4d565b'>关键在于记录「没照做的原因」：地层反馈、设备限制、交接班——这是下一次迭代最值钱的输入。</text><text x='12' y='112' font-size='8.5' fill='#c9613f'>反例：只记产量。一旦现场没按推荐执行，事后无法分辨是模型错了还是操作错了。</text></svg>"
+        },
+        {
+          "name": "偏差归因与策略更新",
+          "role": "人工",
+          "do": "把实际产量、含水、含砂与模拟预测对比，拆分 simulator 误差与操作偏差，更新模型与 λ。",
+          "effect": "3–5 口井之后，模拟偏差从 ±18% 收敛到 ±7%，后续井的推荐可信度明显上升。",
+          "trap": "一次性把偏差全算到模型头上，忽略执行偏差，会导致模型越改越保守。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='偏差归因与策略更新闭环'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='17' font-size='10' fill='#4d565b'>预测 vs 实际：先拆误差归属，再决定改模型还是改 λ</text><line x1='60' y1='96' x2='330' y2='96' stroke='#242b2e'/><line x1='60' y1='30' x2='60' y2='96' stroke='#242b2e'/><polyline points='66,92 110,78 154,68 198,60 242,54 286,50 324,48' fill='none' stroke='#41699b' stroke-width='1.6'/><text x='180' y='46' font-size='8.5' fill='#41699b'>模拟预测</text><polyline points='66,92 110,86 154,80 198,76 242,72 286,70 324,68' fill='none' stroke='#2f7d6b' stroke-width='2'/><text x='240' y='66' font-size='8.5' fill='#2f7d6b'>实际执行</text><text x='60' y='112' font-size='8.5' fill='#79828a'>前 3 口井偏差 ±18% → <tspan fill='#2f7d6b'>第 5 口井 ±7%</tspan></text><rect x='350' y='28' width='298' height='82' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='362' y='46' font-size='9' fill='#242b2e'>误差归属三选一</text><text x='362' y='64' font-size='8.5' fill='#4d565b'>① 模拟器参数错（物性、相对渗透率）</text><text x='362' y='80' font-size='8.5' fill='#4d565b'>② 执行偏差（现场没按制度调阀）</text><text x='362' y='96' font-size='8.5' fill='#4d565b'>③ λ 定得不合适（代价偏好变了）</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算「做对了」",
+        "html": "<p><b>90 天净收益</b>：累计产油按油价折算，减去出砂处置与产水处理成本。这是唯一把「多产」和「不惹事」放在同一个口径里比较的指标。</p><p><b>出砂事件率</b>：投产期出现含砂超标的井占比。模型要看的是它有没有比历史基线下降，而不是有没有归零。</p><p><b>无水期长度</b>：从投产到含水超过阈值的天数。它是「长期 vs 短期」取舍里唯一能被快速验证的一项。</p><p><b>策略采纳率</b>：现场按推荐序列执行的步数占比。低于 70% 通常说明制度的粒度不符合现场习惯（建议写成每几天一次，而不是每天一次）。</p>"
+      },
+      "fails": [
+        { "name": "回报里只写产量", "why": "出砂与产水不扣成本，最优策略必然是把压差提到出砂为止，模型越优现场越危险。" },
+        { "name": "把模拟器当真值直接上线", "why": "策略会主动走到模拟器误差最大的边界（贴近出砂临界），没有安全裕度就会在实井上翻车。" },
+        { "name": "忽略现场工况约束", "why": "给出「今天提 2 MPa、明天降 1 MPa」这种制度，现场阀门与流程不允许，结果是一张没人执行的纸。" },
+        { "name": "只记录产量不记录执行偏差", "why": "事后无法分辨模型错还是操作错，模型会被按错误归因越改越保守。" }
+      ]
+    },
+
+    "demo": {
+      "mode": "auto",
+      "html": "demo/index.html",
+      "js": "demo/demo.js",
+      "label": "可运行示范",
+      "intro": "拖动出砂代价权重、水处理成本、水体能量与岩石强度：实时重跑价值迭代，看最优压差轨道怎么变，并与「一步提到位」「慢慢提」对比 90 天的产油、产水、出砂与净收益。",
+      "height": 1220
+    }
+  }
+}

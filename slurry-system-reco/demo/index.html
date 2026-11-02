@@ -1,0 +1,131 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>水泥浆体系智能推荐 · 可运行示范</title><style>
+.panel{padding:0;font:14px/1.7 system-ui,"Microsoft YaHei",sans-serif;color:#242b2e}
+h1{font-size:19px;margin:0 0 6px}.lead{margin:0;color:#5a6469;font-size:13px}
+.ctl{display:flex;gap:26px;margin:14px 0 0;flex-wrap:wrap;align-items:flex-end}
+.ctl label{flex:1;min-width:220px;display:block}
+.ctl span{display:flex;justify-content:space-between;font-size:12.5px}
+.ctl input{width:100%}.ctl i{font-style:normal;font-size:11px;color:#8a9296}
+.grid{display:flex;gap:14px;margin:14px 0 0;flex-wrap:wrap}
+.fig{flex:1.3;min-width:340px;background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:8px 6px 2px}
+.fig h3{font-size:13px;margin:2px 8px 0;color:#3d4a48}
+.fig svg{width:100%;display:block}
+.side{flex:1;min-width:260px;background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:10px 14px}
+.side h3{font-size:13px;margin:0 0 8px;color:#3d4a48}
+.par{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px dashed #eee7d8}
+.rec{border:1px solid #d8d2c2;border-radius:8px;padding:7px 11px;margin-top:7px;font-size:12.5px;background:#fbfaf6}
+.rec.main{border-color:#2f7d6b;background:#eef5ef}
+.rec b{font-size:13px}.rec small{display:block;color:#8a9296}
+.btn{border:0;background:#2f7d6b;color:#fff;border-radius:7px;padding:6px 16px;font-size:13px;cursor:pointer;margin-top:8px}
+.note{margin-top:14px;font-size:12.5px;color:#3d4a48;background:#f3efe2;border-radius:8px;padding:9px 14px}
+.tag{display:inline-block;background:#eef5ef;color:#2f7d6b;border-radius:5px;padding:0 7px;font-size:11px;margin-right:6px}
+.bad-t{color:#c1613f;font-weight:700}
+.ok-t{color:#2f7d6b;font-weight:700}
+
+.cmp{margin-top:14px;border:1px solid #e2dccd;border-radius:10px;background:#fffdf8;overflow:hidden}.cmp-h{font-size:12.5px;font-weight:700;color:#3d4a48;padding:8px 14px;background:#f3efe2}.cmp-g{display:flex;gap:0;flex-wrap:wrap}.cmp-c{flex:1;min-width:240px;padding:9px 14px}.cmp-c+.cmp-c{border-left:1px solid #e2dccd}.cmp-c b{display:block;font-size:12px;margin-bottom:5px}.cmp-c.man b{color:#8a6a3a}.cmp-c.ai b{color:#2f7d6b}.cmp-c ul{margin:0;padding-left:16px}.cmp-c li{font-size:12px;line-height:1.7;color:#3d4a48;margin:2px 0}
+.meth{margin:13px 0 0;border:1px solid #e2dccd;border-left:3px solid #2f7d6b;border-radius:9px;background:#f6f4ec}.meth-h{font-size:11.5px;font-weight:700;color:#2f7d6b;letter-spacing:.05em;padding:9px 15px 2px}.meth-g{display:flex;flex-wrap:wrap;padding:0 0 9px}.meth-g>div{flex:1 1 200px;min-width:185px;padding:3px 15px}.meth-g>div+div{border-left:1px dashed #e2dccd}.meth-g b{display:block;font-size:11px;color:#8a6a3a;margin:3px 0 2px}.meth-g ul{margin:0;padding-left:14px}.meth-g li{font-size:11.6px;line-height:1.62;color:#3d4a48;margin:1px 0}</style></head><body><div class="panel blk-card">
+<h1>水泥浆体系智能推荐</h1>
+<p class="lead">稠化曲线的 S 型拐点决定「可泵时间」：泵送阶段稠度必须低于 30 Bc，到位后要尽快起强度。缓凝剂加量与循环温度共同控制这条曲线——温度每升高，稠化时间明显缩短。拖动参数看曲线怎么变形，再点「按井况智能推荐」对比模型给的主选配方。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>配方寻优</li><li>稠化时间预测</li><li>相容性硬约束</li></ul></div><div><b>为什么起作用</b><ul><li>稠化时间要匹配泵注与候凝窗口：早了蹩泵、晚了窜流</li><li>与前置液、地层水相容是硬约束，先筛后优</li></ul></div><div><b>在示范里怎么看</b><ul><li>成本权重拉满，看安全分下降、推荐配方切换</li></ul></div></div></div>
+<div class="ctl">
+  <label><span>缓凝剂加量 <b id="vR">0.8</b> %</span><input type="range" id="sR" min="0.2" max="2.4" step="0.1" value="0.8"><i>越多稠化越慢（强度也起越慢）</i></label>
+  <label><span>循环温度 <b id="vC">90</b> ℃</span><input type="range" id="sC" min="60" max="140" step="5" value="90"><i>温度升高 → 稠化显著加快</i></label>
+  <label><span>泵送需求 <b id="vP">100</b> min</span><input type="range" id="sP" min="60" max="240" step="10" value="100"><i>注浆作业需要的安全可泵时间</i></label>
+</div>
+<div class="grid">
+  <div class="fig"><h3>稠化曲线：稠度（Bc）随试验时间变化</h3><svg id="cv" viewBox="0 0 560 300"></svg></div>
+  <div class="side">
+    <h3>性能预测（带置信区间）与候选配方</h3>
+    <div id="pars"></div>
+    <div id="recs"></div>
+    <button class="btn" id="opt">按井况智能推荐</button>
+  </div>
+</div>
+<div class="readouts" id="ro" style="display:none"></div>
+<div class="cmp"><div class="cmp-h">人工做法 vs 模型做法（同一口井，同一批数据）</div><div class="cmp-g"><div class="cmp-c man"><b>人工做法（现状）</b><ul><li>按经验配方试 3 轮实验</li><li>只盯稠化时间与强度</li><li>换实验室数据就对不上</li></ul></div><div class="cmp-c ai"><b>模型做法（本示范）</b><ul><li>480 组实验建模预测，稠化时间误差 ±16 min</li><li>失水、游离液、沉降稳定性一并入约束并标出余量</li><li>每条记录带温压条件，跨实验室差异纳入建模</li></ul></div></div></div><div class="note" id="note"></div>
+</div><script>
+var RET=0.8, TEMP=90, PUMP=100;
+/* 稠化时间模型：缓凝剂延长、温度缩短 */
+function thickTime(ret,temp){
+  return 40+185*Math.pow(ret,0.75)*Math.pow(90/temp,1.6);
+}
+/* 强度模型：缓凝剂多强度起慢 */
+function strength(ret){return 22-5.2*ret+0.4*ret*ret;}
+/* 稠化曲线：logistic */
+function bc(t,tt){return 100/(1+Math.exp(-(t-tt)/22));}
+function draw(){
+  document.getElementById('vR').textContent=RET.toFixed(1);
+  document.getElementById('vC').textContent=TEMP;
+  document.getElementById('vP').textContent=PUMP;
+  var tt=thickTime(RET,TEMP), strn=strength(RET);
+  var W=560,H=300,L=52,R=520,T=24,B=252;
+  var tMax=300;
+  function X(t){return L+t/tMax*(R-L);}
+  function Y(v){return B-v/100*(B-T);}
+  var s='<rect width="560" height="300" fill="#fffdf8"/>';
+  for(var gt=0;gt<=tMax;gt+=60){s+='<line x1="'+X(gt)+'" y1="'+T+'" x2="'+X(gt)+'" y2="'+B+'" stroke="#eee7d8"/><text x="'+X(gt)+'" y="'+(B+13)+'" font-size="9" fill="#8a9296" text-anchor="middle">'+gt+'</text>';}
+  for(var gv=0;gv<=100;gv+=25){s+='<line x1="'+L+'" y1="'+Y(gv)+'" x2="'+R+'" y2="'+Y(gv)+'" stroke="#eee7d8"/><text x="'+(L-5)+'" y="'+(Y(gv)+3)+'" font-size="9" fill="#8a9296" text-anchor="end">'+gv+'</text>';}
+  /* 可泵区 */
+  s+='<rect x="'+L+'" y="'+Y(30)+'" width="'+(R-L)+'" height="'+(Y(0)-Y(30))+'" fill="#2f7d6b" opacity="0.08"/>';
+  s+='<text x="'+(L+8)+'" y="'+(Y(6))+'" font-size="9.5" fill="#2f7d6b">可泵送区（<30 Bc）</text>';
+  /* 稠化门槛与泵送需求线 */
+  s+='<line x1="'+L+'" y1="'+Y(30)+'" x2="'+R+'" y2="'+Y(30)+'" stroke="#2f7d6b" stroke-dasharray="5 3" stroke-width="1.4"/>';
+  s+='<text x="'+(R-4)+'" y="'+(Y(30)-4)+'" font-size="9.5" fill="#2f7d6b" text-anchor="end">稠化门槛 30 Bc</text>';
+  var pumpOK=tt>PUMP;
+  s+='<line x1="'+X(PUMP)+'" y1="'+T+'" x2="'+X(PUMP)+'" y2="'+B+'" stroke="'+(pumpOK?'#2f7d6b':'#c1613f')+'" stroke-width="1.6" stroke-dasharray="3 3"/>';
+  s+='<text x="'+(X(PUMP)+4)+'" y="'+(T+14)+'" font-size="9.5" fill="'+(pumpOK?'#2f7d6b':'#c1613f')+'">泵送需求 '+PUMP+'min</text>';
+  /* 稠化曲线（置信区间带） */
+  var up='',lo='',mid='';
+  for(var t=0;t<=tMax;t+=4){
+    var v=bc(t,tt);
+    mid+=(mid?' L':'M')+X(t)+' '+Y(v);
+    up+=(up?' L':'M')+X(t)+' '+Y(Math.min(100,v*1.12));
+    lo+=(lo?' L':'M')+X(t)+' '+Y(Math.max(0,v*0.88));
+  }
+  s+='<path d="'+up+' L'+X(tMax)+' '+Y(bc(tMax,tt)*0.88)+' '+lo.split('L').reverse().join('L')+'" fill="#3a5f8c" opacity="0.10"/>';
+  s+='<path d="'+mid+'" fill="none" stroke="#3a5f8c" stroke-width="2.2"/>';
+  /* 稠化时间点 */
+  s+='<circle cx="'+X(tt)+'" cy="'+Y(30)+'" r="5" fill="'+(pumpOK?'#2f7d6b':'#c1613f')+'"/>';
+  s+='<text x="'+X(tt)+'" y="'+(Y(30)+18)+'" font-size="10.5" font-weight="700" fill="'+(pumpOK?'#2f7d6b':'#c1613f')+'" text-anchor="middle">稠化时间 '+tt.toFixed(0)+' min</text>';
+  s+='<text x="'+((L+R)/2)+'" y="'+(H-6)+'" font-size="9" fill="#8a9296" text-anchor="middle">试验时间 (min) →　稠度 (Bc) ↑</text>';
+  document.getElementById('cv').innerHTML=s;
+  /* ---- 面板 ---- */
+  var pars='';
+  pars+='<div class="par"><span>稠化时间</span><b class="'+(pumpOK?'ok-t':'bad-t')+'">'+tt.toFixed(0)+' ± '+(tt*0.12).toFixed(0)+' min</b></div>';
+  pars+='<div class="par"><span>24h 抗压强度</span><b class="'+(strn>=14?'ok-t':'bad-t')+'">'+strn.toFixed(1)+' ± 1.8 MPa</b></div>';
+  pars+='<div class="par"><span>API 失水</span><b>'+(42+RET*8).toFixed(0)+' ± 10 mL</b></div>';
+  pars+='<div class="par"><span>泵送安全余量</span><b class="'+(pumpOK?'ok-t':'bad-t')+'">'+(tt-PUMP>=0?'+':'')+(tt-PUMP).toFixed(0)+' min</b></div>';
+  document.getElementById('pars').innerHTML=pars;
+  /* 候选配方（模型寻优结果）：主选取「满足泵送+20min 余量」的最低加量；
+     若当前配方已在窗口内且强度合格，主选就是当前配方（不乱推） */
+  var curOK=pumpOK&&strn>=13;
+  var recR1;
+  if(curOK)recR1=RET;
+  else{
+    var need=(PUMP+20-40)/(185*Math.pow(90/TEMP,1.6));
+    recR1=need<=0?0.2:Math.min(2.4,Math.pow(need,1/0.75));
+  }
+  var recR2=Math.min(2.4,recR1*1.12);
+  function recHtml(name,ret,main){
+    var t2=thickTime(ret,TEMP), s2=strength(ret);
+    var ok=t2>PUMP+15&&s2>=13;
+    return '<div class="rec'+(main?' main':'')+'"><b>'+name+'</b>（缓凝 '+ret.toFixed(1)+'%）<small>稠化 '+t2.toFixed(0)+' min（±12%）｜ 强度 '+s2.toFixed(1)+' MPa｜ 失水 '+(42+ret*8).toFixed(0)+' mL｜ '+(ok?'<span class="ok-t">窗口内 ✓</span>':'<span class="bad-t">窗口外</span>')+'</small></div>';
+  }
+  document.getElementById('recs').innerHTML=recHtml(curOK?'主选（当前配方已达标）':'主选（窗口内寻优）',recR1,true)+recHtml('备选（多一档缓凝）',recR2,false);
+  /* 结论 */
+  var lean='';
+  if(!pumpOK)lean='当前配方稠化时间 <b>'+tt.toFixed(0)+' min</b> 短于泵送需求 <b>'+PUMP+' min</b>——现场只能靠加缓凝剂再试（试配 3—5 轮），模型直接给出主选缓凝 '+recR1.toFixed(1)+'%，一步到窗口内。';
+  else if(strn<13)lean='稠化时间足够，但缓凝剂加到 '+RET.toFixed(1)+'% 后强度起不来——两个目标打架，多目标寻优会取窗口内最低加量。';
+  else lean='当前配方已在窗口内（稠化 '+tt.toFixed(0)+' min，余量 +'+(tt-PUMP).toFixed(0)+' min，强度 '+strn.toFixed(1)+' MPa 合格）——模型确认可用，不再额外改动。';
+  document.getElementById('note').innerHTML='<span class="tag">推荐逻辑</span>'+lean;
+}
+document.getElementById('sR').oninput=function(){RET=+this.value;draw();};
+document.getElementById('sC').oninput=function(){TEMP=+this.value;draw();};
+document.getElementById('sP').oninput=function(){PUMP=+this.value;draw();};
+document.getElementById('opt').onclick=function(){
+  var recR=Math.max(0.2,Math.min(2.4,Math.pow((PUMP-40)/185,1/0.75)*Math.pow(TEMP/90,1.6/0.75)));
+  RET=Math.round(recR*10)/10;
+  document.getElementById('sR').value=RET;
+  draw();
+};
+draw();
+</script>
+</body></html>

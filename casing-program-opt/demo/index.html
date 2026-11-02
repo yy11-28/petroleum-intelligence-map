@@ -1,0 +1,163 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>套管层次与下深智能优化 · 可运行示范</title><style>
+.panel{padding:0;font:14px/1.7 system-ui,"Microsoft YaHei",sans-serif;color:#242b2e}
+h1{font-size:19px;margin:0 0 6px}.lead{margin:0;color:#5a6469;font-size:13px}
+.tabs{display:flex;gap:8px;margin:12px 0 0;flex-wrap:wrap}
+.tabs button{border:1px solid #d8d2c2;background:#fbfaf6;border-radius:999px;padding:4px 13px;font-size:12.5px;cursor:pointer;color:#5a6469}
+.tabs button.on{background:#2f7d6b;color:#fff;border-color:#2f7d6b;font-weight:700}
+.ctl{display:flex;gap:26px;margin:14px 0 0;flex-wrap:wrap}
+.ctl label{flex:1;min-width:220px;display:block}
+.ctl span{display:flex;justify-content:space-between;font-size:12.5px}
+.ctl input{width:100%}.ctl i{font-style:normal;font-size:11px;color:#8a9296}
+.grid{display:flex;gap:14px;margin:14px 0 0;align-items:stretch;flex-wrap:wrap}
+.fig{flex:1.15;min-width:320px;background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:8px 6px 2px}
+.fig h3{font-size:13px;margin:2px 8px 0;color:#3d4a48}
+.fig svg{width:100%;display:block}
+.side{flex:1;min-width:280px;display:flex;flex-direction:column;gap:10px}
+.card{background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:10px 14px}
+.card h3{font-size:13px;margin:0 0 6px;color:#3d4a48}
+.opt{border:1px solid #e2dccd;border-radius:8px;padding:7px 10px;margin-top:6px;cursor:pointer;font-size:12.5px;background:#fbfaf6}
+.opt.on{border-color:#2f7d6b;background:#eef5ef;box-shadow:inset 0 0 0 1px #2f7d6b}
+.opt b{font-size:13px}.opt .sc{float:right;font-weight:700;color:#2f7d6b}
+.opt small{display:block;color:#8a9296;font-size:11px}
+.note{margin-top:14px;font-size:12.5px;color:#3d4a48;background:#f3efe2;border-radius:8px;padding:9px 14px}
+.tag{display:inline-block;background:#eef5ef;color:#2f7d6b;border-radius:5px;padding:0 7px;font-size:11px;margin-right:6px}
+
+.cmp{margin-top:14px;border:1px solid #e2dccd;border-radius:10px;background:#fffdf8;overflow:hidden}.cmp-h{font-size:12.5px;font-weight:700;color:#3d4a48;padding:8px 14px;background:#f3efe2}.cmp-g{display:flex;gap:0;flex-wrap:wrap}.cmp-c{flex:1;min-width:240px;padding:9px 14px}.cmp-c+.cmp-c{border-left:1px solid #e2dccd}.cmp-c b{display:block;font-size:12px;margin-bottom:5px}.cmp-c.man b{color:#8a6a3a}.cmp-c.ai b{color:#2f7d6b}.cmp-c ul{margin:0;padding-left:16px}.cmp-c li{font-size:12px;line-height:1.7;color:#3d4a48;margin:2px 0}
+.meth{margin:13px 0 0;border:1px solid #e2dccd;border-left:3px solid #2f7d6b;border-radius:9px;background:#f6f4ec}.meth-h{font-size:11.5px;font-weight:700;color:#2f7d6b;letter-spacing:.05em;padding:9px 15px 2px}.meth-g{display:flex;flex-wrap:wrap;padding:0 0 9px}.meth-g>div{flex:1 1 200px;min-width:185px;padding:3px 15px}.meth-g>div+div{border-left:1px dashed #e2dccd}.meth-g b{display:block;font-size:11px;color:#8a6a3a;margin:3px 0 2px}.meth-g ul{margin:0;padding-left:14px}.meth-g li{font-size:11.6px;line-height:1.62;color:#3d4a48;margin:1px 0}</style></head><body><div class="panel blk-card">
+<h1>套管层次与下深智能优化</h1>
+<p class="lead">三压力剖面决定「必封点」（安全窗口闭合处）——模型在满足必封约束的前提下枚举套管程序并按成本与裕度排序。切换地层模式、拖动压力修正与安全偏好，看必封点、井身结构与推荐程序怎么联动。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>必封点规则推理（9 条形式化规则）</li><li>成本—安全—工期的多目标优化</li></ul></div><div><b>为什么起作用</b><ul><li>必封点是规范硬约束，先算可行域再谈优劣，避免用打分掩盖「不该下」的方案</li><li>三个目标量纲不同，前沿能看清「省一分钱要牺牲多少安全裕度」</li></ul></div><div><b>在示范里怎么看</b><ul><li>成本权重拉满，看安全裕度被压到临界时方案会不会翻盘</li></ul></div></div></div>
+<div class="tabs" id="tabs">
+  <button class="on" data-t="normal">常规压力体系</button>
+  <button data-t="hp">深部异常高压</button>
+  <button data-t="leak">上部易漏失</button>
+</div>
+<div class="ctl">
+  <label><span>压力剖面修正 <b id="vD">+0.00</b> g/cm³</span><input type="range" id="sD" min="-0.05" max="0.12" step="0.01" value="0"><i>邻井实测对坍塌压力的修正（异常压力让它升高）</i></label>
+  <label><span>安全裕度偏好 <b id="vM">5</b></span><input type="range" id="sM" min="0" max="10" step="1" value="5"><i>0=激进（省成本）　10=保守（多下一层）</i></label>
+</div>
+<div class="grid">
+  <div class="fig"><h3>三压力剖面与必封点推理（当量密度 g/cm³）</h3><svg id="cv" viewBox="0 0 380 430"></svg></div>
+  <div class="side">
+    <div class="card"><h3>井身结构（按选中程序绘制）</h3><svg id="well" viewBox="0 0 300 260"></svg></div>
+    <div class="card"><h3>候选套管程序（点击切换）</h3><div id="opts"></div></div>
+  </div>
+</div>
+<div class="cmp"><div class="cmp-h">人工做法 vs 模型做法（同一口井，同一批数据）</div><div class="cmp-g"><div class="cmp-c man"><b>人工做法（现状）</b><ul><li>照抄邻井模板，下深按经验微调</li><li>必封点靠读图判断，一天半到三天</li><li>只来得及手算一套程序</li></ul></div><div class="cmp-c ai"><b>模型做法（本示范）</b><ul><li>按 9 条规则推出必封点，每个点可追到触发规则</li><li>剖面扫描分钟级完成，随参数改动实时重算</li><li>一次给出 4—6 套候选，按成本 + 工期 + 裕度排序并给敏感性</li></ul></div></div></div><div class="note" id="note"></div>
+</div><script>
+var MODE='normal', DELTA=0, MARGIN=5, SEL=1;
+var DMAX=3000;
+function pp(d){var x=d/DMAX;return 1.00+0.35*Math.pow(x,1.5);}
+function cb(d){var x=d/DMAX;return pp(d)+0.05+DELTA*1.6+0.19*Math.exp(-Math.pow((d-1350)/300,2))+0.16*Math.exp(-Math.pow((d-2250)/360,2))+(MODE==='leak'?0.05:0);}
+function fr(d){return pp(d)+0.28-0.05*Math.exp(-Math.pow((d-1350)/400,2))-0.05*Math.exp(-Math.pow((d-2250)/420,2))-(MODE==='leak'?0.12*Math.exp(-Math.pow((d-700)/380,2)):0)-(MODE==='hp'?0.05:0);}
+function win(d){return fr(d)-cb(d);}
+/* 找必封点：窗口低于阈值的连续区间中心 */
+function traps(){
+  var t=[],d=100,inSeg=false,s0=0;
+  for(;d<=DMAX;d+=20){
+    var bad=win(d)<0.03;
+    if(bad&&!inSeg){inSeg=true;s0=d;}
+    if(!bad&&inSeg){inSeg=false;t.push((s0+d)/2);}
+  }
+  if(inSeg)t.push((s0+DMAX)/2);
+  return t;
+}
+/* 候选程序：以必封点为界枚举层次组合；激进程序违反必封点会被一票否决 */
+function candidates(tp){
+  var cuts=tp.map(function(t){return t+60});
+  var defs=[
+    {name:'全封（保守）',cuts:cuts.slice()},
+    {name:'合并中部（推荐）',cuts:cuts.length>=2?[cuts[0]]:cuts.slice()},
+    {name:'按经验两层（激进）',cuts:[900]}
+  ];
+  return defs.map(function(o){
+    var layers=o.cuts.map(function(c){return [0,Math.min(c,DMAX-200)]}).concat([[0,DMAX]]);
+    var cost=layers.reduce(function(s,L){return s+L[1]/1000;},0);
+    var m=1e9, md=0;
+    layers.forEach(function(L){for(var d=L[0];d<=L[1];d+=60){if(win(d)<m){m=win(d);md=d;}}});
+    /* 必封覆盖检查：每个必封点必须落在某层下深之下 */
+    var violate=tp.filter(function(t0){return !o.cuts.some(function(c){return c>=t0-60;});}).length;
+    return {name:o.name,layers:layers,cost:cost,margin:m,md:md,violate:violate};
+  });
+}
+function score(o){
+  var cS=Math.max(0,100-o.cost*8), mS=Math.min(100,(o.margin+0.05)*420);
+  var vS=o.violate>0?-60:8;
+  return cS*(1-MARGIN/24)+mS*(0.55+MARGIN/42)+vS;
+}
+function draw(){
+  document.getElementById('vD').textContent=(DELTA>=0?'+':'')+DELTA.toFixed(2);
+  document.getElementById('vM').textContent=MARGIN;
+  /* ---- 剖面图 ---- */
+  var W=380,H=430,L=64,R=356,T=26,B=392;
+  function X(v){return L+(v-0.9)/(2.4-0.9)*(R-L);}
+  function Y(d){return T+(d/DMAX)*(B-T);}
+  var s='<rect width="380" height="430" fill="#fffdf8"/>';
+  for(var gx=0.9;gx<=2.4;gx+=0.3){s+='<line x1="'+X(gx)+'" y1="'+T+'" x2="'+X(gx)+'" y2="'+B+'" stroke="#eee7d8"/><text x="'+X(gx)+'" y="'+(B+14)+'" font-size="9" fill="#8a9296" text-anchor="middle">'+gx.toFixed(1)+'</text>';}
+  for(var gy=0;gy<=DMAX;gy+=1000){s+='<line x1="'+L+'" y1="'+Y(gy)+'" x2="'+R+'" y2="'+Y(gy)+'" stroke="#eee7d8" stroke-dasharray="3 3"/><text x="'+(L-6)+'" y="'+(Y(gy)+3)+'" font-size="9" fill="#8a9296" text-anchor="end">'+gy+'</text>';}
+  var wPath='';
+  for(var d=0;d<=DMAX;d+=30){wPath+=(wPath?' L':'M')+X(fr(d))+' '+Y(d);}
+  for(d=DMAX;d>=0;d-=30){wPath+=' L'+X(cb(d))+' '+Y(d);}
+  s+='<path d="'+wPath+' Z" fill="#2f7d6b" opacity="0.10"/>';
+  [[fr,'#3a5f8c','破裂压力'],[cb,'#c1613f','坍塌压力'],[pp,'#2f7d6b','孔隙压力']].forEach(function(c){
+    var p='';for(var d=0;d<=DMAX;d+=30){p+=(p?' L':'M')+X(c[0](d))+' '+Y(d);}
+    s+='<path d="'+p+'" fill="none" stroke="'+c[1]+'" stroke-width="1.8"/>';
+  });
+  s+='<text x="'+(R-4)+'" y="'+(T+10)+'" font-size="9.5" fill="#3a5f8c" text-anchor="end">破裂压力</text>';
+  s+='<text x="'+(R-4)+'" y="'+(T+22)+'" font-size="9.5" fill="#c1613f" text-anchor="end">坍塌压力</text>';
+  s+='<text x="'+(R-4)+'" y="'+(T+34)+'" font-size="9.5" fill="#2f7d6b" text-anchor="end">孔隙压力</text>';
+  var tp=traps();
+  tp.forEach(function(t0,i){
+    s+='<line x1="'+L+'" y1="'+Y(t0)+'" x2="'+R+'" y2="'+Y(t0)+'" stroke="#c1613f" stroke-dasharray="5 3" stroke-width="1.4"/>';
+    s+='<text x="'+(L+4)+'" y="'+(Y(t0)-4)+'" font-size="10" font-weight="700" fill="#c1613f">必封点 '+(i+1)+'（'+Math.round(t0)+' m）</text>';
+  });
+  s+='<text x="'+((L+R)/2)+'" y="'+(H-4)+'" font-size="9" fill="#8a9296" text-anchor="middle">当量密度 (g/cm³)　→　井深 (m) ↓</text>';
+  document.getElementById('cv').innerHTML=s;
+  /* ---- 候选程序 ---- */
+  var cands=candidates(tp);
+  if(SEL>=cands.length)SEL=0;
+  var scored=cands.map(function(o,i){return {i:i,s:score(o)}});
+  var best=scored.slice().sort(function(a,b){return b.s-a.s})[0];
+  var box='';
+  cands.forEach(function(o,i){
+    var v=o.violate>0?'<span style="color:#c1613f;font-weight:700">⚠ 违反 '+o.violate+' 个必封约束</span>':'';
+    box+='<div class="opt'+(i===SEL?' on':'')+'" data-i="'+i+'"><b>'+o.name+'</b><span class="sc">'+score(o).toFixed(1)+'</span><small>层次 '+o.layers.length+' ｜ 成本指数 '+o.cost.toFixed(1)+' ｜ 最窄窗口 '+o.margin.toFixed(2)+'（'+Math.round(o.md)+'m）'+v+(i===best.i?'　<span class="tag">当前推荐</span>':'')+'</small></div>';
+  });
+  document.getElementById('opts').innerHTML=box;
+  [].forEach.call(document.querySelectorAll('.opt'),function(el){el.onclick=function(){SEL=+el.dataset.i;draw();};});
+  /* ---- 井身结构（从宽到窄绘制，标签左右交替防重叠） ---- */
+  var o=cands[SEL];
+  var wx=128,wt=15,wy0=14,wh=214;
+  var ws='<rect width="300" height="260" fill="#fffdf8"/>';
+  var cols=['#3a5f8c','#7a5a8c','#2f7d6b','#c1613f'];
+  var n=o.layers.length;
+  o.layers.forEach(function(Ly,i){
+    var y1=wy0+wh*(Ly[0]/DMAX), y2=wy0+wh*(Ly[1]/DMAX);
+    var hw=wt*(1+0.6*(n-1-i));
+    var col=cols[i%4];
+    ws+='<rect x="'+(wx-hw/2)+'" y="'+y1+'" width="'+hw+'" height="'+(y2-y1)+'" rx="3" fill="'+col+'" opacity="0.82" stroke="#fffdf8" stroke-width="1.5"/>';
+    var nm=(i===0?'表层套管':(i===n-1?'油层套管':'技术套管'+i));
+    var ty=(y1+y2)/2+3, side=(i%2===0);
+    var tx=side?wx+hw/2+6:wx-hw/2-6;
+    ws+='<text x="'+tx+'" y="'+ty+'" font-size="9.5" fill="'+col+'" font-weight="700" text-anchor="'+(side?'start':'end')+'">'+nm+'</text>';
+    ws+='<text x="'+tx+'" y="'+(ty+12)+'" font-size="9" fill="#8a9296" text-anchor="'+(side?'start':'end')+'">↓'+Math.round(Ly[1])+' m</text>';
+  });
+  ws+='<line x1="'+wx+'" y1="'+wy0+'" x2="'+wx+'" y2="'+(wy0+wh)+'" stroke="#5a6469" stroke-width="1"/>';
+  tp.forEach(function(t0){
+    ws+='<line x1="'+(wx-wt*2.4)+'" y1="'+(wy0+wh*t0/DMAX)+'" x2="'+(wx-wt*1.5)+'" y2="'+(wy0+wh*t0/DMAX)+'" stroke="#c1613f" stroke-width="2"/>';
+    ws+='<text x="'+(wx-wt*2.4-3)+'" y="'+(wy0+wh*t0/DMAX+3)+'" font-size="9" fill="#c1613f" text-anchor="end">必封</text>';
+  });
+  ws+='<text x="8" y="254" font-size="9" fill="#8a9296">井深 0 → '+DMAX+' m（红线＝必封点）</text>';
+  document.getElementById('well').innerHTML=ws;
+  /* ---- 结论 ---- */
+  var rec=cands[best.i];
+  document.getElementById('note').innerHTML='<span class="tag">推理结果</span>当前剖面推理出 <b>'+tp.length+'</b> 个必封点（'+(tp.length?tp.map(function(t0){return Math.round(t0)+'m'}).join('、'):'—')+'）；'+
+    '按当前偏好推荐 <b>'+rec.name+'</b>（成本指数 <b>'+rec.cost.toFixed(1)+'</b>，最窄窗口 <b>'+rec.margin.toFixed(2)+'</b> g/cm³ @'+Math.round(rec.md)+'m）。'+
+    (rec.violate>0?'<b style="color:#c1613f">注意：当前选中程序违反必封约束，现场不可采用。</b>':
+    (MARGIN>=7?'裕度偏好高 → 模型倾向多下一层保窗口。':(MARGIN<=3?'裕度偏好低 → 模型倾向合并层次省成本。':'模型在成本与窗口间取平衡。')));
+}
+document.getElementById('sD').oninput=function(){DELTA=+this.value;draw();};
+document.getElementById('sM').oninput=function(){MARGIN=+this.value;draw();};
+[].forEach.call(document.querySelectorAll('#tabs button'),function(b){b.onclick=function(){MODE=b.dataset.t;[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.remove('on')});b.classList.add('on');SEL=1;draw();};});
+draw();
+</script>
+</body></html>

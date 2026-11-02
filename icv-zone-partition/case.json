@@ -1,0 +1,145 @@
+{
+  "id": "icv-zone-partition",
+  "sceneId": "co32",
+  "title": "智能完井层段划分智能优化",
+  "version": "1.0.0",
+  "updated": "2026-10-30",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "智能完井靠层段阀门（ICV）调控生产，分段太粗控不住水窜、太细则成本与故障率同步上升。现场按经验取 3—6 段、按物性均匀划分，层间干扰与调控收益没有量化。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "剖面 + 调控",
+          "desc": "沿井段物性、产液剖面、阀位记录"
+        },
+        {
+          "label": "标注成本",
+          "value": "高",
+          "desc": "调控效果要长期生产验证"
+        },
+        {
+          "label": "可见收益",
+          "value": "慢",
+          "desc": "收益体现在含水控制，周期长"
+        },
+        {
+          "label": "难度",
+          "value": "高",
+          "desc": "分段与调控互为前提，耦合强"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>做法是按物性把水平段均匀切成几段（常见 3—6 段），每段装一个 ICV，投产后再按含水情况调阀位。</p><p>问题是：<b>分段数凭经验</b>——没有算过「多一段能多控多少水、值不值这个钱和故障率」；<b>按物性均分不等于按水流分</b>——真正要隔开的是水窜通道，不是物性界面；<b>调控收益未评估</b>——装了阀到底控住了多少水，没有对照。</p><p><b>智能完井与层段划分</b>：智能完井是在水平井段上安装若干个可控阀门（ICV/滑套），把储层段隔成几段，投产后远程调节每段的开关与开度——高含水段关小、主力段开大，实现「分段精控」。划分几段、在哪些位置放阀，就是层段划分问题。</p><p><b>为什么划分难</b>：段切粗了控不住水窜，切细了成本与故障点同步上升；而且真正该隔开的是水窜通道（沿井段物性差、见水快的部分），不是简单的物性界面。装了阀不调控等于白装，调控收益又必须放在整个生产周期里算。</p><svg viewBox='0 0 660 250' role='img' aria-label='水平井段划分与层段阀门（ICV）示意' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='250' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>水平井段划分与层段阀门（ICV）示意</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>阀的位置决定「能不能隔开水窜通道」</text><rect x='46' y='79' width='584' height='26' rx='4' fill='#F4F1E8' stroke='#C9C3B4'/><rect x='46.0' y='79' width='140.2' height='26' fill='#7C9CC0' opacity='0.55'/><line x1='186.2' y1='79' x2='186.2' y2='105' stroke='#fff' stroke-width='2'/><text x='116.1' y='96' font-size='10' fill='#2A2A28' text-anchor='middle'>段1 趾端</text><rect x='186.2' y='79' width='186.9' height='26' fill='#2F7D6B' opacity='0.55'/><line x1='373.0' y1='79' x2='373.0' y2='105' stroke='#fff' stroke-width='2'/><text x='279.6' y='96' font-size='10' fill='#2A2A28' text-anchor='middle'>段2 主力</text><rect x='373.0' y='79' width='140.2' height='26' fill='#E8B444' opacity='0.55'/><line x1='513.2' y1='79' x2='513.2' y2='105' stroke='#fff' stroke-width='2'/><text x='443.1' y='96' font-size='10' fill='#2A2A28' text-anchor='middle'>段3</text><rect x='513.2' y='79' width='116.8' height='26' fill='#E0A188' opacity='0.55'/><line x1='630.0' y1='79' x2='630.0' y2='105' stroke='#fff' stroke-width='2'/><text x='571.6' y='96' font-size='10' fill='#2A2A28' text-anchor='middle'>段4 跟端</text><rect x='132.44' y='72' width='14' height='40' rx='3' fill='#2F567D'/><text x='139.44' y='126' font-size='9.5' fill='#2F567D' text-anchor='middle'>ICV-1</text><rect x='284.28' y='72' width='14' height='40' rx='3' fill='#2F567D'/><text x='291.28' y='126' font-size='9.5' fill='#2F567D' text-anchor='middle'>ICV-2</text><rect x='436.12' y='72' width='14' height='40' rx='3' fill='#2F567D'/><text x='443.12' y='126' font-size='9.5' fill='#2F567D' text-anchor='middle'>ICV-3</text><rect x='564.6' y='72' width='14' height='40' rx='3' fill='#2F567D'/><text x='571.6' y='126' font-size='9.5' fill='#2F567D' text-anchor='middle'>ICV-4</text><text x='14' y='152' font-size='10.5' fill='#6B6B66'>各段产液贡献与含水（示意）</text><rect x='107' y='-1360' width='24' height='1564' fill='#2F567D' opacity='0.75'/><text x='119' y='217' font-size='9' fill='#93938C' text-anchor='middle'>段1 12%</text><rect x='253' y='-3844' width='24' height='4048' fill='#2F7D6B' opacity='0.75'/><text x='265' y='217' font-size='9' fill='#93938C' text-anchor='middle'>段2 45%</text><rect x='399' y='-2648' width='24' height='2852' fill='#E8B444' opacity='0.75'/><text x='411' y='217' font-size='9' fill='#93938C' text-anchor='middle'>段3 30%</text><rect x='545' y='-1176' width='24' height='1380' fill='#C1613F' opacity='0.75'/><text x='557' y='217' font-size='9' fill='#93938C' text-anchor='middle'>段4 13%</text><line x1='46' y1='204' x2='630' y2='204' stroke='#C9C3B4'/><text x='14' y='226' font-size='10' fill='#93938C'>水窜常集中在个别段（如段3 含水快速上升）——阀要能把它单独关小</text><text x='14' y='242' font-size='10' fill='#93938C'>分段数凭经验定 3—6 段；多一段多一套阀：成本 +、故障点 +</text></svg><div class='viz-cap'>图：水平井段划分与层段阀门（ICV）示意</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>智能方法把分段变成寻优问题：先用沿井段物性与邻井产液剖面预测各段的产液与含水贡献，评估层间干扰，再枚举分段数与滑套位置，按「调控收益 − 成本与故障风险」排序。</p><p>价值是把「装几段」从经验变成可答辩的结论：例如「对比 4 段与 6 段，6 段在含水 60% 后可多控 8 个百分点，但增加 2 套阀（成本 +22%、故障点 +2），按当前油价回收期 3.4 年，推荐 4 段 + 两段预留」。</p><p><b>调控收益怎么算</b>：分段数增加，可控性提升（能隔开更多窜流），但阀门成本与故障风险线性增加；两条曲线的差值在某个分段数附近最大——那就是经济最优的分段数，而不是「越多越好」或「越少越省」。</p><p><b>智能方法做什么</b>：先用沿井段物性与邻井产液剖面预测各段的产液与含水贡献，评估层间干扰定位水窜通道；再枚举分段数与滑套位置组合，按「调控收益 − 成本 − 故障风险」排序，给出多方案对比与不确定性说明。</p><svg viewBox='0 0 660 220' role='img' aria-label='分段数的两难：调控收益 vs 成本与风险' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='220' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>分段数的两难：调控收益 vs 成本与风险</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>差值最大的位置就是经济最优分段数</text><rect x='127.75' y='34' width='147.5' height='150' fill='#2F7D6B' opacity='0.16'/><text x='201.5' y='46' font-size='9.5' fill='#6B6B66' text-anchor='middle'>推荐区间</text><line x1='54' y1='34' x2='644' y2='34' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='37.5' font-size='9.5' fill='#93938C' text-anchor='end'>100</text><line x1='54' y1='71.5' x2='644' y2='71.5' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='75' font-size='9.5' fill='#93938C' text-anchor='end'>75</text><line x1='54' y1='109' x2='644' y2='109' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='112.5' font-size='9.5' fill='#93938C' text-anchor='end'>50</text><line x1='54' y1='146.5' x2='644' y2='146.5' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='150' font-size='9.5' fill='#93938C' text-anchor='end'>25</text><line x1='54' y1='184' x2='644' y2='184' stroke='#DDD8CB' stroke-width='1'/><text x='47' y='187.5' font-size='9.5' fill='#93938C' text-anchor='end'>0</text><text x='54' y='199' font-size='9.5' fill='#93938C' text-anchor='middle'>2段</text><text x='201.5' y='199' font-size='9.5' fill='#93938C' text-anchor='middle'>4段</text><text x='349' y='199' font-size='9.5' fill='#93938C' text-anchor='middle'>6段</text><text x='496.5' y='199' font-size='9.5' fill='#93938C' text-anchor='middle'>8段</text><text x='644' y='199' font-size='9.5' fill='#93938C' text-anchor='middle'>10段</text><line x1='54' y1='184' x2='644' y2='184' stroke='#C9C3B4'/><line x1='54' y1='34' x2='54' y2='184' stroke='#C9C3B4'/><polyline points='54.0,157.8 127.8,112.0 201.5,85.0 275.3,69.1 349.0,59.6 422.8,54.0 496.5,50.8 570.3,48.8 644.0,47.7' fill='none' stroke='#2F7D6B' stroke-width='2' stroke-linejoin='round'/><polyline points='54.0,163.0 127.8,145.8 201.5,128.5 275.3,111.3 349.0,94.0 422.8,76.8 496.5,59.5 570.3,42.3 644.0,25.0' fill='none' stroke='#C1613F' stroke-width='2' stroke-linejoin='round'/><polyline points='54.0,151.8 127.8,123.3 201.5,113.5 275.3,114.8 349.0,122.6 422.8,134.3 496.5,148.3 570.3,163.6 644.0,172.0' fill='none' stroke='#2F567D' stroke-width='2' stroke-linejoin='round'/><circle cx='201.5' cy='82' r='2.8' fill='#1A4779'/><text x='201.5' y='97' font-size='10' fill='#1A4779'>净收益峰值 ≈ 4—5 段</text><text x='349' y='214' font-size='10' fill='#93938C' text-anchor='middle'>分段数</text><text x='14' y='30' font-size='10' fill='#93938C'>相对值 (0—100)</text><rect x='54' y='201' width='10' height='10' rx='2' fill='#2F7D6B'/><text x='68' y='210' font-size='10' fill='#6B6B66'>调控收益</text><rect x='107.6' y='201' width='10' height='10' rx='2' fill='#C1613F'/><text x='121.6' y='210' font-size='10' fill='#6B6B66'>成本+故障风险</text><rect x='180.4' y='201' width='10' height='10' rx='2' fill='#2F567D'/><text x='194.4' y='210' font-size='10' fill='#6B6B66'>净收益</text></svg><div class='viz-cap'>图：分段数的两难：调控收益 vs 成本与风险</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>沿井段物性与产液剖面</b>（渗透率、含油饱和度、产液贡献）；<b>邻井分段与调控效果</b>（分段数、阀位变化、调控后含水与产量）；<b>阀门与工具约束</b>（阀数上限、尺寸、温压等级）。</p><p>有智能完井的邻井通常只有几十口，样本稀缺是主要限制，需要结合机理模型做小样本推断。</p><p><b>需要三类数据</b>：沿井段物性与产液剖面（渗透率、含油饱和度、产液贡献）、邻井分段与调控效果（分段数、阀位变化、调控后含水与产量）、阀门与工具约束（阀数上限、尺寸、温压等级）。有智能完井的邻井通常只有几十口，样本稀缺是主要限制。</p><p><b>智能方法的落地路径</b>：物性与剖面 → 产液贡献预测 → 层间干扰评估 → 分段方案比选 → 投产后调控跟踪。调控跟踪既是收益的来源，也是校准收益评估的唯一途径。</p><svg viewBox='0 0 660 220' role='img' aria-label='从产液预测到分段方案比选' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='220' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>从产液预测到分段方案比选</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>小样本下预测必须给区间，不做单点推荐</text><line x1='90' y1='66' x2='252' y2='108' stroke='#C9C3B4' stroke-width='1.4'/><rect x='160.8' y='78' width='20.4' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='171' y='90' font-size='9' fill='#6B6B66' text-anchor='middle'>输入</text><line x1='90' y1='150' x2='252' y2='108' stroke='#C9C3B4' stroke-width='1.4'/><rect x='160.8' y='120' width='20.4' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='171' y='132' font-size='9' fill='#6B6B66' text-anchor='middle'>类比</text><line x1='252' y1='108' x2='412' y2='108' stroke='#C9C3B4' stroke-width='1.4'/><rect x='315.6' y='99' width='32.8' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='332' y='111' font-size='9' fill='#6B6B66' text-anchor='middle'>水窜定位</text><line x1='412' y1='108' x2='562' y2='66' stroke='#C9C3B4' stroke-width='1.4'/><rect x='476.8' y='78' width='20.4' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='487' y='90' font-size='9' fill='#6B6B66' text-anchor='middle'>枚举</text><line x1='562' y1='66' x2='562' y2='154' stroke='#C9C3B4' stroke-width='1.4'/><rect x='551.8' y='101' width='20.4' height='16' rx='8' fill='#fff' stroke='#DDD8CB'/><text x='562' y='113' font-size='9' fill='#6B6B66' text-anchor='middle'>校准</text><circle cx='90' cy='66' r='32' fill='#2F567D' opacity='0.28'/><circle cx='90' cy='66' r='32' fill='none' stroke='#2F567D' stroke-width='1.4'/><text x='90' y='63.5' font-size='10' fill='#2A2A28' text-anchor='middle'>物性/产液剖</text><text x='90' y='76.5' font-size='10' fill='#2A2A28' text-anchor='middle'>面</text><circle cx='90' cy='150' r='32' fill='#2F567D' opacity='0.28'/><circle cx='90' cy='150' r='32' fill='none' stroke='#2F567D' stroke-width='1.4'/><text x='90' y='154' font-size='10' fill='#2A2A28' text-anchor='middle'>邻井调控档案</text><circle cx='252' cy='108' r='34' fill='#2F7D6B' opacity='0.28'/><circle cx='252' cy='108' r='34' fill='none' stroke='#2F7D6B' stroke-width='1.4'/><text x='252' y='112' font-size='10' fill='#2A2A28' text-anchor='middle'>产液贡献预测</text><circle cx='412' cy='108' r='34' fill='#6B5B95' opacity='0.28'/><circle cx='412' cy='108' r='34' fill='none' stroke='#6B5B95' stroke-width='1.4'/><text x='412' y='112' font-size='10' fill='#2A2A28' text-anchor='middle'>层间干扰评估</text><circle cx='562' cy='66' r='34' fill='#E8B444' opacity='0.28'/><circle cx='562' cy='66' r='34' fill='none' stroke='#E8B444' stroke-width='1.4'/><text x='562' y='70' font-size='10' fill='#2A2A28' text-anchor='middle'>分段方案比选</text><circle cx='562' cy='154' r='32' fill='#8A97A6' opacity='0.28'/><circle cx='562' cy='154' r='32' fill='none' stroke='#8A97A6' stroke-width='1.4'/><text x='562' y='158' font-size='10' fill='#2A2A28' text-anchor='middle'>调控跟踪回填</text><text x='14' y='197' font-size='10' fill='#93938C'>关键提醒：装阀不调控 = 白装，且无法验证分段是否合理</text><text x='14' y='212' font-size='10' fill='#93938C'>输出形态：多方案对比 + 不确定性说明，不做单点推荐</text></svg><div class='viz-cap'>图：从产液预测到分段方案比选</div><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>邻井样本 42 口；沿井段按 10 m 切片，渗透率、饱和度、轨迹与出水点统一到同一深度基准。</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>阀数上限与尺寸、温压等级为硬约束；水窜识别必须含水体能量与裂缝沟通项，否则低估见水速度。</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>候选分段 3—8 段，按 5 年净现值比选（增产收益减工具与调控成本），给出段数—收益拐点。</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度偏高：分段数、滑套位置与产液剖面互为前提，且调控收益要放到整个生产周期评估，样本又少，结论不确定性大。</p><p>可参考方向：产液剖面预测、分段聚类、调控收益评估。建议输出「多方案对比 + 不确定性说明」，不做单点推荐。</p><p><b>难在哪</b>：分段数、滑套位置与产液剖面互为前提，调控收益要放到整个生产周期评估，邻井样本又少，结论不确定性大。参考方向为产液剖面预测、分段聚类与调控收益评估。</p><p><b>与传统做法的本质差别</b>：从「按物性均匀切几段」变成「按水窜通道与调控收益寻优」，并把成本与故障风险一起算进比选。</p><svg viewBox='0 0 660 208' role='img' aria-label='传统做法 vs 智能做法' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='208' fill='#FBFaf6'/><text x='14' y='21' font-size='12.5' font-weight='700' fill='#2A2A28'>传统做法 vs 智能做法</text><text x='646' y='21' font-size='10.5' fill='#93938C' text-anchor='end'>切在哪、切几段，都要有算得出来的理由</text><rect x='16' y='36' width='307' height='156' rx='8' fill='#8A97A6' opacity='0.12'/><rect x='16' y='36' width='307' height='22' rx='8' fill='#8A97A6' opacity='0.30'/><text x='28' y='51' font-size='11' font-weight='700' fill='#2A2A28'>传统：按物性均匀切</text><circle cx='32' cy='74' r='2.6' fill='#8A97A6'/><text x='40' y='78' font-size='10.5' fill='#4A4A45'>分段数凭经验取 3—6 段</text><circle cx='32' cy='96' r='2.6' fill='#8A97A6'/><text x='40' y='100' font-size='10.5' fill='#4A4A45'>分段界面按物性划分，不看水窜</text><circle cx='32' cy='118' r='2.6' fill='#8A97A6'/><text x='40' y='122' font-size='10.5' fill='#4A4A45'>多分段＝更好？成本故障没人算</text><circle cx='32' cy='140' r='2.6' fill='#8A97A6'/><text x='40' y='144' font-size='10.5' fill='#4A4A45'>装阀后调控凭感觉，无对照</text><rect x='337' y='36' width='307' height='156' rx='8' fill='#2F7D6B' opacity='0.12'/><rect x='337' y='36' width='307' height='22' rx='8' fill='#2F7D6B' opacity='0.30'/><text x='349' y='51' font-size='11' font-weight='700' fill='#2A2A28'>智能：按水窜与收益寻优</text><circle cx='353' cy='74' r='2.6' fill='#2F7D6B'/><text x='361' y='78' font-size='10.5' fill='#4A4A45'>分段界面定位到水窜通道</text><circle cx='353' cy='96' r='2.6' fill='#2F7D6B'/><text x='361' y='100' font-size='10.5' fill='#4A4A45'>净收益曲线给出经济最优分段数</text><circle cx='353' cy='118' r='2.6' fill='#2F7D6B'/><text x='361' y='122' font-size='10.5' fill='#4A4A45'>多方案对比 + 翻转条件说明</text><circle cx='353' cy='140' r='2.6' fill='#2F7D6B'/><text x='361' y='144' font-size='10.5' fill='#4A4A45'>投产后用调控数据校准收益评估</text><path d='M329 104 l12 -8 l0 16 z' fill='#2F7D6B'/></svg><div class='viz-cap'>图：传统做法 vs 智能做法</div>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "智能完井层段划分怎么做",
+      "lead": [
+        "核心是把「均匀切几段」换成「按水窜通道与调控收益寻优分段」，并把成本与故障风险一起算进比选。",
+        "下面的示范是第 3—4 步：调整控水、产能与成本三项权重，看四种分段方案的排序。"
+      ],
+      "stats": [
+        [
+          "邻井样本",
+          "42 口"
+        ],
+        [
+          "候选分段",
+          "3—8 段"
+        ],
+        [
+          "收益评估周期",
+          "5 年"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "沿井段物性与剖面整理",
+          "role": "数据",
+          "do": "把水平段的测井解释、渗透率与饱和度剖面、井眼轨迹与已知出水点对齐到同一深度网格，按 10 m 一段切片。",
+          "effect": "得到随深度连续的水平段物性剖面，每段都有渗透率、含水与轨迹参数，可直接用于产液贡献预测。",
+          "trap": "测井深度与井眼轨迹深度基准不同，直接叠加会整体错位，必须统一到同一个垂深或测深基准。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='水平段切片：物性热条 + 出水点 + 轨迹统一基准'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>测井、轨迹、出水点统一到同一深度网格，按 10 m 切片 → 每段都有渗透率、含水与轨迹参数</text><text x='60' y='36' font-size='8.5' fill='#79828a'>水平段 0 — 1200 m</text><rect x='60' y='42' width='80' height='16' fill='#7fae9b'/><rect x='140' y='42' width='60' height='16' fill='#a9c9ba'/><rect x='200' y='42' width='100' height='16' fill='#5f9683'/><rect x='300' y='42' width='70' height='16' fill='#c3d2e2'/><rect x='370' y='42' width='90' height='16' fill='#7fae9b'/><rect x='460' y='42' width='60' height='16' fill='#d9c27a'/><rect x='520' y='42' width='80' height='16' fill='#5f9683'/><text x='64' y='54' font-size='7.5' fill='#f2f5f0'>高渗</text><text x='306' y='54' font-size='7.5' fill='#4d565b'>低渗</text><text x='464' y='54' font-size='7.5' fill='#5c4a1a'>可疑水层</text><circle cx='486' cy='50' r='4' fill='none' stroke='#c9613f' stroke-width='1.4'/><text x='494' y='68' font-size='8' fill='#c9613f'>已知出水点 780 m</text><path d='M60 88 C 160 84 240 92 340 86 C 440 82 520 90 600 86' fill='none' stroke='#41699b' stroke-width='1.4'/><text x='60' y='102' font-size='8' fill='#41699b'>轨迹垂深波动（±6 m）</text><rect x='60' y='42' width='540' height='0' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='12' y='118' font-size='8.5' fill='#79828a'>测井深度与轨迹深度基准不同：直接叠加整体错位，必须先统一垂深 / 测深基准</text></svg>"
+        },
+        {
+          "name": "产液贡献预测",
+          "role": "算法",
+          "do": "按各段渗透率、生产压差与完井表皮估算产液与产油贡献，输出沿井段的产液剖面与各段贡献占比。",
+          "effect": "把水平段从一根均匀管子变成带贡献分布的几十段，哪几段是主力产层一目了然。",
+          "trap": "渗透率来自测井解释，误差常在半个数量级，产液剖面要给出上下界而不能只给一条曲线。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='沿井段产液贡献剖面：主力段一目了然'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>按渗透率、压差、表皮估算各段贡献 → 水平段从均匀管子变成带贡献分布的几十段</text><line x1='60' y1='88' x2='620' y2='88' stroke='#242b2e' stroke-width='1'/><text x='56' y='98' font-size='8' fill='#4d565b'>0</text><text x='590' y='98' font-size='8' fill='#4d565b'>1200 m</text><rect x='80' y='62' width='34' height='26' fill='#5f9683'/><rect x='140' y='70' width='34' height='18' fill='#a9c9ba'/><rect x='200' y='50' width='34' height='38' fill='#2f7d6b'/><text x='204' y='46' font-size='8.5' fill='#2f5a4d'>主力段 24%</text><rect x='260' y='74' width='34' height='14' fill='#c3d2e2'/><rect x='320' y='58' width='34' height='30' fill='#7fae9b'/><rect x='380' y='78' width='34' height='10' fill='#dfe6ee'/><text x='376' y='74' font-size='8' fill='#79828a'>3%</text><rect x='440' y='54' width='34' height='34' fill='#41699b'/><text x='414' y='50' font-size='8.5' fill='#41699b'>18%</text><rect x='500' y='72' width='34' height='16' fill='#a9c9ba'/><text x='80' y='106' font-size='8' fill='#79828a'>每柱附上下界误差线：渗透率来自测井解释，误差常在半个数量级</text><text x='12' y='118' font-size='8.5' fill='#79828a'>贡献剖面给区间不给单曲线——用单曲线做划分决策是把估算当实测</text></svg>"
+        },
+        {
+          "name": "层间干扰评估",
+          "role": "算法",
+          "do": "模拟各段合采时的压力干扰与含水上升路径，识别高渗水窜段对相邻产油段的压制程度与见水时间提前量。",
+          "effect": "给出哪些段见水早、压制了哪些邻段，以及分段控制后能挽回多少产量。",
+          "trap": "不含水体能量与裂缝沟通的纯渗流模型会低估水窜速度，有水体的井必须把水体项加进去。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='高渗水窜段压制相邻产油段：见水提前量可视化'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>模拟合采时的压力干扰与含水上升路径：识别谁压制谁、见水提前多少</text><rect x='60' y='36' width='120' height='30' rx='4' fill='#5f9683' stroke='#e2ded0'/><text x='74' y='50' font-size='9' fill='#f2f5f0'>高渗段 A</text><text x='74' y='62' font-size='8' fill='#e8efe9'>见水 8 个月</text><rect x='240' y='36' width='120' height='30' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='254' y='50' font-size='9' fill='#4d565b'>产油段 B</text><text x='254' y='62' font-size='8' fill='#c9613f'>被压制 · 降产 31%</text><rect x='420' y='36' width='120' height='30' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='434' y='50' font-size='9' fill='#4d565b'>产油段 C</text><text x='434' y='62' font-size='8' fill='#c9613f'>见水提前 14 个月</text><path d='M150 62 C 180 84 220 84 250 66' fill='none' stroke='#c9613f' stroke-width='2'/><polygon points='250,66 242,66 248,74' fill='#c9613f'/><text x='158' y='92' font-size='8.5' fill='#c9613f'>水窜压制</text><path d='M180 46 C 260 20 380 20 456 44' fill='none' stroke='#41699b' stroke-width='1.4' stroke-dasharray='5 3'/><text x='280' y='22' font-size='8' fill='#41699b'>层间压力干扰路径</text><rect x='560' y='30' width='88' height='42' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='570' y='46' font-size='8.5' fill='#4d565b'>有水体的井</text><text x='570' y='60' font-size='8.5' fill='#4d565b'>必须加水体项：</text><text x='570' y='74' font-size='8.5' fill='#c9613f'>纯渗流模型会</text><text x='570' y='84' font-size='8.5' fill='#c9613f'>低估水窜</text><text x='12' y='114' font-size='8.5' fill='#79828a'>分段控制的价值在这里量化：关小 A 段能挽回 B、C 段多少产量</text></svg>"
+        },
+        {
+          "name": "分段方案比选",
+          "role": "算法",
+          "do": "枚举 2—8 段的划分方式与阀位布置，按净现值（增产收益减去工具与调控成本）比选，给出收益随段数变化的曲线。",
+          "effect": "给出段数—净收益曲线与推荐段数：段数不是越多越好，超过拐点后工具成本会压过增产收益。",
+          "trap": "只算增产不算工具与后期调控成本，会得出段数越多越好的错误结论，净收益要按全生命周期算。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='段数—净现值曲线：拐点之后工具成本压过增产收益'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>枚举 2—8 段划分与阀位布置，按 5 年净现值比选（增产收益 − 工具 − 调控成本）</text><line x1='70' y1='96' x2='380' y2='96' stroke='#242b2e' stroke-width='1'/><line x1='70' y1='96' x2='70' y2='28' stroke='#242b2e' stroke-width='1'/><text x='160' y='110' font-size='8.5' fill='#79828a'>段数（2 → 8）</text><text x='58' y='40' font-size='8.5' fill='#79828a'>净现值 ↑</text><text x='76' y='92' font-size='8' fill='#4d565b'>2</text><text x='126' y='92' font-size='8' fill='#4d565b'>3</text><text x='176' y='92' font-size='8' fill='#4d565b'>4</text><text x='226' y='92' font-size='8' fill='#4d565b'>5</text><text x='276' y='92' font-size='8' fill='#4d565b'>6</text><text x='326' y='92' font-size='8' fill='#4d565b'>7</text><text x='376' y='92' font-size='8' fill='#4d565b'>8</text><path d='M70 88 C 120 66 170 44 220 40 C 250 38 280 46 320 60 C 350 70 370 78 380 84' fill='none' stroke='#2f7d6b' stroke-width='2'/><circle cx='220' cy='40' r='5' fill='none' stroke='#c9613f' stroke-width='1.5'/><text x='232' y='36' font-size='8.5' fill='#c9613f'>推荐 5 段（拐点）</text><text x='320' y='52' font-size='8' fill='#79828a'>段再多：工具成本↑ 调控复杂度↑</text><rect x='420' y='30' width='228' height='66' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='432' y='48' font-size='8.5' fill='#4d565b'>只算增产不算工具与调控成本</text><text x='432' y='62' font-size='8.5' fill='#c9613f'>→ 会得出「段数越多越好」的错结论</text><text x='432' y='80' font-size='8.5' fill='#4d565b'>净收益按全生命周期算</text><text x='12' y='118' font-size='8.5' fill='#79828a'>输出段数—收益曲线 + 推荐段数：划分方式（哪几段并、哪几段分）同样可枚举比选</text></svg>"
+        },
+        {
+          "name": "方案确认与调控跟踪",
+          "role": "人工",
+          "do": "工程师结合管柱可行性与调控能力确认方案，投产后按各段产液与含水实测跟踪并调整阀位策略。",
+          "effect": "分段方案可随实测调整，调控记录成为下一口井划分的依据。",
+          "trap": "阀位策略不记录、不回溯，等发现某段长期全关时已无法判断是划分错还是调控错。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='方案确认 → 投产跟踪 → 阀位策略可回溯'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='9' fill='#4d565b'>确认后投产：按各段产液与含水实测跟踪阀位策略，调控记录是下一口井划分的依据</text><rect x='20' y='40' width='136' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='58' font-size='9.5' fill='#4d565b'>方案确认</text><text x='34' y='74' font-size='8.5' fill='#79828a'>管柱可行性 / 调控能力</text><line x1='158' y1='62' x2='190' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='190,62 184,58.5 184,65.5' fill='#8a8f80'/><rect x='192' y='40' width='130' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='206' y='58' font-size='9.5' fill='#4d565b'>投产跟踪</text><text x='206' y='74' font-size='8.5' fill='#79828a'>各段产液 / 含水实测</text><line x1='324' y1='62' x2='356' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='356,62 350,58.5 350,65.5' fill='#8a8f80'/><rect x='358' y='40' width='130' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='372' y='58' font-size='9.5' fill='#4d565b'>阀位调整</text><text x='372' y='74' font-size='8.5' fill='#79828a'>策略 + 调整原因记录</text><line x1='490' y1='62' x2='522' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='522,62 516,58.5 516,65.5' fill='#8a8f80'/><rect x='524' y='40' width='118' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='538' y='58' font-size='9.5' fill='#4d565b'>回溯归档</text><text x='538' y='74' font-size='8.5' fill='#79828a'>支撑下一口井划分</text><path d='M582 86 C 574 108 100 108 84 88' fill='none' stroke='#8a8f80' stroke-width='1.2' stroke-dasharray='4 3'/><rect x='20' y='92' width='622' height='16' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='32' y='104' font-size='8.5' fill='#c9613f'>阀位策略不记录不回溯：发现某段长期全关时，已无法判断是划分错还是调控错</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>控水收益</b>：采用方案后含水上升速率相对邻井的降低幅度。</p><p><b>分段合理性</b>：实际需要调控的阀位数与「从未使用」的阀位数——后者过多说明分段冗余。</p><p><b>经济性</b>：增量控水收益相对增量阀门成本的回收期。</p>"
+      },
+      "fails": [
+        {
+          "name": "按物性均分",
+          "why": "分段界面按物性划分而非水窜通道，阀装了但控不住水。"
+        },
+        {
+          "name": "分段冗余",
+          "why": "一味增加分段数，多个阀从未使用，成本与故障点白白增加。"
+        },
+        {
+          "name": "装阀不调控",
+          "why": "投产后不调阀位，既没收益也无法验证分段合理性。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 620,
+      "intro": "调整控水收益、产能与成本三项权重，看四种分段方案的排序——注意成本拉满时分段数怎么被压下来。",
+      "html": "demo/index.html"
+    }
+  }
+}

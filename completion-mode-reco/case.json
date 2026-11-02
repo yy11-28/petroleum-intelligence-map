@@ -1,0 +1,169 @@
+{
+ "id": "completion-mode-reco",
+ "sceneId": "co1",
+ "methods": [
+  "kg",
+  "opt"
+ ],
+ "title": "完井方式智能优选：相似案例检索",
+ "version": "1.0.0",
+ "updated": "2026-10-23",
+ "tabs": {
+  "background": {
+   "label": "专业背景",
+   "lede": "完井方式决定了井与储层怎么「接上」——裸眼、射孔、筛管还是砾石充填，一旦下入就很难低成本更改。现场主要靠工程师经验加邻井类比，新区块没有邻井可参考时最容易选错，而选错的代价常常要等到投产一两年后才暴露。",
+   "judge": [
+    {
+     "label": "数据形态",
+     "value": "结构化表 + 文本",
+     "desc": "储量参数与结论混在井史、设计书里"
+    },
+    {
+     "label": "标注成本",
+     "value": "中",
+     "desc": "结论字段可从井史整理，不用逐点标注"
+    },
+    {
+     "label": "可见收益",
+     "value": "中",
+     "desc": "先排候选 + 给证据，人做裁定"
+    },
+    {
+     "label": "难度",
+     "value": "中",
+     "desc": "混合类型特征，相似度怎么量是卡点"
+    }
+   ],
+   "sections": [
+    {
+     "no": 1,
+     "en": "PROBLEM",
+     "title": "当前做法与问题",
+     "html": "<p>常规做法：拿到新井的地质设计后，工程师凭经验挑几口「像」的邻井，翻它们的完井总结与投产后表现，再开会定方式。一个区块一口井从查资料到出结论，通常要 2–3 天。</p><p>问题有三个：<b>检索不全</b>——人记得住的邻井不超过十来口，覆盖不到另一个层系的井；<b>隐性因素难量化</b>——「当年那口井就是因为出砂才改的筛管」这类判断写在文本里，没进表格；<b>结论不沉淀</b>——老专家退休后，同样的决策要重新说服一遍。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='四种完井方式的井筒剖面与选错代价的时间滞后'>\n<rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/>\n<defs><marker id='ar1' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0 0 L6 3 L0 6 Z' fill='#c9613f'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>四种完井方式：差别在于地层里的油气「怎么进井筒」——一旦下入，很难低成本更改</text>\n<rect x='16' y='28' width='160' height='150' rx='4' fill='#efece1' stroke='#e2ded0'/><rect x='22' y='96' width='148' height='76' fill='#e3dac7'/><text x='28' y='168' font-size='8.5' fill='#8a7f66'>产层</text>\n<rect x='80' y='28' width='24' height='150' fill='#fff' stroke='#242b2e'/><line x1='80' y1='28' x2='80' y2='96' stroke='#41699b' stroke-width='2.2'/><line x1='104' y1='28' x2='104' y2='96' stroke='#41699b' stroke-width='2.2'/>\n<path d='M40 120 L78 120' stroke='#c9613f' stroke-width='1' marker-end='url(#ar1)'/><path d='M40 140 L78 140' stroke='#c9613f' stroke-width='1' marker-end='url(#ar1)'/><path d='M40 160 L78 160' stroke='#c9613f' stroke-width='1' marker-end='url(#ar1)'/>\n<text x='172' y='194' font-size='10.5' fill='#242b2e' text-anchor='middle'>裸眼完井</text><text x='172' y='209' font-size='9' fill='#79828a' text-anchor='middle'>地层稳定 · 远离水</text>\n<rect x='188' y='28' width='160' height='150' rx='4' fill='#efece1' stroke='#e2ded0'/><rect x='194' y='96' width='148' height='76' fill='#e3dac7'/><text x='200' y='168' font-size='8.5' fill='#8a7f66'>产层</text>\n<rect x='252' y='28' width='24' height='150' fill='#fff' stroke='#242b2e'/><line x1='252' y1='28' x2='252' y2='178' stroke='#41699b' stroke-width='2.2'/><line x1='276' y1='28' x2='276' y2='178' stroke='#41699b' stroke-width='2.2'/>\n<line x1='242' y1='120' x2='252' y2='120' stroke='#c9613f' stroke-width='1.4'/><line x1='276' y1='120' x2='286' y2='120' stroke='#c9613f' stroke-width='1.4'/><line x1='242' y1='140' x2='252' y2='140' stroke='#c9613f' stroke-width='1.4'/><line x1='276' y1='140' x2='286' y2='140' stroke='#c9613f' stroke-width='1.4'/><line x1='242' y1='160' x2='252' y2='160' stroke='#c9613f' stroke-width='1.4'/><line x1='276' y1='160' x2='286' y2='160' stroke='#c9613f' stroke-width='1.4'/>\n<path d='M212 150 L250 150' stroke='#c9613f' stroke-width='1' marker-end='url(#ar1)'/>\n<text x='268' y='194' font-size='10.5' fill='#242b2e' text-anchor='middle'>射孔完井</text><text x='268' y='209' font-size='9' fill='#79828a' text-anchor='middle'>要分层 · 控水 · 压裂</text>\n<rect x='360' y='28' width='160' height='150' rx='4' fill='#efece1' stroke='#e2ded0'/><rect x='366' y='96' width='148' height='76' fill='#e3dac7'/><text x='372' y='168' font-size='8.5' fill='#8a7f66'>产层</text>\n<rect x='424' y='96' width='24' height='82' fill='#cfd8e0' stroke='#41699b'/><line x1='424' y1='28' x2='424' y2='96' stroke='#41699b' stroke-width='2.2'/><line x1='448' y1='28' x2='448' y2='96' stroke='#41699b' stroke-width='2.2'/>\n<circle cx='430' cy='112' r='1.2' fill='#41699b'/><circle cx='442' cy='118' r='1.2' fill='#41699b'/><circle cx='430' cy='132' r='1.2' fill='#41699b'/><circle cx='442' cy='140' r='1.2' fill='#41699b'/><circle cx='430' cy='156' r='1.2' fill='#41699b'/><circle cx='442' cy='164' r='1.2' fill='#41699b'/>\n<path d='M384 150 L422 150' stroke='#c9613f' stroke-width='1' marker-end='url(#ar1)'/>\n<text x='440' y='194' font-size='10.5' fill='#242b2e' text-anchor='middle'>筛管完井</text><text x='440' y='209' font-size='9' fill='#79828a' text-anchor='middle'>中等出砂</text>\n<rect x='532' y='28' width='160' height='150' rx='4' fill='#efece1' stroke='#e2ded0'/><rect x='538' y='96' width='148' height='76' fill='#e3dac7'/><text x='544' y='168' font-size='8.5' fill='#8a7f66'>产层</text>\n<rect x='582' y='96' width='48' height='82' rx='2' fill='#b9c6cf' opacity='0.6'/><circle cx='590' cy='112' r='1.3' fill='#79828a'/><circle cx='600' cy='124' r='1.3' fill='#79828a'/><circle cx='622' cy='116' r='1.3' fill='#79828a'/><circle cx='592' cy='146' r='1.3' fill='#79828a'/><circle cx='612' cy='158' r='1.3' fill='#79828a'/><circle cx='624' cy='140' r='1.3' fill='#79828a'/><circle cx='602' cy='168' r='1.3' fill='#79828a'/>\n<rect x='596' y='96' width='24' height='82' fill='#cfd8e0' stroke='#41699b'/><line x1='596' y1='28' x2='596' y2='96' stroke='#41699b' stroke-width='2.2'/><line x1='620' y1='28' x2='620' y2='96' stroke='#41699b' stroke-width='2.2'/>\n<path d='M556 150 L594 150' stroke='#c9613f' stroke-width='1' marker-end='url(#ar1)'/>\n<text x='612' y='194' font-size='10.5' fill='#242b2e' text-anchor='middle'>砾石充填</text><text x='612' y='209' font-size='9' fill='#79828a' text-anchor='middle'>严重出砂</text>\n<line x1='16' y1='220' x2='684' y2='220' stroke='#e2ded0'/>\n<line x1='60' y1='240' x2='640' y2='240' stroke='#242b2e'/><circle cx='60' cy='240' r='3.5' fill='#41699b'/><circle cx='300' cy='240' r='3.5' fill='#79828a'/><circle cx='640' cy='240' r='3.5' fill='#c9613f'/>\n<text x='60' y='232' font-size='9' fill='#41699b'>完井决策（1–3 天）</text><text x='300' y='232' font-size='9' fill='#79828a' text-anchor='middle'>投产</text><text x='640' y='232' font-size='9' fill='#c9613f' text-anchor='end'>出砂大修 / 含水上升</text>\n<text x='350' y='247' font-size='8.5' fill='#c9613f' text-anchor='middle'>选错的代价要 12–24 个月后才看得见，而决策窗口只有几天</text>\n</svg><span class='viz-cap'>四种完井方式（井筒剖面）与「决策快、代价慢」的时间错位——这正是类比检索能发挥作用的地方。</span></div>"
+    },
+    {
+     "no": 2,
+     "en": "INTERVENTION",
+     "title": "AI 能做什么",
+     "html": "<p>这不是典型的深度学习场景——一口井一条记录，样本量是「几百到几千井次」，量级太小。合适的做法分两层：<b>知识图谱</b>把区块、层系、岩性、工艺、失效之间的关系连起来，负责「什么和什么可比」；<b>案例推理（CBR）</b>在这张图上做加权近邻检索，把最像的 K 口井连同它们的投产后表现一起拉出来。</p><p>算法输出的是<b>候选排序 + 证据清单</b>，不是替工程师拍板。人要看的只有一件事：这几口井到底像在哪里。真正被替掉的是「翻资料、找邻井」这一步。</p><div class='viz'><svg viewBox='0 0 700 220' role='img' aria-label='知识图谱约束检索范围，案例推理给出候选排序'>\n<rect x='0' y='0' width='700' height='220' fill='#fbfaf6'/>\n<defs><marker id='ar2' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<text x='16' y='18' font-size='11' fill='#242b2e'>两层：知识图谱决定「到哪儿去找」，案例推理负责「找出来怎么排」</text>\n<rect x='16' y='30' width='250' height='150' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='48' font-size='10' fill='#4d565b'>案例库（每点一口井，颜色＝采用方式）</text>\n<circle cx='44' cy='72' r='4' fill='#41699b'/><circle cx='68' cy='96' r='4' fill='#2f7d6b'/><circle cx='86' cy='66' r='4' fill='#2f7d6b'/><circle cx='108' cy='118' r='4' fill='#b26a39'/><circle cx='128' cy='84' r='4' fill='#2f7d6b'/><circle cx='150' cy='104' r='4' fill='#b26a39'/><circle cx='172' cy='70' r='4' fill='#41699b'/><circle cx='192' cy='130' r='4' fill='#7a5aa0'/><circle cx='214' cy='92' r='4' fill='#b26a39'/><circle cx='236' cy='112' r='4' fill='#7a5aa0'/><circle cx='120' cy='148' r='4' fill='#2f7d6b'/><circle cx='196' cy='152' r='4' fill='#7a5aa0'/><circle cx='62' cy='140' r='4' fill='#41699b'/><circle cx='244' cy='62' r='4' fill='#2f7d6b'/>\n<path d='M138 104 l0 0' fill='none'/><circle cx='138' cy='104' r='7' fill='none' stroke='#242b2e' stroke-width='1.4'/><circle cx='138' cy='104' r='2.6' fill='#242b2e'/><text x='150' y='100' font-size='9' fill='#242b2e'>待钻井</text>\n<circle cx='138' cy='104' r='34' fill='none' stroke='#c9613f' stroke-dasharray='4 3'/><text x='138' y='152' font-size='8.5' fill='#c9613f' text-anchor='middle'>相似度邻域</text>\n<path d='M266 104 L306 104' stroke='#242b2e' stroke-width='1.2' marker-end='url(#ar2)'/>\n<rect x='306' y='44' width='150' height='120' rx='5' fill='#41699b' opacity='0.9'/><text x='381' y='66' font-size='10.5' fill='#fff' text-anchor='middle'>知识图谱</text><text x='381' y='84' font-size='9' fill='#fff' text-anchor='middle'>同层系 / 同岩性</text><text x='381' y='100' font-size='9' fill='#fff' text-anchor='middle'>年份过滤</text><line x1='320' y1='110' x2='442' y2='110' stroke='#dbe4ef'/><text x='381' y='126' font-size='9' fill='#fff' text-anchor='middle'>先把范围收紧</text><text x='381' y='144' font-size='9' fill='#fff' text-anchor='middle'>再谈「像不像」</text>\n<path d='M456 104 L492 104' stroke='#242b2e' stroke-width='1.2' marker-end='url(#ar2)'/>\n<rect x='492' y='30' width='192' height='150' rx='5' fill='#fbfaf6' stroke='#e2ded0'/><text x='504' y='48' font-size='10' fill='#4d565b'>输出：候选排序 + 证据</text>\n<text x='504' y='70' font-size='9.5' fill='#4d565b'>筛管完井</text><rect x='560' y='60' width='92' height='10' rx='2' fill='#b26a39'/><text x='660' y='69' font-size='9' fill='#4d565b'>52%</text>\n<text x='504' y='88' font-size='9.5' fill='#4d565b'>射孔完井</text><rect x='560' y='78' width='60' height='10' rx='2' fill='#2f7d6b' opacity='0.6'/><text x='628' y='87' font-size='9' fill='#4d565b'>34%</text>\n<text x='504' y='106' font-size='9.5' fill='#4d565b'>砾石充填</text><rect x='560' y='96' width='18' height='10' rx='2' fill='#7a5aa0' opacity='0.6'/><text x='586' y='105' font-size='9' fill='#4d565b'>10%</text>\n<text x='504' y='124' font-size='9.5' fill='#4d565b'>裸眼完井</text><rect x='560' y='114' width='7' height='10' rx='2' fill='#41699b' opacity='0.6'/><text x='575' y='123' font-size='9' fill='#4d565b'>4%</text>\n<line x1='504' y1='136' x2='672' y2='136' stroke='#e2ded0'/><text x='504' y='152' font-size='9' fill='#79828a'>附 6 口证据井的条件与投产后表现</text><text x='504' y='168' font-size='9' fill='#79828a'>人看的是「像在哪里」，不是概率</text>\n<text x='16' y='200' font-size='10.5' fill='#4d565b'>样本量只有几百到几千井次，不够训练一个「从地质预测完井方式」的模型；够做的是<tspan font-weight='600'>检索 + 排序 + 给证据</tspan>。</text>\n<text x='16' y='214' font-size='10' fill='#79828a'>被替掉的是「翻三天资料找邻井」，被留下的是裁定权与责任。</text>\n</svg><span class='viz-cap'>知识图谱收紧检索范围（同层系/同岩性/同年代），案例推理在其中做加权近邻投票。</span></div><p><b>并入专项 · 水平井完井方式智能选型</b>：智能方法不做决策，它把选型拆成两步：先检索——按储层强度、粒度分布、井段长度、是否压裂等条件在邻井库里找条件最接近的一批井，看它们各自用了什么方式、后来产了多少、有没有出砂；再评分——把出砂风险、产能潜力、水窜风险、后期可调性、成本五个维度用统一口径打分，按决策方设定的权重排序。关键价值是把「隐性权重」变成显式输入：把防砂权重拉到最大，看推荐是否翻转——翻转就说明这个结论对防砂诉求高度敏感，必须先让决策方把权重定下来再谈方案。同时把裸眼井「出水后无解」这类硬约束做成一票否决项，而不是打分项。</p>"
+    },
+    {
+     "no": 3,
+     "en": "DATA",
+     "title": "需要准备什么",
+     "html": "<p><b>刻画字段</b>（每口井一条）：出砂指数（或声波时差/岩石强度推算）、距底水距离、渗透率、孔隙度、储层厚度、岩性、层系、区块。<b>结果字段</b>：采用方式、投产 12 个月比采油指数、是否出砂大修、含水上升速度。</p><p><b>量级</b>：单区块 100–500 井次能起步，全油田 2000 井次以上才谈得上稳定。<b>文本</b>：完井设计书与总结，用来抽取尚未结构化的因素（如「邻井曾因出砂修井」）。</p><p><b>坑</b>：单位与深度基准要统一；不同年代可选工艺不同，年份必须作为字段参与过滤，否则老井会把推荐拉向保守。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='三类数据来源与入库瓶颈'>\n<rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/>\n<text x='16' y='18' font-size='11' fill='#242b2e'>需要准备什么：一口井一条记录，左边是「怎么刻画它」，右边是「当年做得怎么样」</text>\n<rect x='16' y='30' width='176' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='104' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>刻画字段（8 个）</text>\n<text x='28' y='66' font-size='9' fill='#4d565b'>出砂指数 · 距底水距离</text><text x='28' y='80' font-size='9' fill='#4d565b'>渗透率 · 孔隙度 · 厚度</text><text x='28' y='94' font-size='9' fill='#4d565b'>岩性 · 层系 · 区块</text><line x1='28' y1='104' x2='180' y2='104' stroke='#d8d2c4'/><text x='28' y='120' font-size='9' fill='#79828a'>来自测井解释与地质设计</text><text x='28' y='134' font-size='9' fill='#79828a'>结构化，可直接入库</text>\n<rect x='204' y='30' width='176' height='112' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='292' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>结果字段（3 个）</text>\n<text x='216' y='66' font-size='9' fill='#4d565b'>采用方式</text><text x='216' y='80' font-size='9' fill='#4d565b'>投产 12 月比采油指数</text><text x='216' y='94' font-size='9' fill='#4d565b'>是否出砂大修 · 含水上升</text><line x1='216' y1='104' x2='368' y2='104' stroke='#d8d2c4'/><text x='216' y='120' font-size='9' fill='#79828a'>来自井史与生产库</text><text x='216' y='134' font-size='9' fill='#c9613f'>结论口径要统一后再入库</text>\n<rect x='392' y='30' width='176' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='480' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>文本（尚未结构化）</text>\n<text x='404' y='66' font-size='9' fill='#4d565b'>完井设计书 · 完井总结</text><text x='404' y='84' font-size='9' fill='#4d565b'>「邻井曾因出砂修井」</text><text x='404' y='102' font-size='9' fill='#4d565b'>「当年改过方式」</text><line x1='404' y1='112' x2='556' y2='112' stroke='#d8d2c4'/><text x='404' y='128' font-size='9' fill='#c9613f'>需抽取成数值因子才可用</text>\n<path d='M192 86 L246 86' stroke='#79828a'/><path d='M380 86 L434 86' stroke='#79828a'/>\n<rect x='240' y='156' width='300' height='30' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='390' y='175' font-size='10.5' fill='#fff' text-anchor='middle'>案例库：一口井一行（2,860 井次）</text>\n<path d='M104 142 L104 156' stroke='#79828a'/><path d='M292 142 L292 156' stroke='#79828a'/><path d='M480 142 L480 156' stroke='#c9613f'/>\n<rect x='556' y='156' width='128' height='30' rx='5' fill='#c9613f' opacity='0.85'/><text x='620' y='175' font-size='10' fill='#fff' text-anchor='middle'>年份必须参与过滤</text>\n<text x='16' y='196' font-size='9.5' fill='#79828a'>量级：单区块 100–500 井次可起步，全油田 2000 井次以上才谈得上稳定。渗透率跨三个数量级，必须取对数。</text>\n</svg><span class='viz-cap'>数据分层：刻画字段、结果字段与文本三类输入，瓶颈在结论口径统一与年份过滤。</span></div>"
+    },
+    {
+     "no": 4,
+     "en": "DIFFICULTY",
+     "title": "难度与参考方向",
+     "html": "<p>难点：<b>「最优」没有统一定义</b>——同一套地质条件，油价与作业成本变了排序也变；<b>样本高度不平衡</b>——裸眼完井的井本来就少，投票永远垫底；<b>量纲悬殊</b>——渗透率跨三个数量级，不取对数会淹没其它特征。</p><p>改进路线按成本从低到高：① 混合距离度量（数值用高斯核、类别用匹配加权）；② 知识图谱补检索——只在同层系/同岩性子树里找近邻；③ 多目标排序，把偏好权重（更看重产能还是防砂）做成可调；④ 用文本抽取把「出砂史」「邻井措施」补成数值因子。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='三个难点：量纲悬殊、样本不平衡、相似度带宽'>\n<rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>三个会让人白干一场的坑</text>\n<rect x='16' y='28' width='212' height='170' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10' fill='#4d565b'>① 量纲悬殊</text>\n<text x='28' y='64' font-size='9' fill='#79828a'>渗透率原始刻度（20–1600 mD）</text>\n<rect x='28' y='70' width='180' height='8' rx='2' fill='#efece1'/><rect x='28' y='70' width='2' height='8' fill='#c9613f'/><rect x='40' y='70' width='6' height='8' fill='#c9613f'/><rect x='60' y='70' width='12' height='8' fill='#c9613f'/><rect x='170' y='70' width='38' height='8' fill='#41699b'/>\n<text x='28' y='98' font-size='9' fill='#79828a'>取对数后（各量级可比）</text>\n<rect x='28' y='104' width='180' height='8' rx='2' fill='#efece1'/><rect x='36' y='104' width='26' height='8' fill='#41699b'/><rect x='74' y='104' width='30' height='8' fill='#41699b'/><rect x='116' y='104' width='34' height='8' fill='#41699b'/><rect x='162' y='104' width='34' height='8' fill='#41699b'/>\n<text x='28' y='130' font-size='9' fill='#c9613f'>不取对数时，相似度几乎</text><text x='28' y='144' font-size='9' fill='#c9613f'>只由渗透率一个字段决定，</text><text x='28' y='158' font-size='9' fill='#c9613f'>出砂指数被完全淹没。</text><text x='28' y='178' font-size='9' fill='#79828a'>对数刻度是距离度量的前提。</text>\n<rect x='244' y='28' width='212' height='170' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='46' font-size='10' fill='#4d565b'>② 样本不平衡</text>\n<text x='256' y='64' font-size='9' fill='#79828a'>各方式的案例数</text>\n<text x='256' y='84' font-size='9.5' fill='#4d565b'>射孔</text><rect x='296' y='74' width='140' height='12' rx='2' fill='#2f7d6b'/><text x='440' y='84' font-size='9' fill='#4d565b'>1280</text>\n<text x='256' y='104' font-size='9.5' fill='#4d565b'>筛管</text><rect x='296' y='94' width='78' height='12' rx='2' fill='#b26a39'/><text x='378' y='104' font-size='9' fill='#4d565b'>720</text>\n<text x='256' y='124' font-size='9.5' fill='#4d565b'>砾石</text><rect x='296' y='114' width='46' height='12' rx='2' fill='#7a5aa0'/><text x='346' y='124' font-size='9' fill='#4d565b'>430</text>\n<text x='256' y='144' font-size='9.5' fill='#4d565b'>裸眼</text><rect x='296' y='134' width='14' height='12' rx='2' fill='#41699b'/><text x='314' y='144' font-size='9' fill='#4d565b'>130</text>\n<text x='256' y='166' font-size='9' fill='#c9613f'>裸眼永远投不过票，</text><text x='256' y='180' font-size='9' fill='#c9613f'>召回率低不是因为它差，</text><text x='256' y='192' font-size='9' fill='#c9613f'>而是因为它本来就少。</text>\n<rect x='472' y='28' width='212' height='170' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='46' font-size='10' fill='#4d565b'>③ 相似度带宽 σ</text>\n<line x1='490' y1='150' x2='666' y2='150' stroke='#242b2e'/><line x1='490' y1='60' x2='490' y2='150' stroke='#242b2e'/>\n<path d='M496 148 C 520 66, 540 64, 556 146' fill='none' stroke='#c9613f' stroke-width='1.4'/><text x='528' y='60' font-size='8.5' fill='#c9613f'>σ 太小</text>\n<path d='M510 148 C 540 104, 580 100, 610 146' fill='none' stroke='#2f7d6b' stroke-width='2'/><text x='546' y='96' font-size='8.5' fill='#2f7d6b'>合适</text>\n<path d='M496 148 C 560 128, 620 126, 664 146' fill='none' stroke='#79828a' stroke-width='1.4' stroke-dasharray='4 3'/><text x='596' y='132' font-size='8.5' fill='#79828a'>σ 太大</text>\n<text x='484' y='168' font-size='9' fill='#4d565b'>σ 小 → 只有极相似的井能进票池，样本稀疏区直接没有邻居；</text><text x='484' y='182' font-size='9' fill='#4d565b'>σ 大 → 什么井都「有点像」，票数被摊平，排序失去区分度。</text>\n<text x='484' y='196' font-size='8.5' fill='#79828a'>横轴：与待钻井的距离；纵轴：相似度</text>\n</svg><span class='viz-cap'>三个坑：量纲（必须取对数）、样本不平衡（少的方式投不过票）、带宽 σ（太小没邻居、太大没区分度）。</span></div>"
+    }
+   ]
+  },
+  "workflow": {
+   "label": "案例流程",
+   "title": "一口新井的方式优选落地流程",
+   "lead": [
+    "这个流程把「工程师翻三天资料」压缩成「跑一遍检索 + 看五口证据井」。核心资产不是模型，是那张把井史整理干净的结构化表。",
+    "下面的示范用 32 口合成邻井演示第 3、4 步：改待钻井的条件，看检索出的 Top-K 怎么投票。"
+   ],
+   "stats": [
+    [
+     "案例库规模",
+     "2,860 井次"
+    ],
+    [
+     "Top-5 一致率",
+     "78%"
+    ],
+    [
+     "单井决策",
+     "0.5 天"
+    ],
+    [
+     "邻井样本",
+     "380 口"
+    ]
+   ],
+   "steps": [
+    {
+     "name": "案例库构建",
+     "role": "数据",
+     "do": "从井史、完井总结与生产库抽取字段，统一单位与深度基准，补区块/层系/岩性三级归属。",
+     "effect": "一口井一条记录：8 个刻画字段 + 3 个结果字段。",
+     "trap": "不同年代记录口径不一致，直接合并会把老井当异常点剔除掉，损失恰恰是最有参考价值的样本。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='案例库构建：三个来源归并为一张表'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='10' y='30' width='96' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='58' y='51' font-size='9.5' fill='#242b2e' text-anchor='middle'>井史 / 完井总结</text><rect x='10' y='72' width='96' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='58' y='93' font-size='9.5' fill='#242b2e' text-anchor='middle'>生产库</text><path d='M106 47 L150 62' stroke='#79828a'/><path d='M106 89 L150 62' stroke='#79828a'/><rect x='150' y='44' width='120' height='36' rx='4' fill='#41699b' opacity='0.9'/><text x='210' y='60' font-size='9.5' fill='#fff' text-anchor='middle'>单位 / 深度基准</text><text x='210' y='74' font-size='9' fill='#fff' text-anchor='middle'>统一归集</text><path d='M270 62 L310 62' stroke='#242b2e' marker-end='url(#arS)'/><defs><marker id='arS' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='310' y='26' width='200' height='72' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='322' y='44' font-size='9.5' fill='#4d565b'>一口井一行</text><line x1='322' y1='52' x2='498' y2='52' stroke='#e2ded0'/><text x='322' y='66' font-size='9' fill='#79828a'>N07　0.62　6.5　310　11.2　筛管</text><text x='322' y='80' font-size='9' fill='#79828a'>N12　0.21　28.0　95　18.4　射孔</text><text x='322' y='94' font-size='9' fill='#79828a'>…</text><rect x='524' y='40' width='126' height='44' rx='4' fill='#c9613f' opacity='0.85'/><text x='587' y='58' font-size='9.5' fill='#fff' text-anchor='middle'>年份作为字段</text><text x='587' y='74' font-size='9' fill='#fff' text-anchor='middle'>不统一 = 老井被当异常点</text><text x='10' y='112' font-size='9.5' fill='#79828a'>8 个刻画字段 + 3 个结果字段；年份与口径必须先对齐，否则检索出来的「近邻」并不可比。</text></svg>"
+    },
+    {
+     "name": "结论标签与质控",
+     "role": "标注",
+     "do": "把完井方式规范成四类枚举，剔除特殊工艺井与资料不全的记录，人工复核 10%。",
+     "effect": "标签一致性从 63% 提到 92%，检索结果才可比。",
+     "trap": "把「改过方式的井」整条删掉，会丢掉最有价值的失败教训，应保留为负样本。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='标签质控漏斗与负样本保留'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='20' font-size='10' fill='#4d565b'>标签规范化与质控：3,240 井次 → 2,860 井次</text><rect x='12' y='30' width='150' height='22' rx='3' fill='#e9e4d8' stroke='#d8d2c4'/><text x='87' y='45' font-size='9.5' fill='#242b2e' text-anchor='middle'>原始 3,240</text><rect x='176' y='30' width='150' height='22' rx='3' fill='#b9c6cf' opacity='0.8'/><text x='251' y='45' font-size='9.5' fill='#242b2e' text-anchor='middle'>规范四类枚举</text><rect x='340' y='30' width='150' height='22' rx='3' fill='#c9613f' opacity='0.8'/><text x='415' y='45' font-size='9.5' fill='#fff' text-anchor='middle'>剔特殊工艺 / 缺项</text><rect x='504' y='30' width='144' height='22' rx='3' fill='#2f7d6b' opacity='0.85'/><text x='576' y='45' font-size='9.5' fill='#fff' text-anchor='middle'>复核 10% → 2,860</text><path d='M162 41 L176 41' stroke='#79828a'/><path d='M326 41 L340 41' stroke='#79828a'/><path d='M490 41 L504 41' stroke='#79828a'/><rect x='12' y='66' width='310' height='40' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='82' font-size='9.5' fill='#c9613f'>不能删：改过方式的井 = 负样本</text><text x='24' y='98' font-size='9' fill='#4d565b'>「当年选错后来改了」是最有价值的教训，删掉就只会学到成功。</text><rect x='336' y='66' width='312' height='40' rx='4' fill='#dfe6ee' stroke='#d8d2c4'/><text x='348' y='82' font-size='9.5' fill='#41699b'>一致性 63% → 92%</text><text x='348' y='98' font-size='9' fill='#4d565b'>口径统一后，检索出的近邻才是真的可比的同类井。</text><text x='12' y='116' font-size='9' fill='#79828a'>人工复核 10% 就够了：这里要统一的是口径，不是逐条标注。</text></svg>"
+    },
+    {
+     "name": "特征对齐与相似度度量",
+     "role": "算法",
+     "do": "渗透率取对数，类别字段编码，按业务权重计算加权距离，用高斯核转成相似度。",
+     "effect": "任意两口井有可解释的相似度；各特征权重可以随时按偏好调整。",
+     "trap": "权重一旦固定就变成了另一个「经验」，要有意识地用后验结果反向标定。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='特征对齐与加权高斯相似度'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>距离 → 相似度：四个特征按业务权重合成一个加权距离，再用高斯核转成 0–1 的相似度</text><text x='12' y='38' font-size='9' fill='#4d565b'>出砂</text><rect x='48' y='29' width='60' height='10' rx='2' fill='#efece1'/><rect x='48' y='29' width='51' height='10' rx='2' fill='#41699b'/><text x='114' y='38' font-size='9' fill='#4d565b'>34%</text><text x='12' y='56' font-size='9' fill='#4d565b'>底水</text><rect x='48' y='47' width='60' height='10' rx='2' fill='#efece1'/><rect x='48' y='47' width='42' height='10' rx='2' fill='#41699b'/><text x='114' y='56' font-size='9' fill='#4d565b'>28%</text><text x='12' y='74' font-size='9' fill='#4d565b'>渗（log）</text><rect x='48' y='65' width='60' height='10' rx='2' fill='#efece1'/><rect x='48' y='65' width='36' height='10' rx='2' fill='#41699b'/><text x='114' y='74' font-size='9' fill='#4d565b'>24%</text><text x='12' y='92' font-size='9' fill='#4d565b'>厚度</text><rect x='48' y='83' width='60' height='10' rx='2' fill='#efece1'/><rect x='48' y='83' width='21' height='10' rx='2' fill='#41699b'/><text x='114' y='92' font-size='9' fill='#4d565b'>14%</text><text x='12' y='110' font-size='8.5' fill='#79828a'>权重本身也是一种「经验」，要用后验结果反向标定</text><line x1='180' y1='26' x2='180' y2='104' stroke='#e2ded0'/><line x1='196' y1='100' x2='400' y2='100' stroke='#242b2e'/><line x1='196' y1='30' x2='196' y2='100' stroke='#242b2e'/><path d='M200 98 C 240 36, 280 32, 320 98' fill='none' stroke='#2f7d6b' stroke-width='2'/><text x='298' y='30' font-size='9' fill='#2f7d6b'>相似度</text><text x='196' y='114' font-size='8.5' fill='#79828a'>加权距离 →</text><text x='300' y='114' font-size='8.5' fill='#79828a'>σ = 0.22</text><rect x='420' y='30' width='228' height='80' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='432' y='48' font-size='9.5' fill='#4d565b'>类别字段用「匹配 / 不匹配」</text><text x='432' y='66' font-size='9' fill='#4d565b'>岩性一致 +0.15，层系一致 +0.10</text><text x='432' y='84' font-size='9' fill='#4d565b'>数值字段用高斯核（连续可比）</text><text x='432' y='102' font-size='9' fill='#c9613f'>混合距离：两类量纲不能直接相加</text></svg>"
+    },
+    {
+     "name": "检索排序与证据呈现",
+     "role": "算法",
+     "do": "取最像的 K 口井，按加权票数给四种方式排序，并把这 K 口井的条件、方式、产能一起列出来。",
+     "effect": "工程师一眼能看到「票数从哪来」，而不是一个黑箱概率。",
+     "trap": "K 太小受单井偶然性影响，太大把不相似的井也拉进来稀释票数，一般取 5–8。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='检索排序与证据呈现'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>取最像的 K 口井按相似度加权投票，并把这 K 口井本身列出来</text><text x='12' y='40' font-size='9' fill='#79828a'>32 口邻井（按相似度排序）</text><rect x='150' y='30' width='14' height='12' fill='#b26a39'/><rect x='166' y='32' width='14' height='10' fill='#b26a39'/><rect x='182' y='34' width='14' height='8' fill='#2f7d6b'/><rect x='198' y='37' width='14' height='5' fill='#2f7d6b'/><rect x='214' y='40' width='14' height='2' fill='#7a5aa0'/><rect x='230' y='41' width='14' height='1' fill='#41699b' opacity='0.3'/><rect x='246' y='41' width='14' height='1' fill='#41699b' opacity='0.25'/><rect x='262' y='41' width='14' height='1' fill='#41699b' opacity='0.2'/><rect x='278' y='41' width='260' height='1' fill='#efece1'/><line x1='228' y1='26' x2='228' y2='52' stroke='#242b2e' stroke-dasharray='3 2'/><text x='232' y='24' font-size='8.5' fill='#242b2e'>K = 6</text><rect x='12' y='62' width='300' height='48' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='22' y='78' font-size='9.5' fill='#4d565b'>加权票数</text><text x='22' y='96' font-size='9' fill='#4d565b'>筛管 52%　射孔 34%　砾石 10%　裸眼 4%</text><text x='22' y='106' font-size='8.5' fill='#79828a'>票数＝相似度之和，不是井数</text><rect x='326' y='62' width='322' height='48' rx='4' fill='#dfe6ee' stroke='#d8d2c4'/><text x='336' y='78' font-size='9.5' fill='#41699b'>证据清单（这才是给人看的东西）</text><text x='336' y='96' font-size='9' fill='#4d565b'>N07 出砂 0.62 / 底水 6.5 m → 筛管，比采油指数 0.71</text><text x='336' y='106' font-size='9' fill='#4d565b'>N19 出砂 0.55 / 底水 9.0 m → 筛管，比采油指数 0.66</text><text x='12' y='118' font-size='8.5' fill='#79828a'>K 太小受单井偶然性影响，太大稀释票数；一般取 5–8。</text></svg>"
+    },
+    {
+     "name": "人工裁定与回填",
+     "role": "人工",
+     "do": "工程师确认或推翻推荐，把理由与最终结果回填案例库，作为下一次检索的证据。",
+     "effect": "库在用的过程中越用越准，Top-5 一致率半年从 61% 升到 78%。",
+     "trap": "不回填就会退化成「一次性的推荐工具」，第二年又要重头说服。",
+     "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='人工裁定与回填闭环'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='30' width='104' height='32' rx='4' fill='#41699b' opacity='0.9'/><text x='64' y='50' font-size='9.5' fill='#fff' text-anchor='middle'>检索排序</text><path d='M116 46 L152 46' stroke='#242b2e' marker-end='url(#arS2)'/><defs><marker id='arS2' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='152' y='30' width='104' height='32' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='204' y='50' font-size='9.5' fill='#242b2e' text-anchor='middle'>工程师裁定</text><path d='M256 46 L292 46' stroke='#242b2e' marker-end='url(#arS2)'/><rect x='292' y='30' width='104' height='32' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='344' y='50' font-size='9.5' fill='#fff' text-anchor='middle'>回填案例库</text><path d='M396 46 L432 46' stroke='#242b2e' marker-end='url(#arS2)'/><rect x='432' y='30' width='104' height='32' rx='4' fill='#b26a39' opacity='0.85'/><text x='484' y='50' font-size='9.5' fill='#fff' text-anchor='middle'>下一次更准</text><path d='M536 46 C 590 46, 600 74, 560 82 C 520 90, 120 92, 64 74' fill='none' stroke='#79828a' stroke-dasharray='4 3'/><text x='300' y='96' font-size='9' fill='#79828a'>闭环：裁定理由与最终结果必须回到库里，否则第二年又要重头说服一遍</text><line x1='12' y1='104' x2='380' y2='104' stroke='#e2ded0'/><text x='12' y='116' font-size='9' fill='#4d565b'>Top-5 一致率：61%（上线）→ 70%（3 个月）→ <tspan font-weight='600' fill='#2f7d6b'>78%（半年）</tspan>　·　不回填就停在 61%</text></svg>"
+    },
+    {
+     "name": "条件相似度检索",
+     "role": "算法",
+     "do": "按储层强度、粒度、井段长度、是否压裂检索条件最接近的邻井。",
+     "effect": "把「找邻井」从人工翻台账变成可复现的检索。",
+     "trap": "条件维度量纲不同，必须先归一化，否则井段长度会压倒一切。"
+    }
+   ],
+   "metrics": {
+    "title": "怎么算“做对了”",
+    "html": "<p><b>Top-1 / Top-3 一致率</b>：推荐的候选里有没有覆盖「实际采用且投产后未出砂大修」的方案，留出独立验证井（约占 15%）评估。</p><p><b>产能分位</b>：投产 12 个月比采油指数在同类条件井中的分位，推荐组不应低于人工组的均值。</p><p><b>置信度可用性</b>：只对置信度最高的 60% 样本做自动推荐并统计其准确率，这一档应显著高于整体——它决定了「哪些井可以自动出建议」。</p>"
+   },
+   "fails": [
+    {
+     "name": "近邻全是老井",
+     "why": "数值上很接近，但老井的选项里没有当时的新工艺，推荐系统性保守。年份必须作为过滤条件。"
+    },
+    {
+     "name": "样本不平衡",
+     "why": "裸眼完井样本少，加权投票永远垫底，召回率低。需要按方式做类别权重校正或分层检索。"
+    },
+    {
+     "name": "把相关性当因果",
+     "why": "同区块井方式雷同，模型学到的其实是区块习惯而非地质规律。跨区块验证会立刻掉点。"
+    },
+    {
+     "name": "量纲支配距离",
+     "why": "渗透率跨三个数量级，不取对数时相似度几乎只由它决定，出砂指数被淹没。"
+    }
+   ]
+  },
+  "demo": {
+   "mode": "auto",
+   "html": "demo/index.html",
+   "label": "可运行示范",
+   "intro": "拖动滑杆设定待钻井的出砂倾向、距底水距离、渗透率与厚度，看 32 口邻井里哪几口被检索出来、它们怎么投票；三张图分别给出候选排序、相似度分布（K 切在哪）与特征画像（到底像在哪里）。",
+   "height": 1080
+  }
+ }
+}

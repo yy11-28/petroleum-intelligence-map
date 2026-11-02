@@ -1,0 +1,421 @@
+/* =========================================================
+   completion.css —— 完井模块增强的样式叠加层
+   ---------------------------------------------------------
+   只负责 #/stage/completion 与 #/scene/coN 上新加的组件：
+   工具条 / 依赖图 / 侧栏配套面板 / 行徽标 / 风险面板 /
+   参考方向 / 示范预设 / 对比预设 / 讲义打印。
+   颜色一律走 tokens.css 的变量，不另开色板。
+   ========================================================= */
+
+/* ---------------- 通用小件 ---------------- */
+.cpt-toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,12px);
+  padding:9px 16px;border-radius:var(--r-m);background:var(--navy);color:var(--on-d);
+  font-size:12.5px;box-shadow:var(--sh-3);opacity:0;pointer-events:none;
+  transition:opacity .22s,transform .22s;z-index:600;
+}
+.cpt-toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------------- 1. 环节页工具条 ---------------- */
+.cpt-tools{
+  margin:2px 0 12px;padding:11px 14px;border:1px solid var(--line-2);
+  border-radius:var(--r-m);background:var(--card);box-shadow:var(--sh-1);
+}
+.cpt-t-row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.cpt-search{flex:1 1 320px;min-width:260px}
+.cpt-search input{
+  width:100%;padding:8px 11px;border:1px solid var(--line-2);border-radius:var(--r-s);
+  background:var(--card-soft);font-size:13px;color:var(--ink);
+}
+.cpt-search input:focus{outline:none;border-color:var(--blue);background:#fff}
+.cpt-kws{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.cpt-kw{
+  font-size:11.5px;padding:3px 9px;border-radius:100px;border:1px solid var(--line-2);
+  color:var(--ink-3);background:var(--card);transition:all .15s;
+}
+.cpt-kw:hover{color:var(--blue);border-color:var(--blue);background:var(--blue-l)}
+.cpt-kw.on{color:#fff;background:var(--blue);border-color:var(--blue);font-weight:600}
+.cpt-kw b{
+  font-size:10px;font-weight:600;margin-left:5px;padding:0 5px;border-radius:100px;
+  background:rgba(26,71,121,.1);color:var(--blue);font-family:var(--mono);
+}
+.cpt-kw.on b{background:rgba(255,255,255,.25);color:#fff}
+/* 依赖图节点随筛选淡化（保留结构上下文，突出命中场景） */
+.cpt-dep-svg g{transition:opacity .25s}
+.cpt-dep-svg .cpt-dep-off{opacity:.12}
+.cpt-t-acts{display:flex;gap:6px;flex-wrap:wrap}
+.cpt-t-foot{
+  display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  margin-top:9px;padding-top:8px;border-top:1px solid var(--line);
+}
+.cpt-tip{font-size:11.5px;color:var(--ink-3);font-family:var(--mono)}
+.cpt-count{font-size:11.5px;color:var(--ink-2);font-family:var(--mono);font-weight:600}
+.cpt-ck{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-3);cursor:pointer}
+.cpt-ck input{width:13px;height:13px;accent-color:var(--blue)}
+
+/* ---------------- 2. 数据依赖视图 ---------------- */
+.cpt-dep{
+  margin:0 0 12px;border:1px solid var(--line-2);border-radius:var(--r-m);
+  background:var(--card);box-shadow:var(--sh-1);overflow:hidden;
+}
+.cpt-dep > summary,
+.cpt-dep-head{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;cursor:pointer;
+  padding:10px 14px;background:var(--navy);color:var(--on-d);list-style:none;
+}
+.cpt-dep > summary::-webkit-details-marker{display:none}
+.cpt-dep > summary::after{
+  content:'▾';margin-left:auto;font-size:10px;color:var(--on-d-2);transition:transform .2s;
+}
+.cpt-dep[open] > summary::after{transform:rotate(180deg)}
+.cpt-dep-t{font-size:13px;font-weight:650;letter-spacing:.01em}
+.cpt-dep-s{font-size:11px;color:var(--on-d-2)}
+.cpt-dep-body{padding:12px 14px 10px;background:var(--card-soft);overflow-x:auto;position:relative}
+.cpt-dep-body.fold{max-height:240px;overflow:hidden}
+.cpt-dep-body.fold::after{content:'';position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(to bottom,rgba(247,244,238,0),var(--card-soft) 78%);pointer-events:none}
+.cpt-dep-body.fold .cpt-dep-legend{display:none}
+/* 底部居中折叠切换 */
+.cpt-dep-foot{
+  display:flex;justify-content:center;padding:8px 14px;
+  border-top:1px solid var(--line);background:var(--card);
+}
+.cpt-dep-toggle{
+  display:inline-flex;align-items:center;gap:7px;
+  font:inherit;font-size:12px;font-weight:600;cursor:pointer;
+  padding:5px 18px;border-radius:100px;
+  border:1px solid var(--line-2);background:var(--card);color:var(--ink-2);
+  transition:all .15s;
+}
+.cpt-dep-toggle:hover{color:var(--blue);border-color:var(--blue);background:var(--blue-l)}
+.cpt-dep-ar{font-style:normal;font-size:10px;color:var(--blue);line-height:1}
+.cpt-dep-svg{display:block;width:100%;min-width:760px;height:auto}
+.cpt-dep-node rect{transition:stroke .16s,fill .16s}
+.cpt-dep-node:hover rect:first-of-type{stroke:var(--blue);fill:var(--blue-l)}
+.cpt-dep-node:focus{outline:none}
+.cpt-dep-node:focus rect:first-of-type{stroke:var(--jade);stroke-width:1.6}
+.cpt-dep-node.sel rect:first-of-type{stroke:var(--blue);stroke-width:1.8;fill:var(--blue-l)}
+.cpt-dep-edge.on{stroke-width:1.8}
+.cpt-dep-legend{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  margin-top:8px;padding-top:8px;border-top:1px solid var(--line);
+  font-size:11px;color:var(--ink-3);
+}
+.cpt-dep-legend span{display:flex;align-items:center;gap:5px}
+.cpt-dep-legend i{width:9px;height:9px;border-radius:2px;display:block}
+.cpt-dep-hint{color:var(--ink-4)}
+
+/* ---------------- 3. 成熟度 / 创新度分层条 ---------------- */
+.cpt-strip{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 10px;
+}
+/* 引导提示条（替代原左上筛选分层条） */
+.cpt-strip-tip{
+  font-size:12px;color:var(--ink-2);line-height:1.7;
+  padding:9px 14px;border:1px solid var(--line-2);border-radius:var(--r-s);
+  background:var(--blue-l,#eef4fa);border-color:rgba(26,71,121,.18);
+}
+.cpt-tip-ic{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--blue,#1A4779);color:#fff;
+  font-size:10px;font-weight:700;font-style:italic;font-family:Georgia,serif;
+}
+.cpt-strip-l{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:var(--ink-4)}
+.cpt-strip-v{width:1px;height:15px;background:var(--line-2);margin:0 4px}
+.cpt-sb{
+  display:inline-flex;align-items:center;gap:5px;font-size:12px;
+  padding:4px 10px;border-radius:100px;border:1px solid var(--line-2);
+  background:var(--card);color:var(--ink-2);transition:all .15s;
+}
+.cpt-sb i{width:8px;height:8px;border-radius:2px;display:block}
+.cpt-sb b{font-family:var(--mono);font-size:10.5px;color:var(--ink-3)}
+.cpt-sb:hover{border-color:var(--blue);color:var(--blue)}
+.cpt-sb.on{background:var(--blue-l);border-color:var(--blue);color:var(--blue);font-weight:600}
+.cpt-sb.on b{color:var(--blue)}
+.cpt-sb.is-all{font-size:11.5px;color:var(--ink-3)}
+
+/* ---------------- 4. 侧栏两栏布局 ---------------- */
+.cpt-layout{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:26px;align-items:start}
+.cpt-main{min-width:0}
+.cpt-side{position:sticky;top:calc(var(--hdr-h) + 16px);min-width:0}
+@media (max-width:1180px){
+  .cpt-layout{grid-template-columns:minmax(0,1fr)}
+  .cpt-side{position:static}
+}
+
+/* 数据互通矩阵 */
+.cpt-mat-hint{font-size:11px;color:var(--ink-3);line-height:1.7;margin-bottom:8px}
+.cpt-mat-hint-lead{
+  font-weight:650;color:var(--blue,#1A4779);
+  padding:6px 10px;border-radius:6px;
+  background:rgba(26,71,121,.08);
+}
+.cpt-mat-wrap{overflow-x:auto;margin:0 -2px;padding:0 2px 4px}
+.cpt-mat{border-collapse:collapse;font-size:10px;width:100%}
+.cpt-mat th,.cpt-mat td{border:1px solid var(--line);padding:2px 0;text-align:center}
+.cpt-mat thead th{
+  background:var(--card-soft);color:var(--ink-3);font-family:var(--mono);
+  font-size:10.5px;font-weight:500;width:14px;
+}
+.cpt-mat thead th:first-child{width:auto;min-width:112px;font-size:10px}
+.cpt-mat td{color:#C9D3DD}
+.cpt-mat td.on{color:var(--blue);font-weight:700}
+.cpt-mat td.opt{color:var(--ink-4)}
+.cpt-mat tbody tr{cursor:pointer;transition:background .15s}
+.cpt-mat tbody tr:hover{background:var(--blue-l)}
+.cpt-mat tbody tr:hover td{border-color:var(--line-2)}
+.cpt-mat-n{
+  text-align:left!important;padding:2px 6px!important;font-size:11px;color:var(--ink-2);
+  white-space:nowrap;display:flex;align-items:center;justify-content:space-between;gap:6px;
+}
+.cpt-mat-n b{font-family:var(--mono);font-size:9.5px;color:var(--ink-4);font-weight:500}
+.cpt-mat tbody tr.on td,.cpt-mat tbody tr.on .cpt-mat-n{background:var(--blue-l);color:var(--blue)}
+.cpt-mat tbody tr.on .cpt-mat-n b{color:var(--blue)}
+
+/* 技术栈 / 成熟度 / 创新度列表 */
+.cpt-slist{display:flex;flex-direction:column;gap:4px}
+.cpt-srow{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;
+  padding:6px 8px;border:1px solid var(--line);border-radius:var(--r-s);
+  background:var(--card);font-size:12px;color:var(--ink-2);text-align:left;transition:all .15s;
+}
+.cpt-srow:hover{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+.cpt-srow.on{border-color:var(--blue);background:var(--blue-l);color:var(--blue);font-weight:600}
+.cpt-srow b{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.cpt-srow.on b{color:var(--blue)}
+.cpt-srow > span{display:flex;align-items:center;gap:6px;min-width:0}
+.cpt-srow-sub{
+  font-size:10.5px;color:var(--ink-4);line-height:1.6;padding:0 8px 4px;
+  margin:-2px 0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.cpt-dot{width:8px;height:8px;border-radius:2px;display:block;flex:none}
+.cpt-srow .mtag{margin:0}
+
+/* ---------------- 5. 场景行徽标 ---------------- */
+.scene-row.cpt-hide{display:none!important}
+.cpt-tg{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;line-height:1.5;padding:1.5px 7px;border-radius:100px;
+  border:1px solid var(--line-2);background:var(--card-soft);color:var(--ink-3);
+  white-space:nowrap;
+}
+.cpt-tg i{width:7px;height:7px;border-radius:2px;background:var(--c,#BAC6D2);display:block}
+.cpt-tg.warn{color:var(--warn);border-color:rgba(185,122,72,.35);background:var(--warn-bg)}
+.cpt-tg.solid{color:var(--c,#1A4779);border-color:color-mix(in srgb,var(--c,#1A4779) 35%,transparent);background:var(--card)}
+.dh-tags .cpt-tg{font-size:10.5px;padding:2px 9px}
+
+/* ---------------- 6. 场景页：风险与工程约束 ---------------- */
+.cpt-risk{
+  margin:6px 0 4px;border:1px solid var(--line-2);border-left:3px solid var(--warn);
+  border-radius:var(--r-s);background:var(--warn-bg);padding:11px 14px 10px;
+}
+.cpt-risk-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+.cpt-risk-t{font-size:12.5px;font-weight:650;color:var(--clay-d)}
+.cpt-risk-body{display:flex;flex-direction:column;gap:6px}
+.cpt-risk-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;align-items:start}
+.cpt-risk-row .rk{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--clay-d);
+  padding-top:3px;text-transform:uppercase;
+}
+.cpt-risk-row .rv{font-size:12.2px;line-height:1.75;color:var(--ink-2)}
+.cpt-dep-list{display:flex;flex-wrap:wrap;gap:5px}
+.cpt-dep-chip{
+  font-size:11.5px;padding:2px 9px;border-radius:100px;border:1px solid var(--line-2);
+  background:var(--card);color:var(--blue);
+}
+.cpt-dep-chip:hover{background:var(--blue-l);border-color:var(--blue)}
+.cpt-risk-note{
+  margin-top:9px;padding-top:8px;border-top:1px dashed rgba(185,122,72,.3);
+  font-size:11px;color:var(--ink-3);line-height:1.7;
+}
+@media (max-width:640px){
+  .cpt-risk-row{grid-template-columns:minmax(0,1fr)}
+  .cpt-risk-row .rk{padding-top:0}
+}
+
+/* 参考方向归集 */
+.cpt-papers{
+  margin:10px 0 4px;border:1px solid var(--line-2);border-radius:var(--r-s);
+  background:var(--card-soft);
+}
+.cpt-papers > summary{
+  cursor:pointer;padding:9px 13px;font-size:12.5px;font-weight:600;color:var(--ink);
+  list-style:none;display:flex;align-items:center;gap:8px;
+}
+.cpt-papers > summary::-webkit-details-marker{display:none}
+.cpt-papers > summary::before{content:'＋';font-size:11px;color:var(--ink-4)}
+.cpt-papers[open] > summary::before{content:'－'}
+.cpt-papers-n{font-family:var(--mono);font-size:10px;color:var(--ink-4)}
+.cpt-papers ul{list-style:none;padding:0 13px 11px;margin:0;display:flex;flex-direction:column;gap:6px}
+.cpt-papers li{font-size:12px;line-height:1.7;color:var(--ink-2);padding-left:2px}
+.cpt-p-tag{
+  display:inline-block;margin-right:7px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;color:var(--blue);background:var(--blue-l);
+  border-radius:2px;padding:1px 5px;vertical-align:1px;
+}
+.cpt-papers a{color:var(--blue);border-bottom:1px solid rgba(26,71,121,.25)}
+.cpt-papers a:hover{border-bottom-color:var(--blue)}
+
+/* ---------------- 7. 示范：典型井工况预设 ---------------- */
+.cpt-sandbox{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:9px 12px;margin-bottom:8px;border:1px solid var(--line-2);
+  border-radius:var(--r-s);background:var(--jade-l);
+}
+.cpt-sb-l{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--jade-d)}
+.cpt-sb-btn{
+  font-size:12px;padding:4px 11px;border-radius:100px;border:1px solid rgba(35,136,104,.32);
+  background:var(--card);color:var(--jade-d);transition:all .15s;
+}
+.cpt-sb-btn:hover{background:#fff;border-color:var(--jade)}
+.cpt-sb-btn.on{background:var(--jade);border-color:var(--jade);color:#fff;font-weight:600}
+.cpt-sb-tip{font-size:11px;color:var(--ink-3)}
+
+/* ---------------- 8. 对比浮层：完井预设组 ---------------- */
+.cpt-presets{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:0 2px 8px}
+.cpt-pre-l{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--ink-4)}
+.cpt-pre-b{
+  font-size:11.5px;padding:3px 9px;border-radius:100px;border:1px solid var(--line-2);
+  background:var(--card);color:var(--ink-2);transition:all .15s;
+}
+.cpt-pre-b:hover{color:var(--blue);border-color:var(--blue);background:var(--blue-l)}
+
+/* =========================================================
+   9. 打印：完井 20 场景讲义（开题调研清单版式）
+   ========================================================= */
+#cpt-print{display:none}
+body.cpt-printing > *:not(#cpt-print){display:none!important}
+body.cpt-printing{background:#fff!important}
+body.cpt-printing #cpt-print{display:block}
+
+.cpt-paper{
+  width:100%;max-width:820px;margin:0 auto;padding:0 0 12mm;
+  font-family:var(--sans);color:#1b1f24;font-size:11pt;line-height:1.7;
+}
+.cpt-p-hd{border-bottom:2px solid #1A4779;padding-bottom:6mm;margin-bottom:6mm}
+.cpt-p-kick{font-family:var(--mono);font-size:8pt;letter-spacing:.16em;color:#5B6B7C}
+.cpt-p-hd h1{font-size:17pt;margin:3mm 0 2mm;letter-spacing:-.01em}
+.cpt-p-meta{font-size:8.5pt;color:#5B6B7C;line-height:1.6}
+.cpt-p-scene{
+  break-inside:avoid;page-break-inside:avoid;
+  padding:3.5mm 0;border-bottom:1px solid #D4DDE6;
+}
+.cpt-p-t{display:flex;align-items:baseline;gap:2mm;flex-wrap:wrap}
+.cpt-p-n{
+  font-family:var(--mono);font-size:8.5pt;color:#fff;background:#1A4779;
+  padding:1px 5px;border-radius:2px;flex:none;
+}
+.cpt-p-t h2{font-size:12pt;margin:0;letter-spacing:-.01em}
+.cpt-p-st{font-size:8.5pt;color:#5B6B7C;font-family:var(--mono);margin-left:auto}
+.cpt-p-checks{font-size:9pt;color:#4A5568;margin:1.5mm 0 1mm}
+.cpt-p-scene dl{
+  display:grid;grid-template-columns:22mm minmax(0,1fr);gap:0.8mm 3mm;
+  margin:0;font-size:9.5pt;line-height:1.62;
+}
+.cpt-p-scene dt{color:#1A4779;font-weight:600;font-size:9pt;padding-top:.4mm}
+.cpt-p-scene dd{margin:0;color:#2a3037}
+.cpt-p-ft{
+  margin-top:5mm;padding:3mm 0;border-top:1px solid #D4DDE6;
+  font-size:8.5pt;color:#5B6B7C;line-height:1.7;
+}
+
+@media print{
+  @page{margin:14mm 12mm}
+  .cpt-paper{font-size:10.5pt}
+  .cpt-p-scene{padding:2.5mm 0}
+  .cpt-p-hd h1{font-size:15pt}
+  .cpt-p-scene dl{grid-template-columns:20mm minmax(0,1fr);font-size:9pt}
+}
+
+/* ---------------- 8. 内容栏宽：案例页内容撑满左右两侧 ----------------
+   专业背景 / 案例流程 / 可运行示范三段统一占满内容区宽度：
+   正文不再被 ch 单位收窄，图形跟着容器等比放大
+   （图内文字由构建注入的防叠脚本兜底，放大后不会挤在一起）。 */
+body.cpt-scope .sec4-body,
+body.cpt-scope .lede-block,
+body.cpt-scope .case-lead,
+body.cpt-scope .pstep,
+body.cpt-scope .judge,
+body.cpt-scope .metrics,
+body.cpt-scope .fail-box{max-width:100%}
+body.cpt-scope .sec4 p,
+body.cpt-scope .lede-block p,
+body.cpt-scope .judge p,
+body.cpt-scope .fail-box p,
+body.cpt-scope .sec4-body p,
+body.cpt-scope .pstep p,
+body.cpt-scope .demo-head p,
+body.cpt-scope .pending p,
+body.cpt-scope .sr-point,
+body.cpt-scope .dh-sub{max-width:100%}
+/* 图形跟着容器等比放大，不再固定 860px 栏宽 */
+body.cpt-scope .viz>svg,
+body.cpt-scope .figure>svg{max-width:100%;margin-inline:0}
+/* 图内文字不再加白色描边（包边）：固定描边在图形拉伸放大后会把小字糊成一团，
+   深底色块上一律用纯白文字保证对比度 */
+
+/* 案例正文段落编号放大，与标题形成更清晰的层级 */
+body.cpt-scope .sec4 .sn{font-size:16px;letter-spacing:.06em;padding-top:0}
+body.cpt-scope .sec4 .sn span{font-size:9.5px;margin-top:5px}
+/* 案例流程的步骤编号同步放大 */
+body.cpt-scope .pstep .pn{font-size:15px}
+@media (max-width:760px){
+  body.cpt-scope .pstep .pn{font-size:13px}
+}
+
+/* 四段式区块分隔线：中间实、两端淡出，代替单纯实线 */
+body.cpt-scope .sec4{
+  border-image:linear-gradient(90deg,rgba(16,37,49,0),rgba(16,37,49,.30) 12% 88%,rgba(16,37,49,0)) 1;
+}
+
+/* ---------------- 案例页文字统一提升一档 ----------------
+   标题 / 导语 / 正文 / 说明 / 图注 各层级同步放大，
+   保持层级比例，只把「看不清」的小字提到舒适可读 */
+body.cpt-scope .dh-sub,
+body.cpt-scope .case-lead p,
+body.cpt-scope .lede-block p,
+body.cpt-scope .sec4 p,
+body.cpt-scope .pstep .pdo{font-size:14px;line-height:1.85}
+body.cpt-scope .case-lead h3,
+body.cpt-scope .sec4 h3{font-size:18px}
+body.cpt-scope .dh-title{font-size:clamp(24px,2.9vw,34px)}
+body.cpt-scope .pstep h4{font-size:15.5px}
+body.cpt-scope .pstep h4 .role,
+body.cpt-scope .pstep .peff .k{font-size:10px}
+body.cpt-scope .pstep .peff{font-size:12.5px;line-height:1.7}
+body.cpt-scope .judge .jv{font-size:14.5px}
+body.cpt-scope .judge .jd{font-size:12.5px;line-height:1.65}
+body.cpt-scope .judge .jl{font-size:10px}
+body.cpt-scope .case-cells .v{font-size:14px}
+body.cpt-scope .case-cells .v b{font-size:17.5px}
+body.cpt-scope .case-cells .l{font-size:10px}
+body.cpt-scope .figcap,
+body.cpt-scope .viz-cap{font-size:12px;line-height:1.6}
+body.cpt-scope .fail h5{font-size:13.5px}
+body.cpt-scope .fail p{font-size:12.5px}
+body.cpt-scope .fm-t{font-size:12.5px}
+body.cpt-scope .kicker{font-size:11.5px}
+body.cpt-scope .dd-txt{font-size:13.5px;line-height:1.8}
+body.cpt-scope .dd-stats b{font-size:18px}
+body.cpt-scope .dd-stats span{font-size:12px}
+body.cpt-scope .dm-row{font-size:13px}
+body.cpt-scope .dm-row .k{font-size:10.5px}
+body.cpt-scope .dossier-meta{font-size:13px}
+body.cpt-scope .demo-head p{font-size:12.5px;line-height:1.7}
+body.cpt-scope .pending p{font-size:13.5px}
+
+/* 独立内容卡（风险约束 / 指标 / 失效盒）与四段式正文列对齐：
+   它们是案例详情面板（.panel[data-panel]）的直接子级，会贴到序号列左缘，
+   这里统一缩进 64px（序号列宽）+ 18px（网格间距），与 .sec4-body 左缘对齐。
+   注意：「30 秒判断」四格卡（.judge）刻意不缩进——它与下方序号（01/02…）
+   同缘，是页面级横幅；正文卡才与正文列对齐。
+   不依赖 body.cpt-scope，非完井案例页（地震等）同样生效；
+   窄屏下 .sec4 变单列，缩进归零 */
+.panel[data-panel] > .metrics,
+.panel[data-panel] > .fail-box,
+.panel[data-panel] > .cpt-risk{margin-left:calc(64px + 18px)}
+@media (max-width:760px){
+  .panel[data-panel] > .metrics,
+  .panel[data-panel] > .fail-box,
+  .panel[data-panel] > .cpt-risk{margin-left:0}
+}

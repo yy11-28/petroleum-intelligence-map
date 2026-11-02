@@ -1,0 +1,248 @@
+/* =========================================================
+   plan.css —— 立项决策台 #/plan
+   闭环：候选池 → 调研标尺 → 技术路线 → 风险与报告
+   ---------------------------------------------------------
+   视觉沿用全站令牌：白卡 + --line-2 描边 + --sh-1 抬起投影 + 主蓝强调，
+   圆角统一到 var(--r-*)，颜色全部走变量以兼容深浅双主题。
+   三色职责同 tokens.css：主蓝＝平台 / 流程，青绿＝结果状态，砂岩棕＝警示。
+   ========================================================= */
+
+.plan-wrap { padding-bottom: 64px; }
+
+/* ---------- 步骤条：四步进度装进一张卡 ---------- */
+.pl-steps {
+  display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+  padding: 9px 12px; margin-bottom: 22px;
+  background: var(--card); border: 1px solid var(--line-2);
+  border-radius: var(--r-m); box-shadow: var(--sh-1);
+}
+.pl-step {
+  position: relative; display: flex; align-items: center; gap: 8px;
+  padding: 7px 13px 7px 9px; border: 1px solid transparent; border-radius: var(--r-m);
+  font-size: 12.5px; color: var(--ink-3);
+  transition: background .16s, border-color .16s, color .16s;
+}
+.pl-step + .pl-step { margin-left: 14px; }
+/* 步骤之间的连接线，强调「闭环」而不是四个孤立的按钮 */
+.pl-step + .pl-step::before {
+  content: ''; position: absolute; left: -14px; top: 50%;
+  width: 10px; height: 1px; background: var(--line-2);
+}
+.pl-step:hover { color: var(--blue); border-color: var(--line-2); background: var(--paper-2); }
+.pl-step .sn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 19px; height: 19px; border-radius: 50%;
+  background: var(--paper-3); color: var(--ink-3);
+  font-family: var(--mono); font-size: 11px; font-weight: 650;
+}
+.pl-step.done { color: var(--ink-2); }
+.pl-step.done .sn { background: var(--jade-l); color: var(--jade-d); }
+.pl-step.on {
+  background: var(--blue-l); border-color: var(--blue); color: var(--blue); font-weight: 650;
+}
+.pl-step.on .sn { background: var(--blue); color: var(--ink-inv); }
+
+/* ---------- 两栏布局 ---------- */
+.pl-grid { display: grid; grid-template-columns: 292px minmax(0, 1fr); gap: 22px; align-items: start; }
+.pl-pool {
+  border: 1px solid var(--line-2); border-radius: var(--r-m); padding: 14px;
+  background: var(--card); box-shadow: var(--sh-1); position: sticky; top: 74px;
+}
+.pl-pool h3 { margin: 0 0 4px; padding-bottom: 9px; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+.pl-pool .hint { margin: 8px 0 10px; font-size: 11.5px; color: var(--ink-3); line-height: 1.6; }
+
+.pl-add { display: flex; gap: 6px; margin-bottom: 10px; }
+.pl-add select {
+  flex: 1; min-width: 0; padding: 6px 8px; font-size: 12px;
+  border: 1px solid var(--line-2); border-radius: var(--r-s);
+  background: var(--card); color: var(--ink);
+}
+.pl-add select:hover { border-color: var(--line-3); }
+.pl-add .btn { padding: 6px 10px; font-size: 12px; }
+
+.pl-pool-list { display: flex; flex-direction: column; gap: 7px; max-height: 430px; overflow: auto; }
+.pl-pool-item {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 9px; border: 1px solid var(--line); border-radius: var(--r-s);
+  background: var(--card-soft); font-size: 12px; transition: border-color .16s, background .16s;
+}
+.pl-pool-item:hover { border-color: var(--line-3); background: var(--card); }
+.pl-pool-item .nm { flex: 1; min-width: 0; line-height: 1.45; }
+.pl-pool-item .nm b { display: block; font-weight: 650; color: var(--ink); }
+.pl-pool-item .nm span { color: var(--ink-3); font-size: 11px; }
+.pl-pool-item .rm {
+  border: 0; background: none; color: var(--ink-4); cursor: pointer;
+  font-size: 14px; line-height: 1; padding: 2px 3px; border-radius: var(--r-s);
+}
+.pl-pool-item .rm:hover { color: var(--clay); background: var(--clay-l); }
+.pl-pool-empty {
+  font-size: 12px; color: var(--ink-3); padding: 12px 10px; line-height: 1.7;
+  border: 1px dashed var(--line-2); border-radius: var(--r-s); background: var(--card-soft);
+}
+
+/* ---------- 主区 ---------- */
+.pl-main { min-width: 0; }
+.pl-sec { margin-bottom: 26px; }
+.pl-sec-h { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.pl-sec-h h3 {
+  margin: 0; padding-left: 10px; border-left: 3px solid var(--blue);
+  font-size: 15px; line-height: 1.35;
+}
+.pl-sec-h .sub { font-size: 11.5px; color: var(--ink-3); }
+
+/* 数据口径勾选：与全站 .chip 同款（胶囊 + 主蓝选中） */
+.pl-cats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.pl-cat {
+  padding: 5px 11px; border: 1px solid var(--line-2); border-radius: 100px;
+  font-size: 11.5px; line-height: 1.35; color: var(--ink-2);
+  background: var(--card); cursor: pointer; transition: all .15s;
+}
+.pl-cat:hover { border-color: var(--blue); color: var(--blue); }
+.pl-cat.on {
+  background: var(--blue); border-color: var(--blue); color: var(--ink-inv); font-weight: 600;
+  box-shadow: 0 1px 3px rgba(10, 32, 56, .08);
+}
+.pl-cat-note { font-size: 11.5px; color: var(--ink-3); margin-bottom: 14px; }
+
+/* 权重预设：矩形，与上面的胶囊在数据区里区分开 */
+.pl-presets { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.pl-preset {
+  padding: 6px 12px; border: 1px solid var(--line-2); border-radius: var(--r-s);
+  font-size: 12px; background: var(--card); color: var(--ink-2); cursor: pointer;
+  transition: all .15s;
+}
+.pl-preset:hover { border-color: var(--blue); color: var(--blue); }
+.pl-preset.on {
+  background: var(--blue); border-color: var(--blue); color: var(--ink-inv); font-weight: 600;
+}
+
+/* ---------- 表格 ---------- */
+.pl-tw {
+  overflow: auto; border: 1px solid var(--line-2); border-radius: var(--r-m);
+  background: var(--card); box-shadow: var(--sh-1);
+}
+.pl-tb { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; }
+.pl-tb th, .pl-tb td {
+  padding: 8px 10px; border-bottom: 1px solid var(--line);
+  text-align: left; white-space: nowrap;
+}
+.pl-tb thead th {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--paper-2); color: var(--ink-3);
+  font-size: 11px; font-weight: 650; letter-spacing: .04em;
+  border-bottom: 1px solid var(--line-2);
+}
+.pl-tb tbody tr:last-child td { border-bottom: 0; }
+/* 场景名列吸附在左：宽表横向滚动时始终知道在看哪个场景 */
+.pl-tb .sc-nm { position: sticky; left: 0; z-index: 1; background: var(--card); box-shadow: 1px 0 0 var(--line); }
+.pl-tb thead th:first-child { position: sticky; left: 0; z-index: 3; }
+.pl-tb .sc-nm { white-space: normal; min-width: 148px; font-weight: 650; }
+.pl-tb .sc-nm span { display: block; font-weight: 400; font-size: 10.5px; color: var(--ink-3); }
+.pl-tb tbody tr:nth-child(even) td { background: var(--card-soft); }
+.pl-tb tbody tr:hover td { background: var(--paper-3); }
+
+.pl-tb td.num { text-align: center; }
+.pl-score { display: block; font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 650; color: var(--ink); }
+/* 刻度条：固定轨道，百分比才有参照 */
+.pl-bar-t {
+  display: block; width: 100%; min-width: 44px; height: 4px; margin-top: 4px;
+  background: var(--paper-3); border-radius: var(--r-s); overflow: hidden;
+}
+.pl-bar-t i { display: block; height: 100%; border-radius: var(--r-s); }
+.pl-total {
+  font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--jade-d);
+}
+.pl-tb .gap { color: var(--clay-d); }
+.pl-tb .ok { color: var(--jade-d); }
+
+/* 维度说明 */
+.pl-legend { display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; color: var(--ink-3); margin-top: 10px; }
+.pl-legend span {
+  padding: 3px 9px; background: var(--card-soft); border: 1px solid var(--line);
+  border-radius: var(--r-s); line-height: 1.6;
+}
+.pl-legend span b { color: var(--ink-2); font-weight: 650; }
+
+/* ---------- 技术路线 ---------- */
+.pl-route-row {
+  border: 1px solid var(--line-2); border-radius: var(--r-m); padding: 12px 14px; margin-bottom: 10px;
+  background: var(--card); box-shadow: var(--sh-1);
+}
+.pl-route-row .h { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.pl-route-row .h b { font-size: 13px; }
+.pl-route-row .h .st { font-size: 11px; color: var(--ink-3); }
+.pl-route-row .why { font-size: 12px; color: var(--ink-2); line-height: 1.7; }
+.pl-chip {
+  display: inline-block; padding: 2px 8px; border-radius: var(--r-s); font-size: 11px; font-weight: 650;
+  background: var(--jade-l); color: var(--jade-d); border: 1px solid var(--line-2);
+}
+.pl-chip.alt { background: var(--clay-l); color: var(--clay-d); }
+
+.pl-tb.pl-cmp tbody td.hl { background: var(--jade-l); font-weight: 650; color: var(--jade-d); }
+
+/* 对比表分组标题行 */
+.pl-grp td {
+  background: var(--paper-2); font-size: 11px; font-weight: 650;
+  color: var(--ink-3); letter-spacing: .04em; padding: 6px 10px;
+}
+
+/* ---------- 风险与报告 ---------- */
+.pl-risk {
+  border: 1px solid var(--line-2); border-left: 3px solid var(--warn);
+  background: var(--warn-bg); border-radius: var(--r-m); box-shadow: var(--sh-1);
+  padding: 11px 13px; margin-bottom: 10px; font-size: 12px; line-height: 1.7;
+}
+.pl-risk b { color: var(--clay-d); }
+.pl-risk-ok { border-left-color: var(--jade); background: var(--jade-l); }
+.pl-risk-ok b { color: var(--ink-2); }
+
+.pl-rep {
+  border: 1px solid var(--line-2); border-radius: var(--r-m);
+  background: var(--card); box-shadow: var(--sh-1);
+  padding: 14px 16px; max-height: 460px; overflow: auto;
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.75;
+  white-space: pre-wrap; color: var(--ink-2);
+}
+.pl-acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+/* 定位声明 */
+.pl-disclaim {
+  margin: 12px 0 18px; padding: 9px 13px; font-size: 12px; line-height: 1.7;
+  border-left: 3px solid var(--warn); background: var(--warn-bg);
+  color: var(--ink-2); border-radius: 0 var(--r-s) var(--r-s) 0;
+}
+
+/* ---------- 空态 ---------- */
+.pl-empty {
+  border: 1px dashed var(--line-2); border-radius: var(--r-m); padding: 40px 20px; text-align: center;
+  background: var(--card); box-shadow: var(--sh-1);
+  color: var(--ink-3); font-size: 13px; line-height: 1.8;
+}
+.pl-empty b { display: block; color: var(--ink-2); font-size: 14px; margin-bottom: 4px; }
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 1080px) {
+  .pl-grid { grid-template-columns: 1fr; }
+  .pl-pool { position: static; }
+  .pl-pool-list { max-height: 260px; }
+}
+@media (max-width: 720px) {
+  .pl-steps { flex-wrap: nowrap; overflow-x: auto; }
+  .pl-step + .pl-step { margin-left: 10px; }
+  .pl-step + .pl-step::before { left: -10px; width: 6px; }
+  .pl-step { padding: 6px 9px 6px 7px; font-size: 11.5px; }
+  .pl-step .lb { display: none; }
+  .pl-step.on .lb { display: inline; }
+  .pl-tb th, .pl-tb td { padding: 7px 8px; font-size: 11.5px; }
+  .pl-tb .sc-nm { min-width: 120px; }
+}
+
+/* ---------- 打印 ---------- */
+@media print {
+  .pl-steps, .pl-pool, .pl-acts, .pl-add, .pl-presets { display: none !important; }
+  .pl-grid { grid-template-columns: 1fr; }
+  .pl-tw { overflow: visible; box-shadow: none; }
+  .pl-rep { max-height: none; overflow: visible; border: 0; padding: 0; box-shadow: none; }
+  .plan-wrap { padding-bottom: 0; }
+  .pl-tw, .pl-route-row, .pl-risk, .pl-empty { box-shadow: none; }
+}

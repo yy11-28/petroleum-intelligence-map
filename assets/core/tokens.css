@@ -1,0 +1,190 @@
+/* =========================================================
+   设计令牌 Design Tokens
+   风格：官方信息平台 —— 标准蓝外壳 + 中性白底 + 单一强调色
+   规则：所有颜色只在这里定义，案例与组件不得写死色值
+   ---------------------------------------------------------
+   三色职责分工（不要在别处混用）：
+     --navy 族  机构色：顶栏 / 页脚 / 表头 / 标题竖条，代表平台本身
+     --clay 族  强调色：仅用于"上传案例"等主动作与警示，全站不超过两处
+     --jade 族  状态色：可运行、校验通过、正常，代表结果判定
+   版式原则：直角优先（圆角 ≤3px）、少阴影、靠细线与留白分区
+   ========================================================= */
+
+:root{
+  /* ---------- 画布：极浅冷灰蓝 ---------- */
+  --paper:      #F7FAFC;   /* 主背景 */
+  --paper-2:    #EEF3F8;   /* 次级底板 */
+  --paper-3:    #E3EAF1;   /* 三级底板 */
+  --card:       #ffffff;   /* 卡片 */
+  --card-soft:  #FAFCFE;   /* 卡片内嵌区 */
+
+  /* ---------- 外壳深炭蓝（顶栏 / 页脚 / 表头） ---------- */
+  --navy:       #0A2038;
+  --navy-2:     #10294A;   /* 深底悬浮态 */
+  --navy-3:     #1A3A5F;   /* 深底浮起块 */
+  --navy-4:     #3D86BD;   /* 深底点睛浅蓝 */
+  --on-d:       #E9EFF5;   /* 深底正文 */
+  --on-d-2:     #B7C6D6;   /* 深底次要文字 */
+  --on-d-3:     #7E93A8;   /* 深底弱化文字 */
+  --line-d:     rgba(255,255,255,.13);   /* 深底描边 */
+  --fill-d:     rgba(255,255,255,.06);   /* 深底填充 */
+
+  /* ---------- 平台主蓝（按钮 / 竖条 / 数字 / 链接） ---------- */
+  --blue:       #1A4779;
+  --blue-2:     #24598F;   /* 悬浮提亮 */
+  --blue-l:     #EAF1F8;   /* 浅蓝底 */
+  --steel:      #5B6B7C;   /* 钢灰，中性 */
+
+  /* ---------- 描边 ---------- */
+  --line:       #E4EAF0;
+  --line-2:     #D4DDE6;
+  --line-3:     #BAC6D2;
+
+  /* ---------- 墨色（文字）：正文中性深灰，拒绝纯黑 ---------- */
+  --ink:        #222B38;
+  --ink-2:      #4A5568;
+  --ink-3:      #718096;
+  --ink-4:      #9AA5B1;
+  --ink-inv:    #ffffff;
+
+  /* ---------- 强调 / 状态 ---------- */
+  --jade:       #238868;
+  --jade-d:     #1B6B51;
+  --jade-l:     #E9F5F0;
+  --clay:       #9A5A28;   /* 砂岩棕：仅"上传案例" */
+  --clay-2:     #B06A32;   /* 悬停提亮 */
+  --clay-d:     #7C4820;
+  --clay-l:     #F6ECDF;
+  --warn:       #B97A48;   /* 警示/声明 浅橙棕 */
+  --warn-bg:    #FBF4EC;
+  --ok:         #4E9B7E;   /* 难度：低 浅青绿 */
+  --ok-bg:      #E9F5F0;
+  --bad:        #9C4A3E;   /* 难度：高 暗红棕 */
+  --bad-bg:     #F7E9E6;
+
+  /* ---------- 五类方法色（低饱和，白底可读，全站一套色板） ---------- */
+  --c-cv:       #238868;   /* 计算机视觉 低饱和青绿 */
+  --c-ts:       #A06B37;   /* 时序预测 砂岩棕 */
+  --c-nlp:      #725994;   /* 自然语言处理 灰紫 */
+  --c-opt:      #1A4779;   /* 优化算法 主蓝 */
+  --c-kg:       #707A38;   /* 知识图谱 暗橄榄绿 */
+
+  --bg-cv:      #E9F5F0;
+  --bg-ts:      #F6EDE2;
+  --bg-nlp:     #EFEBF4;
+  --bg-opt:     #E7EEF6;
+  --bg-kg:      #F0F1DE;
+
+  /* 场景成熟度梯度：探索 → 原型 → 试点 → 规模化 */
+  --mat-1:      #BAC6D2;
+  --mat-2:      #7E93A8;
+  --mat-3:      #3D86BD;
+  --mat-4:      #1A4779;
+
+  /* 方法色的 RGB 分量：矩阵热力图按透明度混色用 */
+  --rgb-cv:     35,136,104;
+  --rgb-ts:     160,107,55;
+  --rgb-nlp:    114,89,148;
+  --rgb-opt:    26,71,121;
+  --rgb-kg:     112,122,56;
+
+  /* ---------- 圆角与阴影：工业平台统一 4px，软阴影 ---------- */
+  --r-s: 3px;
+  --r-m: 4px;
+  --r-l: 5px;
+  --r-xl: 6px;
+
+  --sh-1: 0 1px 6px rgba(10,32,56,.06);
+  --sh-2: 0 1px 6px rgba(10,32,56,.06), 0 6px 16px -8px rgba(10,32,56,.14);
+  --sh-3: 0 2px 6px rgba(10,32,56,.07), 0 10px 24px -12px rgba(10,32,56,.18);
+
+  /* ---------- 字体：Inter + 思源黑体；等宽用于代码路径 ---------- */
+  --mono: 'JetBrains Mono','SF Mono','Cascadia Mono',Consolas,'Liberation Mono',monospace;
+  --sans: 'Inter','Noto Sans SC','Source Han Sans SC',-apple-system,BlinkMacSystemFont,'Segoe UI',
+          'PingFang SC','Hiragino Sans GB','Microsoft YaHei UI','Microsoft YaHei',sans-serif;
+  --display: 'Inter','Noto Sans SC',var(--sans);
+
+  /* ---------- 布局 ---------- */
+  --nav-h: 56px;      /* 主导航行高度 */
+  --hdr-h: 84px;      /* 顶栏总高度（主导航行 + 数据条），吸顶偏移用 */
+  --maxw: 1200px;
+  --sp-1: 6px;  --sp-2: 10px;  --sp-3: 14px;
+  --sp-4: 20px; --sp-5: 28px;  --sp-6: 40px;
+}
+
+/* =========================================================
+   Reset
+   ========================================================= */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);
+  font-size:14px;
+  line-height:1.68;
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 480px at 8% -8%, rgba(26,71,121,.045), transparent 55%),
+    radial-gradient(900px 420px at 96% 4%, rgba(154,90,40,.035), transparent 50%),
+    var(--paper);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  /* 内容区不足一屏时也把页脚推到视口之外（需滚动才见） */
+  display:flex;flex-direction:column;min-height:100vh;
+}
+#view{display:flex;flex-direction:column;flex:1 0 auto}
+#view>main{flex:1 0 auto;min-height:calc(100vh - 88px)}
+
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:inherit}
+img,svg{max-width:100%}
+::selection{background:rgba(47,125,107,.20);color:var(--ink)}
+
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:var(--paper-2)}
+::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:6px;border:3px solid var(--paper-2)}
+::-webkit-scrollbar-thumb:hover{background:var(--line-3)}
+
+:focus-visible{outline:2px solid var(--jade);outline-offset:2px;border-radius:3px}
+
+/* =========================================================
+   排版基元
+   ========================================================= */
+h1,h2,h3,h4,h5{font-family:var(--display);font-weight:650;letter-spacing:-.01em;line-height:1.3;color:var(--ink)}
+p{color:var(--ink-2)}
+b,strong{font-weight:650;color:var(--ink)}
+
+.wrap{width:min(var(--maxw),calc(100% - 48px));margin:0 auto}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.kicker{
+  font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--jade-d);display:inline-flex;align-items:center;gap:9px;
+}
+.kicker::before{content:'';width:20px;height:1.5px;background:currentColor;opacity:.55;border-radius:2px}
+.kicker.plain::before{display:none}
+.kicker.clay{color:var(--clay-d)}
+
+.eyebrow{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-4);
+}
+
+.lede{font-size:13.5px;line-height:1.8;color:var(--ink-2)}
+
+/* 工具类 */
+.muted{color:var(--ink-3)}
+.small{font-size:12px}
+.nowrap{white-space:nowrap}
+.hr{height:1px;background:var(--line);border:0;margin:0}
+.stack{display:flex;flex-direction:column}
+.row{display:flex;align-items:center}
+
+/* 动效：轻微上浮，不做夸张动画 */
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.rise{animation:rise .42s cubic-bezier(.2,.7,.3,1) both}
+.d1{animation-delay:.03s}.d2{animation-delay:.06s}.d3{animation-delay:.09s}.d4{animation-delay:.12s}.d5{animation-delay:.15s}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}

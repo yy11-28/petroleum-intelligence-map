@@ -1,0 +1,149 @@
+{
+  "id": "candidate-well-ranking",
+  "sceneId": "co45",
+  "title": "完井候选井投资优先级智能排序：预算约束下选哪几口先做",
+  "version": "1.0.0",
+  "updated": "2026-11-01",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "一批候选井同时摆在面前，预算只够做其中一部分，就得回答先做哪几口。现状是靠经验与产值排序——谁产量高谁先做，而剩下的是否实施、什么时候实施，往往取决于当年的预算与汇报顺序，没有明确口径。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "结构化",
+          "desc": "候选井指标、投资估算、风险等级与工期"
+        },
+        {
+          "label": "标注成本",
+          "value": "低",
+          "desc": "指标来自已有评价结果，不需额外标注"
+        },
+        {
+          "label": "可见收益",
+          "value": "中",
+          "desc": "预算约束下收益最大化，且口径可解释"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "多目标 + 组合约束，权重口径要事先统一"
+        }
+      ],
+      "sections": [
+        {
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>做法是产值排序：按预测产量或内部收益率从高到低排，预算够几口就做几口。排序结果写进年度计划，剩下的进下一批。</p><p>问题有三个：<b>只看收益不看风险</b>——高产井可能同时是高风险井，实施中途出问题会打乱整批计划；<b>组合效应没人算</b>——两口井共用一套设备或同一支队伍时，总成本不是简单相加，分开排序会重复占用资源；<b>口径不透明</b>——排序靠汇报与经验微调，事后无法解释为什么这口排在那口前面。</p><svg viewBox='0 0 660 154' role='img' aria-label='单井产值排序 vs 预算约束下的组合排序' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='154' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>预算有限时，「谁产量高谁先做」不一定是收益最大的选择</text><text x='50' y='42' font-size='10' fill='#3d4a48'>产值排序（现状）</text><rect x='50' y='50' width='250' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='66' y='68' font-size='8.5' fill='#4d565b'>按预测产量从高到低排</text><text x='66' y='84' font-size='8.5' fill='#4d565b'>预算够几口做几口</text><text x='66' y='100' font-size='8.5' fill='#c9613f'>→ 高产高风险井排在前面</text><text x='66' y='116' font-size='8.5' fill='#c9613f'>→ 共用资源的井重复占用</text><text x='66' y='132' font-size='8.5' fill='#c9613f'>→ 排序口径说不清</text><text x='330' y='42' font-size='10' fill='#3d4a48'>组合排序（本方法）</text><rect x='330' y='50' width='300' height='74' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='346' y='68' font-size='9' fill='#4d565b'>收益 × 风险 × 工期 三维打分</text><text x='346' y='84' font-size='9' fill='#4d565b'>预算为约束，按组合寻优</text><text x='346' y='100' font-size='9' fill='#2f7d6b'>→ 共用资源的井合并计成本</text><text x='346' y='116' font-size='9' fill='#2f7d6b'>→ 输出：做哪几口 + 为什么</text><text x='346' y='132' font-size='9' fill='#2f7d6b'>→ 排序口径可解释、可复核</text><text x='12' y='148' font-size='8.5' fill='#79828a'>差别不在排得更准，而在预算约束下给出可解释的组合与理由</text></svg><div class='viz-cap'>图：单井产值排序 vs 预算约束下的组合排序</div>"
+        },
+        {
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>按收益、风险、工期三维给候选井打分，在预算与资源约束下做组合寻优，输出优先实施清单、未入选井的原因与敏感性提示。</p><p>关键在两点：<b>组合而非单井</b>——预算是总约束，选哪几口要放在一起算，共用资源的井合并计成本；<b>排序可解释</b>——每口井的得分分项列出，为什么入选、为什么落选都说得清，而不是一个黑箱分数。</p><svg viewBox='0 0 660 158' role='img' aria-label='组合寻优：预算约束下选哪几口，并给出理由' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='158' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>组合寻优 vs 单井排序：前者回答「做哪几口」，后者只回答「谁分高」</text><rect x='20' y='36' width='190' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='56' font-size='10' fill='#3d4a48'>① 单井三维打分</text><text x='34' y='74' font-size='8.5' fill='#79828a'>收益 / 风险 / 工期</text><text x='34' y='92' font-size='8.5' fill='#79828a'>权重可调</text><line x1='212' y1='66' x2='244' y2='66' stroke='#8a8f80' stroke-width='1.4'/><polygon points='244,66 238,62.5 238,69.5' fill='#8a8f80'/><rect x='246' y='36' width='190' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='260' y='56' font-size='10' fill='#3d4a48'>② 组合寻优</text><text x='260' y='74' font-size='8.5' fill='#79828a'>预算为总约束</text><text x='260' y='92' font-size='8.5' fill='#2f7d6b'>共用资源合并计成本</text><line x1='438' y1='66' x2='470' y2='66' stroke='#8a8f80' stroke-width='1.4'/><polygon points='470,66 464,62.5 464,69.5' fill='#8a8f80'/><rect x='472' y='36' width='176' height='62' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='486' y='56' font-size='10' fill='#3d4a48'>③ 输出清单</text><text x='486' y='74' font-size='8.5' fill='#2f7d6b'>做哪几口 + 为什么</text><text x='486' y='92' font-size='8.5' fill='#2f7d6b'>未入选的原因</text><text x='20' y='116' font-size='9.5' fill='#4d565b'>输出要能回答两个问题：为什么是这几口、预算变了多少结论会变</text><text x='20' y='134' font-size='8.5' fill='#c9613f'>敏感性提示是必须的：预算与权重一变，排序就可能重排</text><text x='12' y='148' font-size='8.5' fill='#79828a'>可解释性决定这个排序能不能拿去汇报</text></svg><div class='viz-cap'>图：组合寻优：预算约束下选哪几口，并给出理由</div>"
+        },
+        {
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p>需要：<b>候选井评价结果</b>（预测产量、内部收益率、投资估算、风险等级）；<b>资源与工期</b>（队伍、设备、材料周期与单井工期）；<b>预算与约束</b>（年度预算上限、必做井与硬性时间要求）；<b>历史实施结果</b>（已实施井的实际产量与投资偏差）。</p><p>有历史实施结果的井最有价值：预测产量与实际的偏差决定了排序的可信度，也决定要不要打风险折扣。</p><div class='viz-concepts'><div class='viz-c'><div class='viz-c-h'><b>数据口径</b><span>DATA</span></div><p>投资估算含工期与风险预备；共用队伍/设备的井按组合合并计成本；历史偏差按井记录</p></div><div class='viz-c'><div class='viz-c-h'><b>关键约束</b><span>CONSTRAINT</span></div><p>预算为总约束（不是单井上限）；必做井与硬性工期为硬约束；权重口径事先统一</p></div><div class='viz-c'><div class='viz-c-h'><b>效果口径</b><span>EFFECT</span></div><p>给出优先清单 + 各井得分分项 + 未入选原因 + 预算/权重敏感性</p></div></div>"
+        },
+        {
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难度中等：组合寻优算法本身成熟，难在输入——预测产量的可信度参差（有的井评价充分、有的是类比外推），以及权重口径难以统一（产量、风险、战略价值怎么权衡）。</p><p><b>难在哪</b>：候选井的资料成熟度不齐，把一口类比外推的井和一口评价充分的井放在一起打分，等于默认两者可信度相同。参考方向为组合优化、可信度加权与多目标决策。</p><p><b>与传统做法的本质差别</b>：过去是「按产值排、预算够几口做几口」，现在是「预算约束下组合寻优、排序可解释、敏感性明确」——差别不在选得更优，而在口径能拿去汇报。</p>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "候选井优先级排序怎么做",
+      "lead": [
+        "核心是把「按产值单井排序」换成「三维打分 + 预算约束下组合寻优」。",
+        "下面的示范是第 2—4 步：调整预算上限、风险权重与资料成熟度，看优先清单与排序怎么变。"
+      ],
+      "stats": [
+        [
+          "打分维度",
+          "收益 / 风险 / 工期"
+        ],
+        [
+          "约束",
+          "年度预算"
+        ],
+        [
+          "输出",
+          "清单 + 理由"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "候选井指标整理",
+          "role": "数据",
+          "do": "整理各候选井的预测产量、投资估算、风险等级与工期，标注资料成熟度。",
+          "effect": "得到可比的候选井清单，每口井的可信度有标记。",
+          "trap": "资料成熟度不同的井直接放在一起打分，等于默认类比外推与评价充分可信度相同。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='资料成熟度：可信度不同的井不能直接并列打分' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>评价充分的井与类比外推的井并列打分，等于默认两者可信度相同</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>候选井 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>可信度</text><rect x='80' y='40' width='44' height='52' fill='#7fae9b'/><text x='84' y='36' font-size='8.5' fill='#2f5a4d'>高</text><text x='72' y='104' font-size='8' fill='#4d565b'>A 井</text><rect x='150' y='52' width='44' height='40' fill='#a9c9ba'/><text x='154' y='48' font-size='8.5' fill='#2f5a4d'>中高</text><text x='142' y='104' font-size='8' fill='#4d565b'>B 井</text><rect x='220' y='64' width='44' height='28' fill='#d9c27a'/><text x='224' y='60' font-size='8.5' fill='#8a6a3a'>中</text><text x='212' y='104' font-size='8' fill='#4d565b'>C 井</text><rect x='290' y='78' width='44' height='14' fill='#f4ded4'/><text x='294' y='74' font-size='8.5' fill='#8a3d20'>低</text><text x='282' y='104' font-size='8' fill='#4d565b'>D 井</text><text x='290' y='96' font-size='8' fill='#8a3d20'>类比外推</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='9' fill='#4d565b'>可信度加权</text><text x='442' y='70' font-size='8.5' fill='#c9613f'>低成熟度井打风险折扣</text><text x='442' y='90' font-size='8.5' fill='#c9613f'>否则等于默认同可信度</text><text x='12' y='124' font-size='8.5' fill='#79828a'>成熟度是排序可信度的一部分：不打折扣就是把外推当实测</text></svg><div class='viz-cap'>图：资料成熟度：可信度不同的井不能直接并列打分</div>"
+        },
+        {
+          "name": "三维打分与权重",
+          "role": "算法",
+          "do": "按收益、风险、工期三维给每口井打分，权重可调并做敏感性分析。",
+          "effect": "每口井的得分分项可查，权重怎么动会改变排序能提前看到。",
+          "trap": "权重口径不统一会让排序无法汇报：产量、风险、战略价值的权衡必须事先说清并留痕。",
+          "viz": "<svg viewBox='0 0 660 148' role='img' aria-label='三维打分：收益 / 风险 / 工期，权重可调' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='148' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>三维打分的好处是可解释：每一项得分多少、权重多少，能逐条说清</text><rect x='30' y='36' width='190' height='88' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='44' y='56' font-size='9.5' fill='#4d565b'>A 井得分构成</text><text x='44' y='74' font-size='8.5' fill='#79828a'>收益 0.82 × 0.55 = 0.45</text><text x='44' y='90' font-size='8.5' fill='#79828a'>风险 0.70 × 0.30 = 0.21</text><text x='44' y='106' font-size='8.5' fill='#79828a'>工期 0.60 × 0.15 = 0.09</text><text x='44' y='124' font-size='9' fill='#2f7d6b'>合计 0.75</text><rect x='240' y='36' width='190' height='88' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='254' y='56' font-size='9.5' fill='#4d565b'>B 井得分构成</text><text x='254' y='74' font-size='8.5' fill='#79828a'>收益 0.68 × 0.55 = 0.37</text><text x='254' y='90' font-size='8.5' fill='#79828a'>风险 0.88 × 0.30 = 0.26</text><text x='254' y='106' font-size='8.5' fill='#79828a'>工期 0.85 × 0.15 = 0.13</text><text x='254' y='124' font-size='9' fill='#2f7d6b'>合计 0.76</text><rect x='450' y='36' width='198' height='88' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='464' y='56' font-size='9.5' fill='#4d565b'>权重敏感性</text><text x='464' y='74' font-size='8.5' fill='#c9613f'>风险权重 +10%</text><text x='464' y='90' font-size='8.5' fill='#c9613f'>→ B 井反超 A 井</text><text x='464' y='110' font-size='8.5' fill='#c9613f'>→ 排序会变，必须提示</text><text x='12' y='140' font-size='8.5' fill='#79828a'>分项可查 = 可汇报：黑箱分数在这里没有说服力</text></svg><div class='viz-cap'>图：三维打分：收益 / 风险 / 工期，权重可调</div>"
+        },
+        {
+          "name": "预算约束下组合寻优",
+          "role": "算法",
+          "do": "在年度预算与资源约束下做组合寻优，输出优先实施清单与未入选井的原因。",
+          "effect": "给出做哪几口、总预算占用与剩余额度，以及每口未入选井的原因。",
+          "trap": "共用资源的井分开计成本会重复占用预算，实际做不完清单上的井。",
+          "viz": "<svg viewBox='0 0 660 140' role='img' aria-label='组合寻优：预算为总约束，共用资源合并计成本' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='140' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>预算是总约束：清单上的井加起来超预算，等于没排</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>清单方案 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>占用预算</text><rect x='80' y='50' width='60' height='42' fill='#c3d2e2'/><text x='90' y='46' font-size='8.5' fill='#4d565b'>方案 1</text><text x='84' y='104' font-size='8' fill='#4d565b'>4 口 · 920 万</text><rect x='160' y='40' width='60' height='52' fill='#7fae9b'/><text x='170' y='36' font-size='8.5' fill='#2f5a4d'>推荐</text><text x='158' y='104' font-size='8' fill='#4d565b'>5 口 · 1150 万</text><rect x='240' y='56' width='60' height='36' fill='#d9c27a'/><text x='250' y='52' font-size='8.5' fill='#8a6a3a'>保守</text><text x='238' y='104' font-size='8' fill='#4d565b'>3 口 · 680 万</text><rect x='320' y='62' width='60' height='30' fill='#f4ded4'/><text x='330' y='58' font-size='8.5' fill='#8a3d20'>超预算</text><text x='312' y='104' font-size='8' fill='#4d565b'>6 口 · 1380 万</text><line x1='60' y1='44' x2='400' y2='44' stroke='#c9613f' stroke-width='1.2' stroke-dasharray='5 3'/><text x='300' y='40' font-size='8.5' fill='#c9613f'>年度预算 1200 万</text><text x='80' y='118' font-size='8.5' fill='#c9613f'>共用队伍的井合并计成本：分开算会重复占用，清单做不完</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='9' fill='#4d565b'>推荐方案</text><text x='442' y='70' font-size='8.5' fill='#2f7d6b'>5 口 · 1150 万（余 50 万）</text><text x='442' y='90' font-size='8.5' fill='#79828a'>未入选：评分低 / 资源冲突</text><text x='12' y='132' font-size='8.5' fill='#79828a'>组合寻优回答的是「做哪几口」，而不只是「谁分高」</text></svg><div class='viz-cap'>图：组合寻优：预算为总约束，共用资源合并计成本</div>"
+        },
+        {
+          "name": "敏感性分析与复核",
+          "role": "算法",
+          "do": "对预算变动与权重变动做敏感性分析，输出排序稳定性与需复核项。",
+          "effect": "给出「预算或权重怎么动会改变结论」的提示，排序不再是静态结论。",
+          "trap": "不给敏感性提示会让静态排序被当成确定结论，预算一调就要重做且无人知道。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='敏感性分析：预算与权重变动下的排序稳定性' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>排序是条件结论：预算或权重一变就可能重排，必须提前说清</text><line x1='60' y1='92' x2='400' y2='92' stroke='#242b2e' stroke-width='1'/><line x1='60' y1='92' x2='60' y2='28' stroke='#242b2e' stroke-width='1'/><text x='180' y='108' font-size='8.5' fill='#79828a'>预算变动 →</text><text x='46' y='38' font-size='8.5' fill='#79828a'>入选井数</text><polyline points='70,84 130,76 190,66 250,56 310,50 370,46' fill='none' stroke='#2f7d6b' stroke-width='2'/><text x='280' y='42' font-size='8.5' fill='#2f7d6b'>预算↑ → 入选井数↑（边际递减）</text><circle cx='250' cy='56' r='6' fill='none' stroke='#c9613f' stroke-width='1.5'/><text x='258' y='52' font-size='8.5' fill='#c9613f'>拐点：1100 万后收益递减</text><rect x='430' y='36' width='218' height='58' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='442' y='54' font-size='9' fill='#4d565b'>权重变动</text><text x='442' y='70' font-size='8.5' fill='#c9613f'>风险权重 +10% → 2 口换位</text><text x='442' y='90' font-size='8.5' fill='#c9613f'>必须提示，不能给静态结论</text><text x='12' y='124' font-size='8.5' fill='#79828a'>敏感性是排序结论的一部分：没有它就是条件结论被当确定结论用</text></svg><div class='viz-cap'>图：敏感性分析：预算与权重变动下的排序稳定性</div>"
+        },
+        {
+          "name": "决策确认与回填",
+          "role": "人工",
+          "do": "决策层按清单与敏感性提示确认年度计划，实施后把实际产量与投资偏差回填。",
+          "effect": "每批实施结果都在修正预测偏差，下一批的排序更可信。",
+          "trap": "不回填实际产量与投资偏差，预测值的可信度永远得不到校正，排序逐年失真。",
+          "viz": "<svg viewBox='0 0 660 130' role='img' aria-label='决策确认与回填：让预测可信度逐批收敛' style='width:100%;height:auto;display:block;margin:12px 0;border:1px solid #DDD8CB;border-radius:10px;background:#fff' font-family=\"system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif\"><rect x='0' y='0' width='660' height='130' fill='#FBFaf6'/><text x='12' y='20' font-size='9' fill='#4d565b'>回填的是「预测 vs 实际」的偏差：这个偏差决定下一批要不要打折扣</text><rect x='20' y='40' width='140' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='34' y='58' font-size='9.5' fill='#4d565b'>清单确认</text><text x='34' y='74' font-size='8.5' fill='#79828a'>年度计划定案</text><line x1='162' y1='62' x2='194' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='194,62 188,58.5 188,65.5' fill='#8a8f80'/><rect x='196' y='40' width='140' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='210' y='58' font-size='9.5' fill='#4d565b'>分批实施</text><text x='210' y='74' font-size='8.5' fill='#79828a'>实际产量 / 投资</text><line x1='338' y1='62' x2='370' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='370,62 364,58.5 364,65.5' fill='#8a8f80'/><rect x='372' y='40' width='140' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='386' y='58' font-size='9.5' fill='#4d565b'>偏差回填</text><text x='386' y='74' font-size='8.5' fill='#c9613f'>按井记录偏差</text><line x1='514' y1='62' x2='546' y2='62' stroke='#8a8f80' stroke-width='1.4'/><polygon points='546,62 540,58.5 540,65.5' fill='#8a8f80'/><rect x='548' y='40' width='100' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='562' y='58' font-size='9.5' fill='#4d565b'>可信度更新</text><text x='562' y='74' font-size='8.5' fill='#79828a'>下一批更准</text><path d='M596 86 C 588 108 100 108 84 88' fill='none' stroke='#8a8f80' stroke-width='1.2' stroke-dasharray='4 3'/><text x='280' y='112' font-size='8' fill='#79828a'>回填闭环：预测可信度逐批收敛，排序不再靠类比外推硬撑</text><rect x='20' y='92' width='628' height='16' rx='4' fill='#f6e8da' stroke='#e8cdae'/><text x='32' y='104' font-size='8.5' fill='#c9613f'>不回填实际偏差 → 预测可信度无法校正，排序逐年失真</text></svg><div class='viz-cap'>图：决策确认与回填：让预测可信度逐批收敛</div>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>预算利用率</b>：推荐清单的总投资占用预算 ≥ 90%，且不超上限。</p><p><b>收益实现</b>：实施井的实际产量与投资偏差在预测区间内，整批收益率不低于单井产值排序方案。</p><p><b>可解释性</b>：每口井的得分分项、入选/落选原因与敏感性提示完整，可直接用于汇报。</p>"
+      },
+      "fails": [
+        {
+          "name": "只按产值排序",
+          "why": "高产高风险井排在前面，实施中途出问题打乱整批计划。"
+        },
+        {
+          "name": "共用资源分开计成本",
+          "why": "重复占用预算，清单做不完。"
+        },
+        {
+          "name": "成熟度不同井并列打分",
+          "why": "类比外推与评价充分的井被默认同等可信，排序失真。"
+        },
+        {
+          "name": "不给敏感性提示",
+          "why": "条件结论被当确定结论，预算一调就要重做且无人知晓。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "height": 700,
+      "intro": "调整预算上限、风险权重与资料成熟度折扣，看优先清单、排序与敏感性怎么变——把预算压到 800 万，注意清单怎么缩。",
+      "html": "demo/index.html"
+    }
+  }
+}

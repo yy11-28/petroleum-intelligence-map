@@ -1,0 +1,157 @@
+{
+  "id": "wellgroup-completion-opt",
+  "sceneId": "co17",
+  "methods": [
+    "opt"
+  ],
+  "title": "多井组完井协同开发优化：从逐井最优到井组最优",
+  "version": "1.0.0",
+  "updated": "2026-10-25",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "一个井组共享同一套压力系统。每口井单独挑「自己最好」的层，叠加起来却可能全部涌向同一层：互相抢压力、把最好采的那层提前抽空，五年累计反而不如协调后的分法。完井管柱一旦下入就很难低成本更改——井组层面的搭配必须在设计期一次想清楚，这正是组合优化能替工程师做的事。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "结构化模型为主",
+          "desc": "井组模型 + 单井候选方案清单，干扰观测可后补"
+        },
+        {
+          "label": "标注成本",
+          "value": "低",
+          "desc": "优化目标由模拟算出，不需要人工逐井标注"
+        },
+        {
+          "label": "可见收益",
+          "value": "高",
+          "desc": "示范默认工况下，协同比逐井最优多采 127%"
+        },
+        {
+          "label": "难度",
+          "value": "高",
+          "desc": "组合空间爆炸，快速评价引擎的保真度是卡点"
+        }
+      ],
+      "sections": [
+        {
+          "no": 1,
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>常规做法：井组里每口井按单井评价各自挑最优的完井层位与参数，投产时序跟着钻井进度走。单井视角下每口井都没选错，但井组层面无人统筹——演示模型里，7 口井「逐井最优」会全部涌向产量最高的 A 层，每口井的效率因同层竞争被压到 <b>65%</b>，B、C 两层<b>零动用</b>。</p><p>问题有三个：<b>干扰被低估</b>——同层生产的井越多单井效率越低，这个损失在单井设计里根本看不见；<b>调整窗口极窄</b>——层间干扰常在投产一两年后才暴露，那时管柱已经下入，改层位意味着起管柱大修；<b>缺少换算工具</b>——把「单井产能」换算成「井组五年采出」的快速评价手段缺位，协同方案好不好只能靠碰。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='逐井最优与井组协同的层位分配对比'>\n<rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>同一个井组两种分法：单井视角谁都没选错，井组视角叠起来全变味</text>\n<text x='40' y='42' font-size='10' fill='#c9613f'>逐井最优：7 口井全涌向产量最高的 A 层</text>\n<text x='40' y='70' font-size='9' fill='#4d565b'>A 层</text>\n<rect x='86' y='56' width='32' height='22' rx='3' fill='#c9613f' opacity='0.85'/><text x='102' y='70' font-size='9' fill='#fff' text-anchor='middle'>W1</text>\n<rect x='122' y='56' width='32' height='22' rx='3' fill='#c9613f' opacity='0.85'/><text x='138' y='70' font-size='9' fill='#fff' text-anchor='middle'>W2</text>\n<rect x='158' y='56' width='32' height='22' rx='3' fill='#c9613f' opacity='0.85'/><text x='174' y='70' font-size='9' fill='#fff' text-anchor='middle'>W3</text>\n<rect x='194' y='56' width='32' height='22' rx='3' fill='#c9613f' opacity='0.85'/><text x='210' y='70' font-size='9' fill='#fff' text-anchor='middle'>W4</text>\n<rect x='230' y='56' width='32' height='22' rx='3' fill='#c9613f' opacity='0.85'/><text x='246' y='70' font-size='9' fill='#fff' text-anchor='middle'>W5</text>\n<rect x='266' y='56' width='32' height='22' rx='3' fill='#c9613f' opacity='0.85'/><text x='282' y='70' font-size='9' fill='#fff' text-anchor='middle'>W6</text>\n<rect x='302' y='56' width='32' height='22' rx='3' fill='#c9613f' opacity='0.85'/><text x='318' y='70' font-size='9' fill='#fff' text-anchor='middle'>W7</text>\n<text x='40' y='110' font-size='9' fill='#4d565b'>B 层</text><text x='90' y='107' font-size='8.5' fill='#b0a89a'>未动用</text>\n<text x='40' y='150' font-size='9' fill='#4d565b'>C 层</text><text x='90' y='147' font-size='8.5' fill='#b0a89a'>未动用</text>\n<text x='40' y='182' font-size='9' fill='#c9613f'>同层 7 口抢压力：单井效率被压到 65%，B / C 两层零动用</text>\n<text x='380' y='42' font-size='10' fill='#2f7d6b'>井组协同：分摊到三层，投产批次错开 8 个月</text>\n<text x='380' y='70' font-size='9' fill='#4d565b'>A 层</text>\n<rect x='426' y='56' width='32' height='22' rx='3' fill='#2f7d6b' opacity='0.85'/><text x='442' y='70' font-size='9' fill='#fff' text-anchor='middle'>W1</text><text x='453' y='66' font-size='7.5' fill='#d8ecdf'>1</text>\n<rect x='462' y='56' width='32' height='22' rx='3' fill='#2f7d6b' opacity='0.85'/><text x='478' y='70' font-size='9' fill='#fff' text-anchor='middle'>W4</text><text x='489' y='66' font-size='7.5' fill='#d8ecdf'>2</text>\n<rect x='498' y='56' width='32' height='22' rx='3' fill='#2f7d6b' opacity='0.85'/><text x='514' y='70' font-size='9' fill='#fff' text-anchor='middle'>W6</text><text x='525' y='66' font-size='7.5' fill='#d8ecdf'>3</text>\n<rect x='534' y='56' width='32' height='22' rx='3' fill='#2f7d6b' opacity='0.85'/><text x='550' y='70' font-size='9' fill='#fff' text-anchor='middle'>W2</text><text x='561' y='66' font-size='7.5' fill='#d8ecdf'>1</text>\n<rect x='570' y='56' width='32' height='22' rx='3' fill='#2f7d6b' opacity='0.85'/><text x='586' y='70' font-size='9' fill='#fff' text-anchor='middle'>W5</text><text x='597' y='66' font-size='7.5' fill='#d8ecdf'>2</text>\n<text x='380' y='110' font-size='9' fill='#4d565b'>B 层</text><rect x='426' y='96' width='32' height='22' rx='3' fill='#2f7d6b' opacity='0.85'/><text x='442' y='110' font-size='9' fill='#fff' text-anchor='middle'>W3</text><text x='453' y='106' font-size='7.5' fill='#d8ecdf'>1</text>\n<text x='380' y='150' font-size='9' fill='#4d565b'>C 层</text><rect x='426' y='136' width='32' height='22' rx='3' fill='#2f7d6b' opacity='0.85'/><text x='442' y='150' font-size='9' fill='#fff' text-anchor='middle'>W7</text><text x='453' y='146' font-size='7.5' fill='#d8ecdf'>1</text>\n<text x='380' y='182' font-size='9' fill='#2f7d6b'>峰值层消耗 133% → 121%，五年累计采出 +127%（示范默认工况）</text>\n<line x1='16' y1='202' x2='684' y2='202' stroke='#e2ded0'/>\n<defs><marker id='wgA' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#c9613f'/></marker></defs>\n<line x1='60' y1='228' x2='640' y2='228' stroke='#c9613f' stroke-width='1.2' marker-end='url(#wgA)'/>\n<text x='60' y='220' font-size='9' fill='#41699b'>完井设计（决策窗口只有几天）</text>\n<text x='640' y='220' font-size='9' fill='#c9613f' text-anchor='end'>投产 12—24 个月后才发现干扰，改层位 = 起管柱大修</text>\n<text x='350' y='245' font-size='8.5' fill='#c9613f' text-anchor='middle'>错配的代价同样是「发现晚、更改贵」——所以搭配必须在设计期算出来</text>\n</svg><span class='viz-cap'>逐井最优（左）与井组协同（右）的层位分配对比：差距不在某一口井，在「叠起来」。</span></div>"
+        },
+        {
+          "no": 2,
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>合适的方法是<b>「快评价 + 组合搜索」</b>两件套，而不是深度学习——这里没有大量历史样本可学，但有明确的物理机理可以算。<b>快速评价引擎</b>：逐月物质平衡，把「某层采出越多压力越低、同层井越多效率越低、邻层压降会传导」三条机理编成一次不到 0.1 毫秒的试算，替代一次几小时的数值模拟；<b>组合搜索</b>：在 3⁷ ≈ 2,187 种层位分配里穷举，按井组五年累计采出排序，再对最优解错开投产批次。</p><p>输出是一张<b>井组总表</b>：每口井射开哪一层、第几批投产——连同它与「逐井最优」基线的三项对比。工程师审的是「分摊是否可行、批次是否跟得上平台节奏」，真正被替掉的是「各设计各的、投产后才发现干扰」。</p><div class='viz'><svg viewBox='0 0 700 220' role='img' aria-label='快评价加组合搜索的两件套架构'>\n<rect x='0' y='0' width='700' height='220' fill='#fbfaf6'/>\n<defs><marker id='wgB' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<text x='16' y='18' font-size='11' fill='#242b2e'>两个部件：引擎管「算得快」，搜索管「找得全」——没有大样本可学，靠机理硬算</text>\n<rect x='16' y='52' width='136' height='84' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='72' font-size='10' fill='#242b2e'>单井候选方案集</text><text x='28' y='90' font-size='9' fill='#4d565b'>每井 2—4 套</text><text x='28' y='104' font-size='9' fill='#4d565b'>层位 + 参数组合</text><text x='28' y='118' font-size='9' fill='#79828a'>先过工程可行性</text>\n<path d='M152 94 L188 94' stroke='#242b2e' stroke-width='1.2' marker-end='url(#wgB)'/>\n<rect x='192' y='52' width='158' height='84' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='202' y='72' font-size='10' fill='#fff'>井组快速评价引擎</text><text x='202' y='90' font-size='9' fill='#d8ecdf'>逐月物质平衡</text><text x='202' y='104' font-size='9' fill='#d8ecdf'>压力 · 干扰 · 传导</text><text x='202' y='120' font-size='9' fill='#fff'>一次试算 &lt; 0.1 毫秒</text>\n<path d='M350 94 L386 94' stroke='#242b2e' stroke-width='1.2' marker-end='url(#wgB)'/>\n<rect x='390' y='52' width='136' height='84' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='402' y='72' font-size='10' fill='#242b2e'>组合搜索</text><text x='402' y='90' font-size='9' fill='#4d565b'>穷举 3ⁿ ≈ 2,187</text><text x='402' y='104' font-size='9' fill='#4d565b'>按累计采出排序</text><text x='402' y='118' font-size='9' fill='#79828a'>井数超 8 换遗传算法</text>\n<path d='M526 94 L562 94' stroke='#242b2e' stroke-width='1.2' marker-end='url(#wgB)'/>\n<rect x='566' y='52' width='118' height='84' rx='5' fill='#41699b' opacity='0.9'/><text x='578' y='72' font-size='10' fill='#fff'>井组总表</text><text x='578' y='90' font-size='9' fill='#fff'>层位分配</text><text x='578' y='104' font-size='9' fill='#fff'>错峰批次</text><text x='578' y='118' font-size='9' fill='#fff'>三项对比</text>\n<rect x='16' y='156' width='668' height='46' rx='5' fill='#dfe6ee'/>\n<text x='28' y='175' font-size='9.5' fill='#41699b'>与「逐井最优」基线同屏对比：累计采出 / 层系均衡 / 峰值层消耗</text>\n<text x='28' y='192' font-size='9' fill='#4d565b'>人只审两件事：分摊在工程上可行吗？批次跟得上平台与投资节奏吗？</text>\n</svg><span class='viz-cap'>架构两件套：物质平衡引擎负责毫秒级试算，组合搜索在可行集里找井组最优。</span></div>"
+        },
+        {
+          "no": 3,
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p><b>四类输入</b>：井组地质与压力系统（构造、层系、连通关系，来自区块模型）；单井完井候选方案（每井 2—4 套可行层位组合，来自单井设计）；生产与干扰观测（产量、压力、干扰试井、示踪剂，用来标定连通权重）；经济与运行约束（投资节奏、平台槽口、集输能力）。</p><p><b>卡点在连通性</b>：层间窜流权重直接决定「谁在抢谁的压力」，拍脑袋的连通表会让优化输出精确的错误——干扰试井和示踪剂是最直接的标定证据，没有的话至少要用邻井投产响应反推兜底。<b>坑</b>：候选方案集收得太紧会把井组最优排除在外，宁可放宽，让搜索去筛。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='四类输入汇成井组模型'>\n<rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/>\n<defs><marker id='wgC' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs>\n<text x='16' y='18' font-size='11' fill='#242b2e'>需要准备什么：四类输入汇成井组模型，卡点在连通性有没有试井佐证</text>\n<rect x='16' y='34' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='28' y='54' font-size='10' fill='#242b2e'>井组地质与压力系统</text><text x='28' y='72' font-size='8.5' fill='#79828a'>构造 · 层系 · 连通关系（区块模型）</text>\n<rect x='216' y='34' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='228' y='54' font-size='10' fill='#242b2e'>单井完井候选方案</text><text x='228' y='72' font-size='8.5' fill='#79828a'>每井 2—4 套（来自单井设计）</text>\n<rect x='16' y='102' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='28' y='122' font-size='10' fill='#c9613f'>生产与干扰观测</text><text x='28' y='140' font-size='8.5' fill='#c9613f'>产量 · 压力 · 干扰试井 · 示踪剂</text>\n<rect x='216' y='102' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='228' y='122' font-size='10' fill='#242b2e'>经济与运行约束</text><text x='228' y='140' font-size='8.5' fill='#79828a'>投资节奏 · 平台槽口 · 集输能力</text>\n<path d='M206 62 L266 62' stroke='#79828a' marker-end='url(#wgC)'/><path d='M406 62 L466 78' stroke='#79828a' marker-end='url(#wgC)'/><path d='M206 130 L266 130' stroke='#c9613f' marker-end='url(#wgC)'/><path d='M406 130 L466 116' stroke='#79828a' marker-end='url(#wgC)'/>\n<rect x='470' y='54' width='214' height='92' rx='5' fill='#41699b' opacity='0.9'/><text x='484' y='78' font-size='10.5' fill='#fff'>井组模型</text><text x='484' y='98' font-size='9' fill='#fff'>谁和谁抢压力</text><text x='484' y='116' font-size='9' fill='#fff'>窜流权重 = 优化的地基</text><text x='484' y='134' font-size='9' fill='#fff'>连通性必须有标定证据</text>\n<text x='16' y='186' font-size='9.5' fill='#c9613f'>坑：连通表没有干扰试井 / 示踪剂佐证，优化输出的是精确的错误——用邻井投产响应反推至少能兜底。</text>\n</svg><span class='viz-cap'>四类输入汇成井组模型：红字一类是标定连通权重的证据，最容易被省掉。</span></div>"
+        },
+        {
+          "no": 4,
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难点：<b>组合空间爆炸</b>——层位分配 3ⁿ 起，再叠加投产批次与井筒参数，井数一多穷举立刻不可行；<b>引擎保真度</b>——物质平衡太粗会系统性误导，太细就失去毫秒级优势；<b>目标打架</b>——累计采出、层系均衡、峰值层消耗、经济折现互相牵制。</p><p>改进路线按成本从低到高：① 先在可行集内穷举，井数超 8 口换遗传算法或模拟退火；② 用少量数值模拟井校准引擎参数（窜流权重、递减系数）；③ 多目标 Pareto 前沿呈现「总量—均衡—压力」三角，把取舍亮给工程师；④ 最终方案回到数值模拟做终审。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='三个坑：组合爆炸、引擎保真度、目标打架'>\n<rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>三个会让人白干一场的坑</text>\n<rect x='16' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10' fill='#4d565b'>① 组合空间爆炸</text>\n<text x='28' y='66' font-size='8.5' fill='#79828a'>层位分配组合数（3 层可选）</text>\n<text x='28' y='90' font-size='9' fill='#4d565b'>4 口</text><rect x='64' y='80' width='14' height='12' rx='2' fill='#41699b' opacity='0.45'/><text x='84' y='90' font-size='9' fill='#4d565b'>81</text>\n<text x='28' y='112' font-size='9' fill='#4d565b'>7 口</text><rect x='64' y='102' width='54' height='12' rx='2' fill='#41699b' opacity='0.7'/><text x='124' y='112' font-size='9' fill='#4d565b'>2,187</text>\n<text x='28' y='134' font-size='9' fill='#4d565b'>10 口</text><rect x='64' y='124' width='150' height='12' rx='2' fill='#41699b'/><text x='220' y='134' font-size='9' fill='#4d565b'>59,049</text>\n<text x='28' y='156' font-size='9' fill='#c9613f'>再叠加批次与井筒参数，</text><text x='28' y='170' font-size='9' fill='#c9613f'>穷举立刻不可行——井数超 8 换启发式。</text>\n<rect x='244' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='46' font-size='10' fill='#4d565b'>② 引擎保真度 × 速度</text>\n<line x1='256' y1='150' x2='444' y2='150' stroke='#242b2e'/><line x1='256' y1='60' x2='256' y2='150' stroke='#242b2e'/>\n<text x='262' y='164' font-size='8.5' fill='#79828a'>评价速度（右快）</text><text x='250' y='56' font-size='8.5' fill='#79828a'>保真度</text>\n<circle cx='286' cy='76' r='4' fill='#41699b'/><text x='296' y='80' font-size='9' fill='#4d565b'>数值模拟（小时级）</text>\n<circle cx='420' cy='126' r='4' fill='#c9613f'/><text x='330' y='130' font-size='9' fill='#c9613f'>原始物质平衡（偏粗）</text>\n<circle cx='392' cy='96' r='5' fill='#2f7d6b'/><circle cx='392' cy='96' r='10' fill='none' stroke='#2f7d6b' stroke-dasharray='3 2'/><text x='406' y='92' font-size='9' fill='#2f7d6b'>校准后的引擎</text>\n<text x='256' y='184' font-size='9' fill='#4d565b'>太粗会误导、太细跑不动——抽样校准是中间道路。</text>\n<rect x='472' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='46' font-size='10' fill='#4d565b'>③ 目标打架</text>\n<path d='M578 64 L516 150 L640 150 Z' fill='none' stroke='#79828a'/>\n<circle cx='578' cy='118' r='4' fill='#c9613f'/>\n<text x='578' y='58' font-size='9' fill='#4d565b' text-anchor='middle'>累计采出</text>\n<text x='512' y='166' font-size='9' fill='#4d565b' text-anchor='middle'>层系均衡</text>\n<text x='644' y='166' font-size='9' fill='#4d565b' text-anchor='middle'>峰值消耗</text>\n<text x='578' y='104' font-size='9' fill='#c9613f' text-anchor='middle'>单目标必牺牲其余</text>\n<text x='484' y='184' font-size='9' fill='#4d565b'>Pareto 前沿把取舍亮出来，选择权留给工程师。</text>\n</svg><span class='viz-cap'>三个坑：组合爆炸（穷举到 8 口为止）、引擎保真度（抽样校准）、多目标取舍（Pareto 前沿）。</span></div>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "从逐井最优到井组协同的落地流程",
+      "lead": [
+        "这个流程把「每口井各自最优」换成「井组一张总表」。核心资产不是搜索算法，是那个毫秒级的快速评价引擎——引擎不对，搜出来的都是精确的错误。",
+        "下面的示范用 7 口井、3 个层演示第 3、4 步：拖动非均质程度与层间连通性，看「逐井最优」和「井组协同」的五年账怎么拉开差距。"
+      ],
+      "stats": [
+        [
+          "协同增益（默认工况）",
+          "+127%"
+        ],
+        [
+          "层系动用均衡度",
+          "0.00 → 0.98"
+        ],
+        [
+          "峰值层压力消耗",
+          "133% → 121%"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "井组建模与连通关系梳理",
+          "role": "数据",
+          "do": "把构造、层系、压力系统与井间连通整理成井组模型，用干扰试井或示踪剂标定层间窜流权重。",
+          "effect": "得到「谁和谁抢压力」的关系图，这是后面一切试算的地基。",
+          "trap": "连通性凭经验拍表，窜流权重错了，后面搜出的方案是精确的错误。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='井组建模：三来源标定窜流权重'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='wgS1' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs><text x='12' y='18' font-size='10' fill='#4d565b'>井组建模：把「谁和谁抢压力」画成一张图</text><rect x='12' y='30' width='96' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='60' y='48' font-size='9.5' fill='#242b2e' text-anchor='middle'>静态地质模型</text><text x='60' y='62' font-size='8.5' fill='#79828a' text-anchor='middle'>层系 · 断层</text><rect x='120' y='30' width='96' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='168' y='48' font-size='9.5' fill='#c9613f' text-anchor='middle'>干扰试井</text><text x='168' y='62' font-size='8.5' fill='#79828a' text-anchor='middle'>压力响应</text><rect x='228' y='30' width='96' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='276' y='48' font-size='9.5' fill='#c9613f' text-anchor='middle'>示踪剂监测</text><text x='276' y='62' font-size='8.5' fill='#79828a' text-anchor='middle'>窜流方向</text><path d='M108 50 L116 50' stroke='#79828a' marker-end='url(#wgS1)'/><path d='M216 50 L224 50' stroke='#79828a' marker-end='url(#wgS1)'/><path d='M324 50 L346 50' stroke='#79828a' marker-end='url(#wgS1)'/><rect x='350' y='24' width='150' height='52' rx='4' fill='#41699b' opacity='0.9'/><text x='425' y='46' font-size='9.5' fill='#fff' text-anchor='middle'>窜流权重标定</text><text x='425' y='64' font-size='9' fill='#fff' text-anchor='middle'>层间传导强度</text><path d='M500 50 L522 50' stroke='#242b2e' marker-end='url(#wgS1)'/><rect x='526' y='24' width='122' height='52' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='587' y='46' font-size='9.5' fill='#242b2e' text-anchor='middle'>井组关系图</text><text x='587' y='64' font-size='9' fill='#79828a' text-anchor='middle'>谁挨着谁 · 谁抢谁</text><text x='12' y='104' font-size='9.5' fill='#c9613f'>没有试井就用邻井投产响应反推——权重拍脑袋，后面全是精确的错误。</text></svg>"
+        },
+        {
+          "name": "单井候选方案集生成",
+          "role": "设计",
+          "do": "每口井产出 2—4 套工程上可行的层位与参数组合，把明显不可行的先剔除。",
+          "effect": "组合搜索只在可行集内进行，解空间缩小一到两个数量级。",
+          "trap": "候选集收得太紧会把井组最优排除在外——宁可放宽，让搜索去筛。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='每口井生成候选方案并汇成可行集'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='wgS2' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><text x='12' y='18' font-size='10' fill='#4d565b'>每口井 2—4 套可行组合：先过工程可行性，再交给搜索去筛</text><rect x='12' y='32' width='56' height='42' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='40' y='50' font-size='9.5' fill='#242b2e' text-anchor='middle'>W1</text><text x='40' y='65' font-size='8.5' fill='#79828a' text-anchor='middle'>3 套</text><rect x='76' y='32' width='56' height='42' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='104' y='50' font-size='9.5' fill='#242b2e' text-anchor='middle'>W2</text><text x='104' y='65' font-size='8.5' fill='#79828a' text-anchor='middle'>2 套</text><rect x='140' y='32' width='56' height='42' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='168' y='50' font-size='9.5' fill='#242b2e' text-anchor='middle'>W3</text><text x='168' y='65' font-size='8.5' fill='#79828a' text-anchor='middle'>4 套</text><rect x='204' y='32' width='56' height='42' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='232' y='50' font-size='9.5' fill='#242b2e' text-anchor='middle'>…</text><text x='232' y='65' font-size='8.5' fill='#79828a' text-anchor='middle'>到 W7</text><path d='M268 53 L296 53' stroke='#242b2e' marker-end='url(#wgS2)'/><rect x='300' y='28' width='150' height='50' rx='4' fill='#41699b' opacity='0.9'/><text x='375' y='49' font-size='9.5' fill='#fff' text-anchor='middle'>井组可行集</text><text x='375' y='66' font-size='9' fill='#fff' text-anchor='middle'>穷举空间：2 千 — 2 万</text><path d='M450 53 L478 53' stroke='#242b2e' marker-end='url(#wgS2)'/><rect x='482' y='28' width='166' height='50' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='565' y='49' font-size='9.5' fill='#2f7d6b' text-anchor='middle'>剔除后仍保留边界组合</text><text x='565' y='66' font-size='9' fill='#79828a' text-anchor='middle'>解空间缩小 1—2 个量级</text><text x='12' y='104' font-size='9.5' fill='#c9613f'>坑：候选集收得太紧 = 最优解进不来。宁可放宽让搜索去筛，别替搜索做决定。</text></svg>"
+        },
+        {
+          "name": "井组快速评价引擎",
+          "role": "算法",
+          "do": "逐月物质平衡：层压力随采出下降、同层井互相干扰、邻层压降传导，一轮算完整个评价期。",
+          "effect": "单次评价不到 0.1 毫秒，一秒钟能筛上万种分配。",
+          "trap": "引擎偏乐观或偏悲观要靠数值模拟抽样校准，没校准过的引擎不敢用。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='评价引擎的月度循环与校准'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='wgS3' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#41699b'/></marker></defs><text x='12' y='18' font-size='10' fill='#4d565b'>一轮试算 = 月度循环：层压力 → 干扰效率 → 月产 → 累计回写</text><rect x='12' y='34' width='100' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='62' y='55' font-size='9.5' fill='#242b2e' text-anchor='middle'>层压力因子</text><rect x='136' y='34' width='100' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='186' y='55' font-size='9.5' fill='#242b2e' text-anchor='middle'>同层干扰效率</text><rect x='260' y='34' width='100' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='310' y='55' font-size='9.5' fill='#242b2e' text-anchor='middle'>逐井月产量</text><rect x='384' y='34' width='100' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='434' y='55' font-size='9.5' fill='#242b2e' text-anchor='middle'>层累计回写</text><path d='M112 51 L132 51' stroke='#41699b' marker-end='url(#wgS3)'/><path d='M236 51 L256 51' stroke='#41699b' marker-end='url(#wgS3)'/><path d='M360 51 L380 51' stroke='#41699b' marker-end='url(#wgS3)'/><path d='M434 34 C 434 20, 62 20, 62 30' fill='none' stroke='#41699b' stroke-dasharray='4 3' marker-end='url(#wgS3)'/><rect x='504' y='30' width='144' height='42' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='576' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>毫秒级 / 次</text><text x='576' y='64' font-size='9' fill='#d8ecdf' text-anchor='middle'>一秒筛上万种分配</text><text x='12' y='94' font-size='9.5' fill='#c9613f'>校准不可省：抽 3—5 口井用数值模拟复核，井组累计采出误差应小于 10%。</text><text x='12' y='112' font-size='8.5' fill='#79828a'>三条机理：采出越多压力越低 · 同层井越多效率越低 · 邻层压降按连通权重传导。</text></svg>"
+        },
+        {
+          "name": "组合搜索与协同优选",
+          "role": "算法",
+          "do": "在 3ⁿ 的层位分配空间里穷举或启发式搜索，按井组累计采出找最优分配，再错开投产批次。",
+          "effect": "得到全井组的层位分配表与错峰投产时序，附与基线的三项对比。",
+          "trap": "只盯总量会牺牲均衡度——压力被单层抽空，第三年就没有接替层了。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='穷举评分排序并输出井组总表'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='wgS4' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><text x='12' y='18' font-size='10' fill='#4d565b'>3⁷ = 2,187 种分配全扫一遍，按井组五年累计采出排序</text><rect x='12' y='30' width='150' height='54' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='48' font-size='9' fill='#79828a'>解空间（示意）</text><rect x='24' y='56' width='10' height='10' fill='#c9613f' opacity='0.6'/><rect x='38' y='56' width='10' height='10' fill='#c9613f' opacity='0.45'/><rect x='52' y='56' width='10' height='10' fill='#c9613f' opacity='0.6'/><rect x='66' y='56' width='10' height='10' fill='#c9613f' opacity='0.3'/><rect x='80' y='56' width='10' height='10' fill='#2f7d6b'/><rect x='94' y='56' width='10' height='10' fill='#c9613f' opacity='0.35'/><rect x='108' y='56' width='10' height='10' fill='#c9613f' opacity='0.5'/><rect x='122' y='56' width='10' height='10' fill='#c9613f' opacity='0.4'/><text x='24' y='78' font-size='8.5' fill='#2f7d6b'>绿 = Top-1 分配</text><path d='M162 57 L190 57' stroke='#242b2e' marker-end='url(#wgS4)'/><rect x='194' y='30' width='170' height='54' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='206' y='48' font-size='9' fill='#79828a'>评分排序（累计采出）</text><rect x='206' y='54' width='140' height='8' rx='2' fill='#2f7d6b'/><rect x='206' y='66' width='108' height='8' rx='2' fill='#b26a39' opacity='0.6'/><rect x='206' y='78' width='80' height='6' rx='2' fill='#b26a39' opacity='0.35'/><path d='M364 57 L392 57' stroke='#242b2e' marker-end='url(#wgS4)'/><rect x='396' y='30' width='252' height='54' rx='4' fill='#41699b' opacity='0.9'/><text x='408' y='48' font-size='9.5' fill='#fff'>井组总表（协同方案）</text><text x='408' y='66' font-size='9' fill='#fff'>每口井：射开哪一层 · 第几批投产</text><text x='408' y='78' font-size='9' fill='#fff'>附三项对比：总量 / 均衡 / 峰值消耗</text><text x='12' y='104' font-size='9.5' fill='#c9613f'>只盯总量会牺牲均衡度——压力被单层抽空，第三年就没有接替层了。</text></svg>"
+        },
+        {
+          "name": "方案审定与回填",
+          "role": "人工",
+          "do": "工程师审分摊可行性与批次节奏，方案实施后把实际产量与干扰观测回填井组模型。",
+          "effect": "引擎参数随区块经验越校越准，下一轮优化的基线更真实。",
+          "trap": "基线要用资深工程师的手工方案，拿无脑逐井最优当对手，增益数字好看但不诚实。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='方案审定与回填闭环'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='wgS5' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='12' y='30' width='110' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='67' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>井组总表</text><path d='M122 47 L152 47' stroke='#242b2e' marker-end='url(#wgS5)'/><rect x='156' y='30' width='110' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='211' y='51' font-size='9.5' fill='#242b2e' text-anchor='middle'>工程师审定</text><path d='M266 47 L296 47' stroke='#242b2e' marker-end='url(#wgS5)'/><rect x='300' y='30' width='110' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='355' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>现场实施</text><path d='M410 47 L440 47' stroke='#242b2e' marker-end='url(#wgS5)'/><rect x='444' y='30' width='110' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='499' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>回填实际产量</text><path d='M554 47 C 600 47, 610 80, 560 88 C 480 98, 180 98, 90 82' fill='none' stroke='#79828a' stroke-dasharray='4 3' marker-end='url(#wgS5)'/><text x='330' y='112' font-size='9' fill='#79828a' text-anchor='middle'>闭环：干扰观测回填井组模型，窜流权重越标越准</text><text x='12' y='24' font-size='9.5' fill='#4d565b'>审定看两条：分摊工程上可行吗？批次跟得上平台与投资节奏吗？</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>协同增益</b>：相对「逐井最优」基线的井组累计采出提升，示范默认工况 +127%，非均质越强增益越大。注意基线要另备一份资深工程师的手工方案——对手太弱，增益说不出口。</p><p><b>层系动用均衡度</b>：各层采出程度的标准差越小越均衡，协同方案应显著高于基线（示范中 0.00 → 0.98）。</p><p><b>峰值层压力消耗</b>：被抽得最狠那一层的采出程度，协同方案应更低（示范中 133% → 121%）——没有哪一层被单独抽空，后期才有接替能力。</p><p><b>引擎校准误差</b>：抽 3—5 口井用数值模拟复核，井组累计采出误差应小于 10%，否则优化结果不可交付。</p>"
+      },
+      "fails": [
+        {
+          "name": "基线太弱",
+          "why": "拿「无脑逐井最优」当对手，+100% 的增益不代表真实价值；对比资深工程师的手工方案才有说服力。"
+        },
+        {
+          "name": "连通性拍脑袋",
+          "why": "层间窜流权重决定「谁在抢谁的压力」；没有干扰试井或示踪剂佐证的连通表，搜出的是精确的错误。"
+        },
+        {
+          "name": "引擎失真",
+          "why": "物质平衡忽略边水、注水与井筒约束时会系统性乐观；抽样数值模拟校准这一步不能省。"
+        },
+        {
+          "name": "只看总量",
+          "why": "牺牲均衡度换累计产量，压力被单层抽空后无层可接替；总量、均衡、峰值消耗必须同屏对比。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "html": "demo/index.html",
+      "label": "可运行示范",
+      "intro": "拖动滑杆设定井数、层间非均质程度、连通性与压力保持水平，看「每口井都挑最好的层」与「井组协同分配」两套方案的层位分配、五年月产曲线与三项指标对比；表区给出协同方案的逐井层位与投产批次。",
+      "height": 1200
+    }
+  }
+}

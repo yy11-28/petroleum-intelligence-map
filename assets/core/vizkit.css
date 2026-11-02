@@ -1,0 +1,42 @@
+/* =========================================================
+   可视化图元库 VizKit 的配套版式（window.V）
+   ---------------------------------------------------------
+   案例里用 V.concept / V.legend / V.flow / V.io 等生成的
+   内容统一在这里排版；改这里，所有案例同步生效。
+   只新增类名，不改动任何既有样式。
+   ========================================================= */
+
+/* 色例 */
+.viz-legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin:8px 0 2px;font-size:11px;color:var(--ink-3)}
+.viz-legend span{display:flex;align-items:center;gap:5px}
+.viz-legend i{width:9px;height:9px;border-radius:2px;display:block;flex:none}
+
+/* 概念卡：给非石油读者看的「术语 → 一句话 + 微图」 */
+.viz-concepts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:16px 0 4px}
+.viz-concepts.compact{grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px}
+.viz-c{border:1px solid var(--line);border-radius:var(--r-m);background:var(--card-soft);padding:11px 12px 10px}
+.viz-c-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:7px}
+.viz-c-h b{font-size:12.5px;color:var(--blue);letter-spacing:.01em}
+.viz-c-h span{font-family:var(--mono);font-size:9px;color:var(--ink-4)}
+.viz-c-v{margin:0 0 7px;border:1px solid var(--line);border-radius:var(--r-s);background:#fff;overflow:hidden}
+.viz-c-v svg{display:block;width:100%;height:auto}
+.viz-c p{font-size:11.5px;line-height:1.65;color:var(--ink-2);margin:0}
+.viz-c p b{color:var(--ink)}
+
+/* 流程页顶部的自动总览图（由 steps 自动生成） */
+.flow-map{margin:6px 0 18px;padding:14px 14px 10px;border:1px solid var(--line);
+  border-radius:var(--r-m);background:var(--card-soft)}
+.flow-map .fm-t{font-family:var(--mono);font-size:9px;letter-spacing:.13em;color:var(--ink-4);margin-bottom:8px}
+.flow-map svg{display:block;width:100%;height:auto}
+
+/* 图注兜底：万一案例没走 K.figure */
+div.viz > .viz-cap,.pviz > .viz-cap{display:block;margin-top:6px;font-size:11px;color:var(--ink-3);line-height:1.6}
+
+/* 两张图并排（案例可选使用） */
+.viz-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0}
+.viz-pair > div{min-width:0}
+
+@media (max-width:760px){
+  .viz-concepts{grid-template-columns:1fr}
+  .viz-pair{grid-template-columns:1fr}
+}

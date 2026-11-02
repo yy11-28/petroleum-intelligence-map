@@ -1,0 +1,130 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>压力恢复试井智能分析 · 可运行示范</title><style>
+.panel{padding:0;font:14px/1.7 system-ui,"Microsoft YaHei",sans-serif;color:#242b2e}
+h1{font-size:19px;margin:0 0 6px}.lead{margin:0;color:#5a6469;font-size:13px}
+.tabs{display:flex;gap:8px;margin:12px 0 0;flex-wrap:wrap}
+.tabs button{border:1px solid #d8d2c2;background:#fbfaf6;border-radius:999px;padding:4px 13px;font-size:12.5px;cursor:pointer;color:#5a6469}
+.tabs button.on{background:#2f7d6b;color:#fff;border-color:#2f7d6b;font-weight:700}
+.ctl{display:flex;gap:26px;margin:14px 0 0;flex-wrap:wrap}
+.ctl label{flex:1;min-width:220px;display:block}
+.ctl span{display:flex;justify-content:space-between;font-size:12.5px}
+.ctl input{width:100%}.ctl i{font-style:normal;font-size:11px;color:#8a9296}
+.grid{display:flex;gap:14px;margin:14px 0 0;flex-wrap:wrap}
+.fig{flex:1.3;min-width:340px;background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:8px 6px 2px}
+.fig h3{font-size:13px;margin:2px 8px 0;color:#3d4a48}
+.fig svg{width:100%;display:block}
+.side{flex:1;min-width:260px;background:#fffdf8;border:1px solid #e2dccd;border-radius:10px;padding:10px 14px}
+.side h3{font-size:13px;margin:0 0 8px;color:#3d4a48}
+.par{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0;border-bottom:1px dashed #eee7d8}
+.par b{font-variant-numeric:tabular-nums}
+.alert{margin-top:10px;border-radius:7px;padding:8px 11px;font-size:12.5px}
+.alert.multi{background:#faf3e0;color:#8a6d1f}.alert.ok{background:#eef5ef;color:#2f7d6b}
+.note{margin-top:14px;font-size:12.5px;color:#3d4a48;background:#f3efe2;border-radius:8px;padding:9px 14px}
+.tag{display:inline-block;background:#eef5ef;color:#2f7d6b;border-radius:5px;padding:0 7px;font-size:11px;margin-right:6px}
+
+.cmp{margin-top:14px;border:1px solid #e2dccd;border-radius:10px;background:#fffdf8;overflow:hidden}.cmp-h{font-size:12.5px;font-weight:700;color:#3d4a48;padding:8px 14px;background:#f3efe2}.cmp-g{display:flex;gap:0;flex-wrap:wrap}.cmp-c{flex:1;min-width:240px;padding:9px 14px}.cmp-c+.cmp-c{border-left:1px solid #e2dccd}.cmp-c b{display:block;font-size:12px;margin-bottom:5px}.cmp-c.man b{color:#8a6a3a}.cmp-c.ai b{color:#2f7d6b}.cmp-c ul{margin:0;padding-left:16px}.cmp-c li{font-size:12px;line-height:1.7;color:#3d4a48;margin:2px 0}
+.meth{margin:13px 0 0;border:1px solid #e2dccd;border-left:3px solid #2f7d6b;border-radius:9px;background:#f6f4ec}.meth-h{font-size:11.5px;font-weight:700;color:#2f7d6b;letter-spacing:.05em;padding:9px 15px 2px}.meth-g{display:flex;flex-wrap:wrap;padding:0 0 9px}.meth-g>div{flex:1 1 200px;min-width:185px;padding:3px 15px}.meth-g>div+div{border-left:1px dashed #e2dccd}.meth-g b{display:block;font-size:11px;color:#8a6a3a;margin:3px 0 2px}.meth-g ul{margin:0;padding-left:14px}.meth-g li{font-size:11.6px;line-height:1.62;color:#3d4a48;margin:1px 0}</style></head><body><div class="panel blk-card">
+<h1>压力恢复试井智能分析</h1>
+<p class="lead">压力恢复的双对数诊断图上，导数曲线的形态对应储层模型：均质（平段）、双重介质（先凹后平）、一条断层（晚期上翘）。模型自动对候选模型集合逐个拟合——注意看：不同模型拟合优度接近时，参数可以差一倍，这就是「多解性」，必须显式提示而不是硬给一个答案。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>导数曲线特征段识别</li><li>自动拟合</li><li>多解性提示</li></ul></div><div><b>为什么起作用</b><ul><li>试井解释靠特征段（井储、径向流、边界），人工读段主观且不可复现</li><li>自动拟合给参数的同时提示多解区间，避免把噪声段当特征段</li></ul></div><div><b>在示范里怎么看</b><ul><li>拉高噪声，看特征段被淹没后结论不确定性怎么上升</li></ul></div></div></div>
+<div class="tabs" id="tabs">
+  <button class="on" data-t="hom">均质油藏</button>
+  <button data-t="dual">双重介质</button>
+  <button data-t="fault">一条断层</button>
+</div>
+<div class="ctl">
+  <label><span>测量噪声 <b id="vN">小</b></span><input type="range" id="sN" min="0" max="2" step="1" value="0"><i>压力计噪声越大，特征段越难辨认</i></label>
+  <label><span>压力计漂移 <b id="vD">无</b></span><input type="range" id="sD" min="0" max="2" step="1" value="0"><i>漂移会造成假的晚期上翘（假边界）</i></label>
+</div>
+<div class="grid">
+  <div class="fig"><h3>双对数诊断：压力导数 + 候选模型拟合（黑色＝拟合）</h3><svg id="cv" viewBox="0 0 560 330"></svg></div>
+  <div class="side">
+    <h3>解释参数（选中模型）</h3>
+    <div id="pars"></div>
+    <div id="alert"></div>
+  </div>
+</div>
+<div class="cmp"><div class="cmp-h">人工做法 vs 模型做法（同一口井，同一批数据）</div><div class="cmp-g"><div class="cmp-c man"><b>人工做法（现状）</b><ul><li>一套模型拟合到底</li><li>平滑窗口凭手感</li><li>拟合优度接近时按经验选一个</li></ul></div><div class="cmp-c ai"><b>模型做法（本示范）</b><ul><li>多模型并列拟合，各自给出残差、参数与置信区间</li><li>多窗口导数并列，能看出哪些形态特征是稳的</li><li>R² 差小于 0.02 明确提示多解，并说明还需什么资料</li></ul></div></div></div><div class="note" id="note"></div>
+</div><script>
+var TRUE='hom', NOISE=0, DRIFT=0, SELM='hom';
+var MODELS={
+  hom:{nm:'均质油藏',k:12,S:2.1,bnd:'未见边界'},
+  dual:{nm:'双重介质',k:16,S:-1.8,bnd:'未见边界'},
+  fault:{nm:'一条断层',k:9,S:3.4,bnd:'距井 68 m'}
+};
+/* 理论导数形态（归一化坐标 0-1 对数时间） */
+function th(m,u){
+  if(m==='hom')return 0.42+0.02*Math.sin(u*4)*0.3;
+  if(m==='dual')return 0.42-0.20*Math.exp(-Math.pow((u-0.30)/0.14,2))+0.03*Math.sin(u*5)*0.3;
+  return 0.42+0.42/(1+Math.exp(-(u-0.72)/0.05))-0.02;
+}
+/* 实测点：真实模型 + 噪声 + 漂移 */
+function data(){
+  var pts=[],seed=11;
+  for(var i=0;i<34;i++){
+    var u=0.02+0.96*i/33;
+    seed=(seed*9301+49297)%233280;
+    var nz=(seed/233280-0.5)*(0.02+NOISE*0.045);
+    var dr=DRIFT>0?(u-0.5)*DRIFT*0.10:0;
+    pts.push({u:u,v:th(TRUE,u)+nz+dr});
+  }
+  return pts;
+}
+function r2(pts,m){
+  var ss=0,yy=0;
+  pts.forEach(function(p){ss+=Math.pow(p.v-th(m,p.u),2);yy+=Math.pow(p.v-0.42,2);});
+  return Math.max(0,1-ss/yy);
+}
+function draw(){
+  document.getElementById('vN').textContent=['小','中','大'][NOISE];
+  document.getElementById('vD').textContent=['无','轻度','明显'][DRIFT];
+  var pts=data();
+  var W=560,H=330,L=56,R=520,T=26,B=272;
+  function X(u){return L+u*(R-L);}
+  function Y(v){return B-v*1.05*(B-T)+0.02*(B-T);}
+  var s='<rect width="560" height="330" fill="#fffdf8"/>';
+  for(var g=0;g<=1.01;g+=0.2){
+    s+='<line x1="'+X(g)+'" y1="'+T+'" x2="'+X(g)+'" y2="'+B+'" stroke="#eee7d8"/>';
+    s+='<text x="'+X(g)+'" y="'+(B+14)+'" font-size="9" fill="#8a9296" text-anchor="middle">'+['0.01h','0.1h','1h','10h','100h','1000h'][Math.round(g*5)]+'</text>';
+  }
+  for(g=0.2;g<=0.8;g+=0.2){s+='<line x1="'+L+'" y1="'+Y(g)+'" x2="'+R+'" y2="'+Y(g)+'" stroke="#eee7d8"/><text x="'+(L-5)+'" y="'+(Y(g)+3)+'" font-size="9" fill="#8a9296" text-anchor="end">'+(g*2).toFixed(1)+'</text>';}
+  /* 特征段色带（按真实形态画） */
+  s+='<rect x="'+X(0)+'" y="'+T+'" width="'+X(0.14)-X(0)+'" height="'+(B-T)+'" fill="#3a5f8c" opacity="0.08"/>';
+  s+='<rect x="'+X(0.2)+'" y="'+T+'" width="'+(X(0.55)-X(0.2))+'" height="'+(B-T)+'" fill="#2f7d6b" opacity="0.08"/>';
+  s+='<text x="'+X(0.07)+'" y="'+(T+14)+'" font-size="9.5" fill="#3a5f8c" text-anchor="middle">井筒储集</text>';
+  s+='<text x="'+X(0.375)+'" y="'+(T+14)+'" font-size="9.5" fill="#2f7d6b" text-anchor="middle">径向流（导数平台 → k）</text>';
+  /* 三个模型拟合曲线 */
+  Object.keys(MODELS).forEach(function(m){
+    var on=m===SELM;
+    var p='';for(var u=0;u<=1.001;u+=0.02){p+=(p?' L':'M')+X(u)+' '+Y(th(m,u));}
+    s+='<path d="'+p+'" fill="none" stroke="'+(on?'#242b2e':'#b9b3a4')+'" stroke-width="'+(on?2.4:1.2)+'"'+(on?'':' stroke-dasharray="4 3"')+'/>';
+    s+='<text x="'+X(0.985)+'" y="'+Y(th(m,0.985))+'" font-size="9" fill="'+(on?'#242b2e':'#8a9296')+'" text-anchor="end" dy="'+(m==='dual'?-4:(m==='fault'?10:-2))+'">'+MODELS[m].nm+' R²='+r2(pts,m).toFixed(3)+'</text>';
+  });
+  /* 实测点 */
+  pts.forEach(function(pt){s+='<circle cx="'+X(pt.u)+'" cy="'+Y(pt.v)+'" r="2.6" fill="#3a5f8c" opacity="0.85"/>';});
+  s+='<text x="'+((L+R)/2)+'" y="'+(H-6)+'" font-size="9" fill="#8a9296" text-anchor="middle">对数时间 →　导数（归一化）↑　灰色虚线＝其他候选模型</text>';
+  document.getElementById('cv').innerHTML=s;
+  /* ---- 参数面板 ---- */
+  var pars='';
+  Object.keys(MODELS).forEach(function(m){
+    var M=MODELS[m], r=r2(pts,m);
+    pars+='<div class="par" style="'+(m===SELM?'font-weight:700':'color:#8a9296')+'"><span>'+M.nm+'</span><b>k='+M.k+' mD · S='+M.S+' · R²='+r.toFixed(3)+'</b></div>';
+  });
+  document.getElementById('pars').innerHTML=pars;
+  /* 多解判定：前两名 R² 差 < 0.02 */
+  var rs=Object.keys(MODELS).map(function(m){return {m:m,r:r2(pts,m)}}).sort(function(a,b){return b.r-a.r});
+  var multi=(rs[0].r-rs[1].r)<0.02;
+  var al=multi
+    ?'<div class="alert multi"><b>⚠ 多解提示</b><br>「'+MODELS[rs[0].m].nm+'」与「'+MODELS[rs[1].m].nm+'」拟合优度接近（ΔR²='+(rs[0].r-rs[1].r).toFixed(3)+'），但渗透率差 '+Math.abs(MODELS[rs[0].m].k-MODELS[rs[1].m].k)+' mD。需结合地质（是否有断层）定论，不许硬选。</div>'
+    :'<div class="alert ok">✓ 拟合优度显著区分（ΔR²='+(rs[0].r-rs[1].r).toFixed(3)+'），可推荐「'+MODELS[rs[0].m].nm+'」。</div>';
+  document.getElementById('alert').innerHTML=al;
+  /* 结论 */
+  var driftWarn=DRIFT>0?'<b style="color:#c1613f">压力计漂移会制造假的晚期上翘——不剔除漂移，会把「无边界」误判成「断层」。</b>':'';
+  document.getElementById('note').innerHTML='<span class="tag">智能解释</span>真值是「'+MODELS[TRUE].nm+'」。'+
+    (NOISE>0||DRIFT>0?'数据质量下降后（噪声 '+['小','中','大'][NOISE]+'、漂移 '+['无','轻度','明显'][DRIFT]+'），特征段变模糊，多模型拟合与多解提示是防止硬给错误答案的护栏。':'数据质量好时特征段清晰；试试加大噪声或漂移，看多解提示怎么触发。')+
+    ' '+driftWarn+' 切换上方三个 tab 可改变「真实储层」，验证模型是否解释得对。';
+}
+document.getElementById('sN').oninput=function(){NOISE=+this.value;draw();};
+document.getElementById('sD').oninput=function(){DRIFT=+this.value;draw();};
+[].forEach.call(document.querySelectorAll('#tabs button'),function(b){b.onclick=function(){TRUE=b.dataset.t;SELM=b.dataset.t;[].forEach.call(document.querySelectorAll('#tabs button'),function(x){x.classList.remove('on')});b.classList.add('on');draw();};});
+draw();
+</script>
+</body></html>

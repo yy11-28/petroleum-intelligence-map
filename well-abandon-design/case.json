@@ -1,0 +1,157 @@
+{
+  "id": "well-abandon-design",
+  "sceneId": "co20",
+  "methods": [
+    "kg"
+  ],
+  "title": "报废井封隔方案设计：井筒屏障推理与规范核查",
+  "version": "1.0.0",
+  "updated": "2026-10-25",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "井报废不是「封个塞」那么简单：一口井从浅层水层到高压水层逐段贯穿，每一段都要按井筒屏障规范设置桥塞与水泥塞，任何一段失效都可能让层间窜流把油气送到不该去的地方，甚至污染浅层水。规范条款、地层压力与井身条件三重约束叠在一起，正是知识图谱擅长的推理题。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "结构化 + 文本规范",
+          "desc": "井身结构与压力体系是表，屏障规范是条款"
+        },
+        {
+          "label": "标注成本",
+          "value": "低",
+          "desc": "约束来自规范与案例，无需人工标注"
+        },
+        {
+          "label": "可见收益",
+          "value": "中",
+          "desc": "设计从数天到分钟，每段塞可追溯到条款"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "难在规范条款形式化与多约束推理"
+        }
+      ],
+      "sections": [
+        {
+          "no": 1,
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>常规做法：工程师按经验在射孔段与套管鞋处排塞子，塞长「照抄上一口井」，规范核查靠人工翻条款。示范这口井贯穿五层，最深处是压力系数 1.35 的高压水层——按经验塞 50 米，压差算下来其实需要 54 米起，验收试压当场露馅。</p><p>问题有三个：<b>条款核查靠翻文件</b>——井筒屏障规范几十页，逐条人工对，漏一条就是返工一次；<b>压力条件被平均</b>——高压层的塞长按「经验 50 米」一刀切，压力系数 1.6 的井照样这么封；<b>设计不可追溯</b>——「为什么这段塞 80 米」答辩靠嘴，交接靠运气。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='拍脑袋封堵与逐段屏障的对比'>\n<rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/>\n<defs><marker id='abA' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#c9613f'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>报废封堵的本质：把每一段「地层与地层之间」的路都断掉，一段都不能省</text>\n<text x='60' y='38' font-size='10' fill='#c9613f'>拍脑袋：只封产层，高压层塞长不足</text>\n<rect x='40' y='46' width='110' height='7' fill='#cfdde8'/><text x='156' y='52' font-size='8' fill='#4d565b'>浅层水层</text>\n<rect x='40' y='132' width='110' height='11' fill='#e3dac7'/><text x='156' y='141' font-size='8' fill='#4d565b'>产层 A / B / C</text>\n<rect x='40' y='204' width='110' height='11' fill='#f0cdbd'/><text x='156' y='213' font-size='8' fill='#4d565b'>高压水层 1.35</text>\n<line x1='95' y1='46' x2='95' y2='215' stroke='#5a6e86' stroke-width='5'/>\n<rect x='88' y='140' width='14' height='7' fill='#5a6e86' opacity='0.8'/><text x='110' y='126' font-size='8' fill='#4d565b'>塞 50 m（照抄）</text>\n<rect x='88' y='210' width='14' height='5' fill='#5a6e86' opacity='0.8'/><text x='110' y='228' font-size='8' fill='#c9613f'>高压层 50 m：压差 4.5 MPa 需 54 m 起</text>\n<path d='M100 208 C 130 160, 70 110, 96 52' fill='none' stroke='#c9613f' stroke-width='1.6' stroke-dasharray='5 3' marker-end='url(#abA)'/>\n<text x='52' y='96' font-size='8.5' fill='#c9613f'>窜流通道</text>\n<text x='400' y='38' font-size='10' fill='#2f7d6b'>规范推理：逐段屏障，塞位塞长连着条款</text>\n<rect x='380' y='46' width='110' height='7' fill='#cfdde8'/><rect x='380' y='132' width='110' height='11' fill='#e3dac7'/><rect x='380' y='204' width='110' height='11' fill='#f0cdbd'/>\n<line x1='435' y1='46' x2='435' y2='215' stroke='#5a6e86' stroke-width='5'/>\n<rect x='428' y='46' width='14' height='6' fill='#5a6e86' opacity='0.85'/><rect x='428' y='88' width='14' height='7' fill='#5a6e86' opacity='0.85'/>\n<rect x='428' y='126' width='14' height='7' fill='#5a6e86' opacity='0.85'/><rect x='428' y='162' width='14' height='7' fill='#5a6e86' opacity='0.85'/>\n<rect x='428' y='206' width='14' height='9' fill='#5a6e86' opacity='0.85'/>\n<text x='450' y='72' font-size='8' fill='#2f7d6b'>浅层保护塞</text><text x='450' y='115' font-size='8' fill='#2f7d6b'>每层顶以上 ≥50 m（B-01）</text>\n<text x='450' y='186' font-size='8' fill='#2f7d6b'>高压层塞长 ≥ Δp×12（B-03）</text>\n<text x='450' y='224' font-size='8' fill='#2f7d6b'>双屏障 + 候凝试压（B-02）</text>\n<text x='16' y='244' font-size='9.5' fill='#4d565b'>差别不在「封没封」，在「每一段是不是都按条款封到位」——窜流找的正是那一段没封到位的。</text>\n</svg><span class='viz-cap'>左：照抄上一口井的塞排布，高压层塞长不足留下窜流通道；右：逐段屏障，每段塞连着条款编号。</span></div>"
+        },
+        {
+          "no": 2,
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>两件套。<b>规范推理</b>：把井筒屏障规范的条款形式化成图谱约束——什么压力、什么井况、要求什么屏障要素——逐段推理出塞的位置、长度、工艺等级与验证要求：压差低于 3 MPa 用标准桥塞，3—6 用高压桥塞并按 Δp×12 放塞长，超过 6 升级双桥塞加分段候凝试压；固井质量差于 0.5 的井段先补贴再打塞。<b>案例匹配</b>：检索相似井的封堵方案与验收结果做参照，相似度按压差、层位与井况加权，差异有提示。</p><p>输出是一张<b>可核查的设计</b>：每段塞的规格都连着条款编号与相似案例。被问「为什么这段塞 54 米」，指着 B-03 那条边就能回答——这是图谱与黑箱模型的本质区别。</p><div class='viz'><svg viewBox='0 0 700 220' role='img' aria-label='规范条款形式化与约束推理架构'>\n<rect x='0' y='0' width='700' height='220' fill='#fbfaf6'/>\n<defs><marker id='abB' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<text x='16' y='18' font-size='11' fill='#242b2e'>两件套：条款形式化管「要求是什么」，约束推理管「这一井怎么满足」</text>\n<rect x='16' y='40' width='150' height='100' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='60' font-size='10' fill='#242b2e'>井筒屏障规范</text><text x='28' y='78' font-size='9' fill='#4d565b'>B-01 塞面位置</text><text x='28' y='92' font-size='9' fill='#4d565b'>B-02 双屏障 · B-03 塞长</text><text x='28' y='106' font-size='9' fill='#4d565b'>B-04 补贴 · B-05 试压</text><text x='28' y='126' font-size='8.5' fill='#79828a'>条款挂出处，修订留版本</text>\n<path d='M166 90 L190 90' stroke='#242b2e' stroke-width='1.2' marker-end='url(#abB)'/>\n<rect x='194' y='40' width='158' height='100' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='206' y='60' font-size='10' fill='#fff'>形式化成约束</text><text x='206' y='78' font-size='9' fill='#d8ecdf'>塞面 ≥ 层顶 − 50 m</text><text x='206' y='92' font-size='9' fill='#d8ecdf'>塞长 ≥ max(50, Δp×12)</text><text x='206' y='106' font-size='9' fill='#d8ecdf'>Δp&gt;6 → 双桥塞+试压</text><text x='206' y='126' font-size='9' fill='#fff'>固井 &lt;0.5 → 先补贴</text>\n<path d='M352 90 L376 90' stroke='#242b2e' stroke-width='1.2' marker-end='url(#abB)'/>\n<rect x='380' y='40' width='146' height='100' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='392' y='60' font-size='10' fill='#242b2e'>逐段推理</text><text x='392' y='78' font-size='9' fill='#4d565b'>输入：井身 + 压力体系</text><text x='392' y='92' font-size='9' fill='#4d565b'>输出：塞位/塞长/工艺</text><text x='392' y='106' font-size='9' fill='#4d565b'>+ 相似案例参照</text><text x='392' y='126' font-size='8.5' fill='#79828a'>相似度按压差加权</text>\n<path d='M526 90 L550 90' stroke='#242b2e' stroke-width='1.2' marker-end='url(#abB)'/>\n<rect x='554' y='40' width='130' height='100' rx='5' fill='#41699b' opacity='0.9'/><text x='566' y='60' font-size='10' fill='#fff'>可核查设计</text><text x='566' y='78' font-size='9' fill='#fff'>逐段方案表</text><text x='566' y='92' font-size='9' fill='#fff'>条款核查清单</text><text x='566' y='106' font-size='9' fill='#fff'>费用与工期</text><text x='566' y='126' font-size='9' fill='#fff'>每段可追溯</text>\n<rect x='16' y='160' width='668' height='40' rx='5' fill='#dfe6ee'/>\n<text x='28' y='177' font-size='9.5' fill='#41699b'>「为什么这段塞 54 米？」——高压层压差 4.5 MPa × 12 = 54，依据条款 B-03，相似井 W-2019 用了同一等级。</text>\n<text x='28' y='193' font-size='9' fill='#4d565b'>回答这句话不需要翻规范原文：边就在图谱上，出处跟着条款走。</text>\n</svg><span class='viz-cap'>架构：条款形式化成约束，逐段推理出塞位塞长与工艺等级，交付时附带核查清单。</span></div>"
+        },
+        {
+          "no": 3,
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p><b>四类输入</b>：井身结构与套管程序（尺寸、下深、固井质量——塞往哪儿放的前提）；地层压力体系（各层实测孔隙压力与破裂压力——塞长与工艺等级的依据）；井筒屏障规范（屏障要素、塞长、验证要求——推理的规则源）；报废案例库（方案、施工记录、验收结果——参照与边权来源）。</p><p><b>坑</b>：压力系数要用<b>实测地层压力</b>，别用区块平均值——高压层的塞长能差一倍；固井质量差段要在井身上显式标记，隐性的「水泥环缺失」会让水泥塞失去依托，屏障形同虚设。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='四类数据汇入约束推理'>\n<rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/>\n<defs><marker id='abC' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs>\n<text x='16' y='18' font-size='11' fill='#242b2e'>需要准备什么：井筒底账、压力体系、规范条款与案例库，各管一段推理</text>\n<rect x='16' y='34' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='28' y='54' font-size='10' fill='#242b2e'>井身结构与套管程序</text><text x='28' y='72' font-size='8.5' fill='#79828a'>尺寸 · 下深 · 固井质量（差段标记）</text>\n<rect x='216' y='34' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='228' y='54' font-size='10' fill='#c9613f'>地层压力体系</text><text x='228' y='72' font-size='8.5' fill='#c9613f'>实测孔隙压力 · 破裂压力（别用平均！）</text>\n<rect x='16' y='102' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='28' y='122' font-size='10' fill='#242b2e'>井筒屏障规范</text><text x='28' y='140' font-size='8.5' fill='#79828a'>条款编号 · 适用条件 · 版本</text>\n<rect x='216' y='102' width='190' height='56' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='228' y='122' font-size='10' fill='#242b2e'>报废案例库</text><text x='228' y='140' font-size='8.5' fill='#79828a'>方案 · 施工 · 验收试压结果</text>\n<path d='M206 62 L266 62' stroke='#79828a' marker-end='url(#abC)'/><path d='M406 62 L466 78' stroke='#79828a' marker-end='url(#abC)'/><path d='M206 130 L266 130' stroke='#79828a' marker-end='url(#abC)'/><path d='M406 130 L466 116' stroke='#79828a' marker-end='url(#abC)'/>\n<rect x='470' y='54' width='214' height='92' rx='5' fill='#41699b' opacity='0.9'/><text x='484' y='78' font-size='10.5' fill='#fff'>井筒底账 + 约束集</text><text x='484' y='98' font-size='9' fill='#fff'>每层：压力 · 层位 · 井况</text><text x='484' y='116' font-size='9' fill='#fff'>每条：条件 · 要求 · 出处</text><text x='484' y='134' font-size='9' fill='#fff'>底账不准，推理越快错得越快</text>\n<text x='16' y='186' font-size='9.5' fill='#c9613f'>坑：压力系数用区块平均，高压层塞长差一倍——实测压力是这口井的，不是邻区块的。</text>\n</svg><span class='viz-cap'>数据分工：井身给底账，压力给依据，规范给约束，案例给参照——四类缺一，推理就瘸。</span></div>"
+        },
+        {
+          "no": 4,
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难点：<b>条款形式化</b>——规范是自然语言，「视具体情况适当加长」要变成可执行条件，转译错了推理越快错得越快；<b>多约束冲突</b>——塞长、井筒空间、工期与费用互相牵制，双桥塞方案贵 54 万但换来的是验收一次过；<b>动态规范</b>——条款修订后，受影响的在编设计要能自动重推。</p><p>改进路线按成本从低到高：① 条款逐条形式化并挂出处；② 塞排布用约束求解替代人工排序；③ 案例边权随验收结果更新；④ 规范版本管理，修订即重推受影响井。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='三个难点：条款形式化、多约束冲突、动态规范'>\n<rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>三个会让人白干一场的坑</text>\n<rect x='16' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10' fill='#4d565b'>① 条款形式化：别意译</text>\n<rect x='28' y='58' width='188' height='34' rx='4' fill='#f6e2da'/><text x='36' y='72' font-size='8.5' fill='#c9613f'>原文：「塞长应视压差</text><text x='36' y='85' font-size='8.5' fill='#c9613f'>适当加长」——不可执行</text>\n<path d='M122 96 L122 108' stroke='#2f7d6b' marker-end='url(#abD)'/><defs><marker id='abD' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#2f7d6b'/></marker></defs>\n<rect x='28' y='112' width='188' height='34' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='36' y='126' font-size='8.5' fill='#2f7d6b'>形式化：Δp ≤ 3 MPa → 50 m；</text><text x='36' y='140' font-size='8.5' fill='#2f7d6b'>Δp &gt; 3 → max(50, Δp×12) m</text>\n<text x='28' y='168' font-size='9' fill='#4d565b'>转译要和规范方逐条对</text><text x='28' y='182' font-size='9' fill='#c9613f'>——意译错的规则，跑得越快错得越快。</text>\n<rect x='244' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='256' y='46' font-size='10' fill='#4d565b'>② 多约束：塞长 vs 空间 vs 钱</text>\n<text x='256' y='70' font-size='9' fill='#4d565b'>双桥塞 + 试压</text><rect x='380' y='62' width='60' height='12' rx='2' fill='#c9613f'/><text x='446' y='72' font-size='8.5' fill='#4d565b'>332 万</text>\n<text x='256' y='92' font-size='9' fill='#4d565b'>单高压桥塞</text><rect x='380' y='84' width='50' height='12' rx='2' fill='#41699b' opacity='0.75'/><text x='436' y='94' font-size='8.5' fill='#4d565b'>278 万</text>\n<text x='256' y='118' font-size='9' fill='#4d565b'>工期差</text><text x='330' y='118' font-size='8.5' fill='#79828a'>+3.5 天（候凝与试压）</text>\n<text x='256' y='144' font-size='9' fill='#4d565b'>贵的 54 万买的是</text><text x='256' y='158' font-size='9' fill='#c9613f'>「验收一次过 + 百年不窜」。</text>\n<text x='256' y='180' font-size='8.5' fill='#79828a'>取舍亮给工程师，算法不定优先级。</text>\n<rect x='472' y='28' width='212' height='164' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='484' y='46' font-size='10' fill='#4d565b'>③ 动态规范：修订即重推</text>\n<rect x='484' y='60' width='76' height='26' rx='4' fill='#41699b' opacity='0.85'/><text x='522' y='77' font-size='9' fill='#fff' text-anchor='middle'>规范 v2.1</text>\n<path d='M560 73 L582 73' stroke='#242b2e' marker-end='url(#abD)'/>\n<rect x='586' y='60' width='76' height='26' rx='4' fill='#b26a39' opacity='0.85'/><text x='624' y='77' font-size='9' fill='#fff' text-anchor='middle'>v2.2 修订</text>\n<rect x='484' y='98' width='178' height='40' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='494' y='114' font-size='8.5' fill='#4d565b'>B-03 系数 12 → 15</text><text x='494' y='130' font-size='8.5' fill='#c9613f'>受影响在编设计：14 口 → 自动重推</text>\n<text x='484' y='162' font-size='9' fill='#4d565b'>没有版本管理，修订条款</text><text x='484' y='176' font-size='9' fill='#c9613f'>只能靠群发邮件通知。</text>\n</svg><span class='viz-cap'>三个坑：条款要逐条对原文、约束取舍要亮给人、规范修订要能重推受影响井。</span></div>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "从「照抄上一口井」到「逐段可追溯」的落地流程",
+      "lead": [
+        "这个流程把「翻规范、抄邻井」换成「逐段推理、条条可查」。核心资产是形式化到位的条款库与底账准确的井筒档案——底账不准，推理越快错得越快。",
+        "下面的示范用一口五层井演示第 2、3 步：拉高压层压力与固井质量，看工艺等级怎么升级、方案怎么变。"
+      ],
+      "stats": [
+        [
+          "默认方案",
+          "5 段屏障 · 278 万"
+        ],
+        [
+          "工艺升级点",
+          "压差 3 / 6 MPa"
+        ],
+        [
+          "设计耗时",
+          "数天 → 分钟级"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "井身结构数字化",
+          "role": "数据",
+          "do": "把套管程序、固井质量、射孔段与层位顶底逐段建档，固井差段在井身上显式标记。",
+          "effect": "推理有了精确的井筒底账：塞往哪儿放、哪里要先补课，一目了然。",
+          "trap": "用完井时的固井资料凑合——几十年后的水泥环状态要先查补注与修井史。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='井身结构数字化建档'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>逐段建档：套管 · 固井 · 射孔段 · 层位，一段一行</text><rect x='12' y='30' width='150' height='56' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='87' y='50' font-size='9.5' fill='#242b2e' text-anchor='middle'>完井档案</text><text x='87' y='68' font-size='8.5' fill='#79828a' text-anchor='middle'>套管程序 · 射孔段</text><rect x='176' y='30' width='150' height='56' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='251' y='50' font-size='9.5' fill='#c9613f' text-anchor='middle'>固井质量曲线</text><text x='251' y='68' font-size='8.5' fill='#c9613f' text-anchor='middle'>差段显式标记 &lt; 0.5</text><rect x='340' y='30' width='150' height='56' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='415' y='50' font-size='9.5' fill='#242b2e' text-anchor='middle'>修井与补注史</text><text x='415' y='68' font-size='8.5' fill='#79828a' text-anchor='middle'>水泥环现状修正</text><path d='M162 58 L176 58' stroke='#79828a' marker-end='url(#abS1)'/><path d='M326 58 L340 58' stroke='#79828a' marker-end='url(#abS1)'/><defs><marker id='abS1' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#79828a'/></marker></defs><rect x='504' y='30' width='144' height='56' rx='4' fill='#41699b' opacity='0.9'/><text x='576' y='50' font-size='9.5' fill='#fff' text-anchor='middle'>井筒底账</text><text x='576' y='68' font-size='9' fill='#fff' text-anchor='middle'>一段一行 · 差段标红</text><text x='12' y='106' font-size='9.5' fill='#c9613f'>固井差段不标记，水泥塞打在「没有依托」的井段上——屏障形同虚设，验收才发现。</text></svg>"
+        },
+        {
+          "name": "压力体系与屏障要求推理",
+          "role": "算法",
+          "do": "按各层实测压力与规范条款，逐段推理屏障要素：塞位、塞长、工艺等级与验证要求。",
+          "effect": "每段塞连着条款编号，塞长按压差自动放长。",
+          "trap": "压力用区块平均——高压层塞长差一倍，验收必返工。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='逐段推理屏障要素'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>逐段推理（示范默认工况）：压差决定工艺等级，条款决定塞位塞长</text><rect x='12' y='30' width='120' height='44' rx='4' fill='#f0cdbd'/><text x='72' y='48' font-size='9' fill='#242b2e' text-anchor='middle'>高压水层</text><text x='72' y='63' font-size='8.5' fill='#c9613f' text-anchor='middle'>Δp 4.5 MPa</text><path d='M132 52 L160 52' stroke='#242b2e' marker-end='url(#abS2)'/><defs><marker id='abS2' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='164' y='30' width='190' height='44' rx='4' fill='#e6f1ec' stroke='#2f7d6b'/><text x='259' y='48' font-size='9' fill='#2f7d6b' text-anchor='middle'>高压桥塞 + 水泥塞</text><text x='259' y='63' font-size='8.5' fill='#2f7d6b' text-anchor='middle'>塞长 max(50, 4.5×12) = 54 m</text><rect x='380' y='30' width='268' height='44' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='392' y='48' font-size='9' fill='#4d565b'>依据：B-01 塞面层顶上 50 m</text><text x='392' y='64' font-size='9' fill='#4d565b'>B-03 塞长 ≥ Δp×12 · B-02 双屏障试压</text><rect x='12' y='86' width='636' height='18' rx='3' fill='#dfe6ee'/><text x='24' y='99' font-size='9' fill='#41699b'>产层三段：Δp &lt; 3 MPa → 标准桥塞 + 50 m 水泥塞，塞面在层顶以上 50 m。</text><text x='12' y='116' font-size='9.5' fill='#c9613f'>压力用区块平均的代价：1.6 系数的井照抄 50 m 塞，验收试压当场露馅。</text></svg>"
+        },
+        {
+          "name": "工艺匹配与案例参照",
+          "role": "算法",
+          "do": "按压差与套管尺寸匹配工艺等级，检索相似井案例做参照并标注差异。",
+          "effect": "方案有先例可循，差异有提示，评审有抓手。",
+          "trap": "相似度只看井深不看压力体系——「像」要看封堵难点像不像。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='相似案例匹配'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>相似案例按「压差 + 固井」加权匹配，本井 Δp 4.5 MPa、固井 0.60</text><text x='40' y='44' font-size='9' fill='#242b2e' text-anchor='middle'>W-2019</text><rect x='80' y='34' width='300' height='13' rx='2' fill='#f2efe6'/><rect x='80' y='34' width='276' height='13' rx='2' fill='#2f7d6b' opacity='0.9'/><text x='388' y='45' font-size='9' fill='#2f7d6b' font-weight='600'>92%</text><text x='430' y='45' font-size='8.5' fill='#79828a'>Δp 4.4 · 固井 0.62 · 高压桥塞+双屏障</text><text x='40' y='70' font-size='9' fill='#242b2e' text-anchor='middle'>W-2017</text><rect x='80' y='60' width='300' height='13' rx='2' fill='#f2efe6'/><rect x='80' y='60' width='180' height='13' rx='2' fill='#41699b' opacity='0.6'/><text x='388' y='71' font-size='9' fill='#4d565b'>76%</text><text x='430' y='71' font-size='8.5' fill='#79828a'>Δp 6.9 · 双桥塞（本井压差未到）</text><text x='40' y='96' font-size='9' fill='#242b2e' text-anchor='middle'>W-2021</text><rect x='80' y='86' width='300' height='13' rx='2' fill='#f2efe6'/><rect x='80' y='86' width='150' height='13' rx='2' fill='#41699b' opacity='0.45'/><text x='388' y='97' font-size='9' fill='#4d565b'>71%</text><text x='430' y='97' font-size='8.5' fill='#79828a'>Δp 2.1 · 标准桥塞（偏轻）</text><text x='12' y='116' font-size='9.5' fill='#c9613f'>案例是参照不是答案：最像案例与推理方案不一致时，先查差异再下结论。</text></svg>"
+        },
+        {
+          "name": "方案核查与工期成本",
+          "role": "算法",
+          "do": "对推理出的设计逐条跑规范核查，汇总塞长、工期与费用，输出核查清单与预算。",
+          "effect": "交付前就知道每条要求满足与否，预算与工期同步给出。",
+          "trap": "核查只查塞长不查顺序——先下桥塞还是先注塞，顺序错全盘返工。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='规范核查与费用汇总'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>核查清单（默认工况）：✓ 满足 · △ 建议升级</text><text x='24' y='42' font-size='9' fill='#2f7d6b'>✓ B-01 塞面位置</text><text x='24' y='60' font-size='9' fill='#2f7d6b'>✓ B-02 双屏障</text><text x='24' y='78' font-size='9' fill='#2f7d6b'>✓ B-03 塞长 ≥ Δp×12</text><text x='24' y='96' font-size='9' fill='#2f7d6b'>✓ B-04 补贴要求</text><text x='200' y='42' font-size='9' fill='#b26a39'>△ B-05 全段试压（增强级才含）</text><rect x='380' y='30' width='268' height='70' rx='4' fill='#dfe6ee'/><text x='392' y='50' font-size='9.5' fill='#41699b'>汇总：5 段 · 总塞长 254 m</text><text x='392' y='68' font-size='9.5' fill='#41699b'>费用 278 万 · 工期 17.5 天</text><text x='392' y='86' font-size='8.5' fill='#79828a'>双桥塞方案：332 万 / 21 天（验收更稳）</text><text x='12' y='114' font-size='9.5' fill='#c9613f'>顺序也是核查项：先桥塞后注塞，反了整段重来。</text></svg>"
+        },
+        {
+          "name": "施工验收与图谱回填",
+          "role": "人工",
+          "do": "按设计施工，验收试压结果回填案例库，规范修订后自动重推受影响井。",
+          "effect": "案例边权随验收结果更新，规范修订不再靠群发邮件。",
+          "trap": "验收资料锁在 PDF 里，图谱吃不到，下一口井又从零开始。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='验收回填闭环'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><defs><marker id='abS5' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='12' y='30' width='110' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='67' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>方案审定</text><path d='M122 47 L152 47' stroke='#242b2e' marker-end='url(#abS5)'/><rect x='156' y='30' width='110' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='211' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>施工与试压</text><path d='M266 47 L296 47' stroke='#242b2e' marker-end='url(#abS5)'/><rect x='300' y='30' width='110' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='355' y='51' font-size='9.5' fill='#242b2e' text-anchor='middle'>验收结果回填</text><path d='M410 47 L440 47' stroke='#242b2e' marker-end='url(#abS5)'/><rect x='444' y='30' width='110' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='499' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>案例边权更新</text><path d='M554 47 C 600 47, 610 80, 560 88 C 480 98, 180 98, 90 82' fill='none' stroke='#79828a' stroke-dasharray='4 3' marker-end='url(#abS5)'/><text x='330' y='112' font-size='9' fill='#79828a' text-anchor='middle'>闭环：一次通过 → 边权 +；返工 → 差异分析进案例库</text><text x='12' y='24' font-size='9.5' fill='#4d565b'>规范 v2.2 修订发布 → 受影响在编设计自动重推，修订不再靠邮件通知。</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>条款覆盖率</b>：推理引擎覆盖的规范条款占比应大于 90%，未覆盖条款必须列入人工检查清单并发回条款库补形式化。</p><p><b>一次验收通过率</b>：按推理设计施工的井，试压验收一次通过率应大于 95%——每返工一次都是几十万。</p><p><b>案例参照有效度</b>：相似度第一的案例方案与最终采用方案的一致率应大于 70%，持续偏低说明匹配特征选错了。</p><p><b>追溯完整性</b>：每段塞的规格都能链接到条款编号与相似案例，覆盖率 100%——这是图谱方案与模板文档的本质区别。</p>"
+      },
+      "fails": [
+        {
+          "name": "压力用平均值",
+          "why": "高压水层的塞长按区块平均算，能差出一倍，验收试压当场露馅。"
+        },
+        {
+          "name": "条款人工翻",
+          "why": "几十页屏障规范逐条人工对，漏一条就是返工一次，而且谁也说不清漏没漏。"
+        },
+        {
+          "name": "固井差段没标记",
+          "why": "水泥环缺失段上打塞，水泥塞失去依托，屏障形同虚设。"
+        },
+        {
+          "name": "验收不回填",
+          "why": "案例库吃不到验收结果，相似度再高也学不出好方案，系统停在上线那天。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "html": "demo/index.html",
+      "label": "可运行示范",
+      "intro": "拖动滑杆改变高压水层压力系数、固井质量与屏障冗余等级，看井筒剖面上的封堵方案怎么变：塞位塞长按规范逐段推理、工艺等级随压差升级、固井差段触发补贴，右侧条款核查清单与相似案例同步刷新。",
+      "height": 1200
+    }
+  }
+}

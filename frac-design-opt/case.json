@@ -1,0 +1,157 @@
+{
+  "id": "frac-design-opt",
+  "sceneId": "co7",
+  "methods": [
+    "opt"
+  ],
+  "title": "储层压裂增产智能方案设计",
+  "version": "1.0.0",
+  "updated": "2026-10-23",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "低渗致密储层的水平井，产能几乎全靠压裂造出来的改造体积。簇间距、排量、加砂程序三者互相牵制，而它们最终要压到同一个目标上：单井累计产油减去施工成本。这是一个典型的「慢反馈」问题——真实标签（EUR）要半年到一年才攒得出来。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "施工曲线 + 少量监测",
+          "desc": "排量压力砂比全量归档，几何监测只覆盖少数井"
+        },
+        {
+          "label": "标注成本",
+          "value": "高",
+          "desc": "EUR 需 6–12 个月累积，单井只能用一次"
+        },
+        {
+          "label": "可见收益",
+          "value": "高",
+          "desc": "压裂成本占单井投资比重大，优化空间直接体现"
+        },
+        {
+          "label": "难度",
+          "value": "高",
+          "desc": "多物理场耦合，且参数是连动的，不是各自独立"
+        }
+      ],
+      "sections": [
+        {
+          "no": 1,
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>常规做法：按区块模板给定簇间距（通常是固定的 10–15 m）和排量，加砂程序照同区块的成熟曲线走，分段数按水平段长度算出来。设计一般一次成型，施工中途只在压力异常时由现场临时判断要不要降砂比或停泵。</p><p>问题有三：<b>参数之间是连动的</b>——排量提上去，缝高会往上长，可能窜出隔层；同时管内摩阻上升，施工压力逼近设备限压；给药的强度又受限于单位时间的携砂能力。孤立地调一个参数，常常换来另外两项越界。<b>异常发现得晚</b>——砂堵往往发展到顶替压力上窜才被识别，这时已经损失了半个泵注阶段。<b>反馈周期长</b>——这一版方案好不好，要等半年的产量曲线才能评价，一年最多迭代两三次。</p><div class='viz'><svg viewBox='0 0 700 250' role='img' aria-label='压裂缝与三个设计参数的牵制关系'>\n<rect x='0' y='0' width='700' height='250' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>压裂：把岩石压出缝、再把砂撑住不让它闭合——缝有多长多高、撑得多开，决定增产多少</text>\n<rect x='16' y='28' width='390' height='200' rx='6' fill='#efece1' stroke='#e2ded0'/><text x='30' y='48' font-size='10.5' fill='#4d565b'>水平井多段压裂：沿水平段打出一组横向缝</text>\n<rect x='40' y='120' width='330' height='16' rx='3' fill='#fff' stroke='#242b2e'/><text x='40' y='152' font-size='9' fill='#41699b'>水平井筒（套管）</text>\n<rect x='36' y='70' width='338' height='52' fill='#e3dac7'/><rect x='36' y='136' width='338' height='52' fill='#e3dac7'/><text x='42' y='90' font-size='8.5' fill='#8a7f66'>产层</text><text x='42' y='180' font-size='8.5' fill='#8a7f66'>产层（下）</text>\n<path d='M96 120 L96 74' stroke='#2f7d6b' stroke-width='3'/><path d='M96 136 L96 182' stroke='#2f7d6b' stroke-width='3'/><path d='M168 120 L168 68' stroke='#2f7d6b' stroke-width='3'/><path d='M168 136 L168 188' stroke='#2f7d6b' stroke-width='3'/><path d='M240 120 L240 72' stroke='#2f7d6b' stroke-width='3'/><path d='M240 136 L240 184' stroke='#2f7d6b' stroke-width='3'/><path d='M312 120 L312 66' stroke='#2f7d6b' stroke-width='3'/><path d='M312 136 L312 190' stroke='#2f7d6b' stroke-width='3'/>\n<circle cx='96' cy='128' r='3' fill='#b26a39'/><circle cx='168' cy='128' r='3' fill='#b26a39'/><circle cx='240' cy='128' r='3' fill='#b26a39'/><circle cx='312' cy='128' r='3' fill='#b26a39'/>\n<path d='M96 128 L168 128' stroke='#c9613f' stroke-dasharray='3 2'/><text x='118' y='118' font-size='9' fill='#c9613f'>簇间距</text>\n<path d='M168 60 L312 60' stroke='#41699b' stroke-dasharray='3 2'/><text x='214' y='54' font-size='9' fill='#41699b'>缝高（受排量影响）</text>\n<text x='40' y='210' font-size='9.5' fill='#4d565b'>缝越密，单缝之间会「抢」缝宽（簇间竞争）；间距太小反而都长不好。</text><text x='40' y='226' font-size='9.5' fill='#79828a'>砂的作用是让缝在停泵后不闭合，导流能力决定了增产能不能留住。</text>\n<rect x='420' y='28' width='264' height='200' rx='6' fill='#fbfaf6' stroke='#e2ded0'/><text x='434' y='48' font-size='10.5' fill='#4d565b'>三个参数互相牵制</text>\n<text x='434' y='72' font-size='10' fill='#4d565b'>① 簇间距 → 簇数与竞争</text><text x='434' y='88' font-size='9' fill='#79828a'>小 → 簇多、覆盖好，但单缝变窄</text>\n<text x='434' y='110' font-size='10' fill='#4d565b'>② 排量 → 缝高与施工压力</text><text x='434' y='126' font-size='9' fill='#c9613f'>大 → 缝高易穿层，压力可能超限</text>\n<text x='434' y='148' font-size='10' fill='#4d565b'>③ 加砂程序 → 导流能力</text><text x='434' y='164' font-size='9' fill='#79828a'>砂比过高 → 砂堵；过低 → 导流不足</text>\n<line x1='434' y1='176' x2='668' y2='176' stroke='#e2ded0'/>\n<text x='434' y='196' font-size='9.5' fill='#242b2e'>所以不存在「排量越大越好」：</text><text x='434' y='214' font-size='9.5' fill='#79828a'>每个参数都有它自己的上限来源，且彼此耦合。</text>\n</svg><span class='viz-cap'>压裂三参数（簇间距、排量、加砂程序）互相牵制，且各自有物理上限。</span></div>"
+        },
+        {
+          "no": 2,
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>第一步是把评估变便宜：<b>用裂缝扩展数值模拟生成样本，训练一个「施工参数 → 裂缝几何 + 产能响应」的代理模型</b>，单次评估从几十分钟压到毫秒。这是后面一切搜索的前提。</p><p>第二步是在代理模型上做<b>多目标寻优</b>：以单井累计产油为收益、以施工成本（液体、支撑剂、作业）为代价，同时把「施工压力 ≤ 设备限压」「缝高 ≤ 隔层厚度」「砂比 ≤ 携砂窗口」作为硬约束先做剪枝，剩下的组合求帕累托前沿，让工程师在「产量—成本」曲线上选点，而不是拿一个唯一解。</p><p>第三步是<b>施工中的闭环调整</b>：把同一套代理模型部署到现场，按实时的压力响应滚动修正后续砂比。它能做的事情其实很朴素——<b>在压力还没到红线之前就把砂比削平的时机找对</b>，这比事后靠经验判断稳得多。</p><p>被替掉的是「照模板设计 + 现场临场决断」这两环。<b>它不能替掉的是地质力学标定本身</b>，以及最后「这口井要不要这么花钱」的决策。</p><div class='viz'><svg viewBox='0 0 700 215' role='img' aria-label='代理模型加硬约束剪枝加多目标寻优'>\n<rect x='0' y='0' width='700' height='215' fill='#fbfaf6'/>\n<defs><marker id='arF3' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>三层：代理模型把缝模变快，硬约束先剪枝，寻优只出前沿不出单解</text>\n<rect x='16' y='30' width='140' height='76' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='86' y='50' font-size='10.5' fill='#242b2e' text-anchor='middle'>缝模（机理）</text><text x='86' y='68' font-size='9' fill='#c9613f' text-anchor='middle'>单次 20–40 min</text><text x='86' y='86' font-size='9' fill='#79828a' text-anchor='middle'>不能穷举</text>\n<path d='M156 68 L190 68' stroke='#242b2e' marker-end='url(#arF3)'/>\n<rect x='190' y='30' width='140' height='76' rx='5' fill='#41699b' opacity='0.9'/><text x='260' y='50' font-size='10.5' fill='#fff' text-anchor='middle'>代理模型</text><text x='260' y='68' font-size='9' fill='#fff' text-anchor='middle'>7,280 组样本</text><text x='260' y='86' font-size='9' fill='#fff' text-anchor='middle'>&lt; 1 ms / 组</text>\n<path d='M330 68 L364 68' stroke='#242b2e' marker-end='url(#arF3)'/>\n<rect x='364' y='30' width='140' height='76' rx='5' fill='#c9613f' opacity='0.85'/><text x='434' y='50' font-size='10.5' fill='#fff' text-anchor='middle'>硬约束剪枝</text><text x='434' y='68' font-size='9' fill='#fff' text-anchor='middle'>压力 · 缝高</text><text x='434' y='86' font-size='9' fill='#fff' text-anchor='middle'>携砂窗口</text>\n<path d='M504 68 L538 68' stroke='#242b2e' marker-end='url(#arF3)'/>\n<rect x='538' y='30' width='146' height='76' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='611' y='50' font-size='10.5' fill='#fff' text-anchor='middle'>多目标寻优</text><text x='611' y='68' font-size='9' fill='#fff' text-anchor='middle'>EUR — 成本</text><text x='611' y='86' font-size='9' fill='#fff' text-anchor='middle'>出前沿</text>\n<line x1='16' y1='122' x2='684' y2='122' stroke='#e2ded0'/>\n<rect x='16' y='132' width='330' height='72' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='152' font-size='9.5' fill='#4d565b'>硬约束必须<tspan font-weight='600'>前置</tspan>：违规组合不该出现在推荐列表里，</text><text x='28' y='170' font-size='9.5' fill='#c9613f'>否则工程师要手动返工，最后不再相信输出。</text><text x='28' y='188' font-size='9' fill='#79828a'>约束来源：施工压力上限、缝高不穿层、砂比不砂堵。</text>\n<rect x='360' y='132' width='324' height='72' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='372' y='152' font-size='9.5' fill='#41699b'>不要加权成标量</text><text x='372' y='170' font-size='9' fill='#4d565b'>权重是人拍的，油价一变结论就作废；出前沿，</text><text x='372' y='188' font-size='9' fill='#4d565b'>由预算与风险偏好在当下取点，方案不会作废。</text>\n</svg><span class='viz-cap'>代理模型提速 → 硬约束前置剪枝 → 多目标寻优只出前沿，不把两个目标加权成一个数。</span></div>"
+        },
+        {
+          "no": 3,
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p><b>地质力学剖面</b>：地应力（含水平应力差）、杨氏模量与泊松比、破裂压力、天然裂缝发育情况——来自测井计算与岩心标定。<b>这部分决定了地下部分的建模质量，也是最容易出错的一环。</b></p><p><b>压裂施工记录</b>：排量、砂比、地面与井底压力、阶段液量、停泵与顶替时刻。这类数据是<b>全量归档且结构化</b>的，一个区块几十到几百口井，不需要额外标注，缺口多在压力信号的采样频率与传感器标定。</p><p><b>裂缝几何监测</b>：微地震事件、测斜仪或分布式光纤解释的缝高缝长、示踪剂的分段产出。这是<b>代理模型最稀缺的标签</b>，通常只有几口重点井。</p><p><b>压后产量</b>：初期产量、递减规律与 EUR。<b>这是最终考核量，但要 6–12 个月才完整</b>，早期只能用短期产量做替代指标，并明确告知它的偏差。</p><div class='viz'><svg viewBox='0 0 700 190' role='img' aria-label='数据来源与地质力学标定瓶颈'>\n<rect x='0' y='0' width='700' height='190' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>需要准备什么：施工数据很多，地质力学参数最缺</text>\n<rect x='16' y='30' width='200' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='116' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>地质力学</text>\n<text x='28' y='66' font-size='9' fill='#4d565b'>地应力剖面 · 杨氏模量</text><text x='28' y='82' font-size='9' fill='#4d565b'>断裂韧性 · 天然裂缝</text><line x1='28' y1='94' x2='204' y2='94' stroke='#d8d2c4'/><text x='28' y='110' font-size='9' fill='#c9613f'>多数井没有实测，靠邻井类推</text><text x='28' y='130' font-size='9' fill='#c9613f'>这是缝高预测误差的主要来源</text>\n<rect x='228' y='30' width='200' height='112' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='328' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>施工记录</text>\n<text x='240' y='66' font-size='9' fill='#4d565b'>排量 · 砂比 · 压力曲线</text><text x='240' y='82' font-size='9' fill='#4d565b'>液量 · 支撑剂用量</text><line x1='240' y1='94' x2='416' y2='94' stroke='#d8d2c4'/><text x='240' y='110' font-size='9' fill='#41699b'>全井都有，秒级采样</text><text x='240' y='130' font-size='9' fill='#41699b'>可用于标定缝模</text>\n<rect x='440' y='30' width='244' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='562' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>产量与监测</text>\n<text x='452' y='66' font-size='9' fill='#4d565b'>投产产量 · 压力恢复</text><text x='452' y='82' font-size='9' fill='#4d565b'>微地震 / 光纤监测</text><line x1='452' y1='94' x2='672' y2='94' stroke='#d8d2c4'/><text x='452' y='110' font-size='9' fill='#c9613f'>只有少数井做过监测</text><text x='452' y='130' font-size='9' fill='#c9613f'>\"缝长多少\"多数是推断值</text>\n<rect x='150' y='156' width='400' height='26' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='350' y='173' font-size='10' fill='#fff' text-anchor='middle'>代理训练集 7,280 组（缝模生成）· 实测只用于校验与后评估</text>\n<path d='M116 142 L116 156' stroke='#c9613f'/><path d='M328 142 L328 156' stroke='#41699b'/><path d='M562 142 L562 156' stroke='#c9613f'/>\n</svg><span class='viz-cap'>数据分层：施工记录丰富，瓶颈是地质力学参数（多数井无实测）与裂缝监测。</span></div>"
+        },
+        {
+          "no": 4,
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难点：<b>代理模型的适用范围</b>——它是用有限的表征样本训练的，参数一旦推出训练覆盖范围（比如超大排量、超密簇间距），预测会开始失真，而寻优恰恰最喜欢往边界跑。<b>多目标之间没有公度</b>——产量和成本、EUR 和短期稳产，真正的取舍标准在油价与公司的决策里，不在算法里。<b>闭合环的安全边界</b>——让模型去实时调整砂比，必须把最终的否决权与硬红线留在人手里。</p><p>改进路线：① 代理模型给出不确定度，对处于外推区的组合降权或直接排除，而不是给一个自信的错数；② 每隔一段时间用新的监测井做一致性复核与重标定，把模型漂移摊到明面上；③ 先把硬约束写进剪枝层再搜索，把「有可能违法」的组合挡在设计阶段；④ 在线调整只做「建议 + 限幅」，每次动作的幅度上限与人工确认都写死在系统里；⑤ 用短期产量做早停 + 长期 EUR 做终评，两套指标分开统计，不要混报。</p><div class='viz'><svg viewBox='0 0 700 205' role='img' aria-label='外推与闭环两个风险'>\n<rect x='0' y='0' width='700' height='205' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>两个必须设防的地方：寻优专往边界跑，以及闭环直接下发指令</text>\n<rect x='16' y='28' width='330' height='166' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10.5' fill='#4d565b'>① 代理模型外推无人管</text>\n<line x1='40' y1='150' x2='330' y2='150' stroke='#242b2e'/><line x1='40' y1='62' x2='40' y2='150' stroke='#242b2e'/>\n<rect x='52' y='76' width='140' height='64' fill=\"none\" stroke='#2f7d6b' stroke-dasharray='4 3'/><text x='58' y='92' font-size='9' fill='#2f7d6b'>训练采样覆盖</text>\n<circle cx='70' cy='112' r='2' fill='#41699b'/><circle cx='96' cy='100' r='2' fill='#41699b'/><circle cx='124' cy='122' r='2' fill='#41699b'/><circle cx='152' cy='92' r='2' fill='#41699b'/><circle cx='176' cy='118' r='2' fill='#41699b'/>\n<circle cx='272' cy='74' r='5.5' fill=\"none\" stroke='#c9613f' stroke-width='1.6'/><circle cx='272' cy='74' r='2.6' fill='#c9613f'/><text x='240' y='70' font-size='9' fill='#c9613f' text-anchor='end'>推荐值</text>\n<path d='M196 130 L262 82' stroke='#c9613f' stroke-dasharray='3 2'/><text x='196' y='142' font-size='9' fill='#c9613f'>寻优往边界跑</text>\n<text x='28' y='170' font-size='9' fill='#4d565b'>边界处样本稀疏、误差最大，给出来的是</text><text x='28' y='186' font-size='9' fill='#c9613f'>自信的错误</text>\n<rect x='360' y='28' width='324' height='166' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='372' y='46' font-size='10.5' fill='#4d565b'>② 闭环调参没有护栏</text>\n<rect x='380' y='60' width='130' height='40' rx='4' fill='#41699b' opacity='0.9'/><text x='445' y='78' font-size='9.5' fill='#fff' text-anchor='middle'>模型建议排量</text><text x='445' y='92' font-size='9' fill='#fff' text-anchor='middle'>14 → 18 m³/min</text>\n<path d='M510 80 L540 80' stroke='#242b2e' marker-end='url(#arF4)'/><defs><marker id='arF4' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<rect x='540' y='60' width='130' height='40' rx='4' fill='#c9613f' opacity='0.85'/><text x='605' y='78' font-size='9.5' fill='#fff' text-anchor='middle'>护栏</text><text x='605' y='92' font-size='9' fill='#fff' text-anchor='middle'>单次 ±1 + 人工确认</text>\n<text x='372' y='122' font-size='9' fill='#4d565b'>没有幅度上限与人工确认，模型一处失控就是一次现场事故。</text>\n<text x='372' y='146' font-size='9' fill='#4d565b'>护栏三件套：单次调整幅度上限、硬约束实时复校、</text><text x='372' y='162' font-size='9' fill='#4d565b'>异常即回退到上一档并提示人工。</text>\n<text x='372' y='182' font-size='9' fill='#c9613f'>「能不能自动下发」是管理决策，不是模型能力问题</text>\n</svg><span class='viz-cap'>左：寻优专往边界跑，边界正是样本最稀、误差最大的地方。右：闭环调参必须有幅度上限与人工确认。</span></div>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "一口致密油水平井的压裂方案设计流程",
+      "lead": [
+        "关键是先把单次「评估」变成毫秒级：只要评估还是几十分钟，任何意义上的寻优、闭环和在线调整都无从谈起。",
+        "下面的示范就是这一步做完之后的事：改簇间距、排量与加砂强度，看三条硬约束怎么相互作用，以及在成本上限内能拿到多少额外的 EUR。"
+      ],
+      "stats": [
+        [
+          "水平段",
+          "1200 m"
+        ],
+        [
+          "压裂段数",
+          "20 段"
+        ],
+        [
+          "候选组合",
+          "7280 组"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "地质力学参数标定",
+          "role": "数据",
+          "do": "用测井、岩心与小型测试校验闭合应力、杨氏模量与隔层遮挡能力，确定各层段的地质力学剖面。",
+          "effect": "剖面定了，后面所有的几何预测才有参照；这一步做不准，模型再好也是错的。",
+          "trap": "直接套邻区块的地应力梯度。隔层遮挡能力的误差会直接决定「缝高能不能压住」这个硬约束是否可信。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='地质力学参数标定'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>用邻井与少量实测把地应力剖面定下来，并给出不确定区间</text><rect x='12' y='30' width='150' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='87' y='48' font-size='9.5' fill='#242b2e' text-anchor='middle'>测井与岩心</text><text x='87' y='64' font-size='9' fill='#79828a' text-anchor='middle'>模量 · 泊松比</text><path d='M162 50 L192 50' stroke='#242b2e' marker-end='url(#arF5)'/><defs><marker id='arF5' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='192' y='30' width='150' height='40' rx='4' fill='#41699b' opacity='0.9'/><text x='267' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>地应力剖面</text><text x='267' y='64' font-size='9' fill='#fff' text-anchor='middle'>分层 · 含区间</text><path d='M342 50 L372 50' stroke='#242b2e' marker-end='url(#arF5)'/><rect x='372' y='30' width='150' height='40' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='447' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>缝模标定</text><text x='447' y='64' font-size='9' fill='#fff' text-anchor='middle'>用施工压力曲线</text><path d='M522 50 L552 50' stroke='#242b2e' marker-end='url(#arF5)'/><rect x='552' y='30' width='96' height='40' rx='4' fill='#c9613f' opacity='0.85'/><text x='600' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>不确定区间</text><text x='600' y='64' font-size='9' fill='#fff' text-anchor='middle'>一起往下传</text><rect x='12' y='78' width='636' height='34' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='24' y='94' font-size='9' fill='#4d565b'>标定只到「压力曲线对得上」是不够的：多组参数都能拟合同一条曲线，缝高预测会差出十几米。</text><text x='24' y='108' font-size='9' fill='#c9613f'>把不确定区间往下传，后面的寻优才能报「最优解的置信范围」</text></svg>"
+        },
+        {
+          "name": "生成样本训练代理模型",
+          "role": "算法",
+          "do": "在标定好的参数范围内做拉丁超立方采样，跑数值模拟得到多组「施工参数 → 缝长/缝高/导流/产能」样本，训练代理模型并留出测试集。",
+          "effect": "单次评估从几十分钟降到毫秒，寻优、不确定度传播与在线调整才成为可能。",
+          "trap": "采样范围按「大概会用到」来定。寻优总往边界跑，边界在覆盖范围外时模型会给出自信的错误预测。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='生成样本训练代理模型'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>缝模批量生成 7,280 组样本，训练毫秒级代理模型</text><rect x='12' y='30' width='150' height='44' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='87' y='48' font-size='9.5' fill='#242b2e' text-anchor='middle'>参数网格</text><text x='87' y='64' font-size='9' fill='#79828a' text-anchor='middle'>间距 × 排量 × 砂量</text><path d='M162 52 L192 52' stroke='#242b2e' marker-end='url(#arF6)'/><defs><marker id='arF6' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='192' y='30' width='150' height='44' rx='4' fill='#41699b' opacity='0.9'/><text x='267' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>缝模批量计算</text><text x='267' y='64' font-size='9' fill='#fff' text-anchor='middle'>7,280 组 · 并行</text><path d='M342 52 L372 52' stroke='#242b2e' marker-end='url(#arF6)'/><rect x='372' y='30' width='150' height='44' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='447' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>代理模型</text><text x='447' y='64' font-size='9' fill='#fff' text-anchor='middle'>&lt; 1 ms · R² 0.95</text><path d='M522 52 L552 52' stroke='#242b2e' marker-end='url(#arF6)'/><rect x='552' y='30' width='96' height='44' rx='4' fill='#b26a39' opacity='0.85'/><text x='600' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>边界标记</text><text x='600' y='64' font-size='9' fill='#fff' text-anchor='middle'>越界即报警</text><rect x='12' y='82' width='636' height='30' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='98' font-size='9' fill='#4d565b'>留出 10% 校验 + 边界区单独统计误差；边界区误差是平均误差的 3–5 倍，不能只看一个数。</text><text x='24' y='110' font-size='9' fill='#c9613f'>推荐值必须落在采样覆盖范围内，越界就回缝模补样本重训</text></svg>"
+        },
+        {
+          "name": "硬约束剪枝组合空间",
+          "role": "算法",
+          "do": "把设备限压、隔层厚度、携砂窗口与最大砂比写成硬约束，先在候选组合里剔除全部违规项。",
+          "effect": "搜索只在合法区域进行，输出的一定是能施工的方案，而不是事后才被告知不可行。",
+          "trap": "把不满足条件的组合静默丢弃。工程师需要知道为什么被剔除——否则下一次还会把同一类参数放进来。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='硬约束剪枝组合空间'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>三条硬约束前置：施工压力、缝高不穿层、砂比在携砂窗口内</text><text x='12' y='42' font-size='9' fill='#4d565b'>施工压力</text><rect x='96' y='32' width='200' height='14' rx='2' fill='#efece1'/><rect x='96' y='32' width='150' height='14' fill='#41699b'/><rect x='246' y='32' width='50' height='14' fill='#c9613f' opacity='0.6'/><text x='304' y='43' font-size='9' fill='#4d565b'>≤ 限压 85 MPa</text><text x='470' y='43' font-size='9' fill='#c9613f'>超限即剪掉</text><text x='12' y='64' font-size='9' fill='#4d565b'>缝高</text><rect x='96' y='54' width='200' height='14' rx='2' fill='#efece1'/><rect x='96' y='54' width='128' height='14' fill='#2f7d6b'/><rect x='224' y='54' width='72' height='14' fill='#c9613f' opacity='0.6'/><text x='304' y='65' font-size='9' fill='#4d565b'>缝高不得穿入上下隔层</text><text x='470' y='65' font-size='9' fill='#c9613f'>穿层即剪掉</text><text x='12' y='86' font-size='9' fill='#4d565b'>砂比</text><rect x='96' y='76' width='200' height='14' rx='2' fill='#efece1'/><rect x='96' y='76' width='40' height='14' fill='#c9613f' opacity='0.6'/><rect x='136' y='76' width='110' height='14' fill='#b26a39'/><rect x='246' y='76' width='50' height='14' fill='#c9613f' opacity='0.6'/><text x='304' y='87' font-size='9' fill='#4d565b'>窗口 8%–32%（低则导流不足，高则砂堵）</text><line x1='12' y1='98' x2='648' y2='98' stroke='#e2ded0'/><text x='12' y='114' font-size='9' fill='#c9613f'>剪枝要在<tspan font-weight='600'>寻优之前</tspan>：违规组合不进候选集，工程师不用手动返工</text></svg>"
+        },
+        {
+          "name": "多目标寻优出帕累托前沿",
+          "role": "算法",
+          "do": "以单井 EUR 为收益、施工成本为代价，在前沿上寻优，并在给定成本上限下给出最优点与敏感趋势。",
+          "effect": "工程师拿到的是一条「多花多少钱、能多换多少产量」的取舍曲线，预算变了立刻能重选。",
+          "trap": "把两个目标加权成一个标量再去优化。权重是人拍的，油价变了整套结论就要重算，而且会丢掉前沿上的其它合法选择。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='多目标寻优出帕累托前沿'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>最大化 EUR、最小化成本：出前沿，不加权成标量</text><line x1='30' y1='98' x2='300' y2='98' stroke='#242b2e'/><line x1='30' y1='30' x2='30' y2='98' stroke='#242b2e'/><circle cx='52' cy='90' r='2.4' fill='#b9c6cf'/><circle cx='76' cy='80' r='2.4' fill='#b9c6cf'/><circle cx='104' cy='68' r='2.4' fill='#b9c6cf'/><circle cx='136' cy='58' r='2.4' fill='#b9c6cf'/><circle cx='172' cy='48' r='2.4' fill='#b9c6cf'/><circle cx='212' cy='42' r='2.4' fill='#b9c6cf'/><circle cx='256' cy='38' r='2.4' fill='#b9c6cf'/><circle cx='292' cy='36' r='2.4' fill='#b9c6cf'/><path d='M52 90 C 110 66, 180 44, 292 36' fill='none' stroke='#41699b' stroke-width='1.8'/><line x1='200' y1='30' x2='200' y2='98' stroke='#c9613f' stroke-dasharray='4 3'/><text x='204' y='40' font-size='8.5' fill='#c9613f'>成本上限</text><circle cx='186' cy='44' r='5' fill=\"none\" stroke='#2f7d6b' stroke-width='1.6'/><text x='194' y='60' font-size='9' fill='#2f7d6b'>预算内最优</text><text x='30' y='112' font-size='8.5' fill='#79828a'>单井成本 →</text><text x='24' y='28' font-size='8.5' fill='#79828a' text-anchor='end'>↑ EUR</text><rect x='330' y='28' width='318' height='84' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='342' y='46' font-size='9.5' fill='#4d565b'>前沿上每一点都是「花这份钱能拿到的最高 EUR」；</text><text x='342' y='64' font-size='9.5' fill='#4d565b'>加权成标量后只剩一个点，油价一变结论就作废。</text><text x='342' y='82' font-size='9' fill='#41699b'>边际递减：最后 20% 的 EUR 常常要多花 50% 的成本</text><text x='342' y='100' font-size='9' fill='#c9613f'>约束收得过紧 → 可行集为空，应报告而不是硬凑</text></svg>"
+        },
+        {
+          "name": "泵注闭环调参与后评估",
+          "role": "人工",
+          "do": "把同一代理模型部署到现场，按实时压力响应滚动修正后续砂比（限幅 + 人工确认）；压后用产量与监测数据回填数据集，重新标定。",
+          "effect": "方案不再是「一次性设计」；每一次施工都在给下一版模型提供样本。",
+          "trap": "让模型直接改泵注指令。闭环必须有动作幅度上限、必有硬红线，最终处置权留在现场。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='泵注闭环调参与后评估'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='30' width='112' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='68' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>实时施工数据</text><path d='M124 47 L158 47' stroke='#242b2e' marker-end='url(#arF7)'/><defs><marker id='arF7' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='158' y='30' width='112' height='34' rx='4' fill='#c9613f' opacity='0.85'/><text x='214' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>护栏复校</text><path d='M270 47 L304 47' stroke='#242b2e' marker-end='url(#arF7)'/><rect x='304' y='30' width='112' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='360' y='51' font-size='9.5' fill='#242b2e' text-anchor='middle'>人工确认</text><path d='M416 47 L450 47' stroke='#242b2e' marker-end='url(#arF7)'/><rect x='450' y='30' width='112' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='506' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>调参下发</text><path d='M562 47 C 620 47, 626 84, 580 90 C 540 94, 130 96, 68 74' fill='none' stroke='#79828a' stroke-dasharray='4 3'/><rect x='12' y='74' width='300' height='36' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='90' font-size='9' fill='#4d565b'>单次调整幅度上限（如排量 ±1 m³/min）+ 异常回退；</text><text x='24' y='104' font-size='9' fill='#c9613f'>没有护栏的闭环，模型一处失控就是一次现场事故</text><rect x='324' y='74' width='324' height='36' rx='4' fill='#dfe6ee' stroke='#d8d2c4'/><text x='336' y='90' font-size='9' fill='#41699b'>后评估：预测 EUR vs 投产 6 个月实际产量</text><text x='336' y='104' font-size='9' fill='#4d565b'>偏差按区块统计，持续偏大的区块要单独重标缝模</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>代理模型精度</b>：留出测试集上缝长、缝高与单井 EUR 的相对误差分别 ≤ 15% / 20% / 20%；更要紧的是<b>排序能力</b>——预测 EUR 最高的前 20% 方案，实际短期产量的排名相关（Spearman）应显著。</p><p><b>约束遵循</b>：推荐方案里施工超压、缝高越界、砂比超窗口的比例必须为 0。<b>这是一票否决项。</b></p><p><b>闭环效果</b>：接入闭环调整后，同一区块内因压力异常导致的提前停泵/丢段比例下降；同时不允许出现 EUR 显著下降（说明控制器切得太保守）。</p>"
+      },
+      "fails": [
+        {
+          "name": "代理模型外推无人管",
+          "why": "采样范围没覆盖边界，寻优却专往边界跑，给出来的是自信的错误。"
+        },
+        {
+          "name": "多目标加权成标量",
+          "why": "权重是人拍的，油价一变结论就作废，还丢掉了前沿上的合法选择。"
+        },
+        {
+          "name": "硬约束只做后置校核",
+          "why": "违规组合照样进推荐列表，工程师按约束手动返工，最后不再相信输出。"
+        },
+        {
+          "name": "闭环直接下发指令",
+          "why": "没有幅度上限与人工确认，模型一处失控就是一次现场事故。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "html": "demo/index.html",
+      "label": "可运行示范",
+      "intro": "拖动簇间距、施工排量、加砂强度与前置液比例，改成本上限并切换模式：三张图给出单段裂缝形态与层位关系、泵注程序（砂比与施工压力随时间）、以及候选方案的「单井成本—EUR」前沿。",
+      "height": 1320
+    }
+  }
+}

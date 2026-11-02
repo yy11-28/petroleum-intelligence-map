@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：固井质量智能评价与候凝风险预警</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>固井质量评价 · 知识图谱判据推理 + 补救措施推荐</h1>
+  <p class="lead">同一张声波—变密度图，不同人常常读出不同结论。这里把判据拆开：每条判据对应一类缺陷、
+  一条规则和一个证据来源，逐井段给出分级，再按<b>缺陷类型 × 位置重要性</b>排补救措施的优先级。</p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>判据形式化（规范 → 可执行规则）</li><li>波形特征识别 + 多曲线融合</li><li>知识图谱证据链</li></ul></div><div><b>为什么起作用</b><ul><li>判据散落在规范与经验里，形式化后才能逐段一致判定</li><li>单条曲线都有盲区（CBL 受气窜影响、VDL 受地层波干扰），融合才能分清「胶结差」与「地层干扰」</li></ul></div><div><b>在示范里怎么看</b><ul><li>改居中度与候凝时间，看 12 段分级与证据链怎么变</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>顶替排量 <output id="out-q">1.4 m³/min</output></label>
+    <input type="range" id="q" min="0.8" max="3" step="0.1" value="1.4">
+  </div>
+  <div class="ctl">
+    <label>候凝时间 <output id="out-hr">28 h</output></label>
+    <input type="range" id="hr" min="8" max="72" step="2" value="28">
+  </div>
+  <div class="ctl">
+    <label>套管居中度 <output id="out-st">70 %</output></label>
+    <input type="range" id="st" min="30" max="100" step="2" value="70">
+  </div>
+  <div class="ctl">
+    <label>井径扩大率 <output id="out-wo">12 %</output></label>
+    <input type="range" id="wo" min="0" max="35" step="1" value="12">
+  </div>
+  <div class="ctl">
+    <label>水泥浆失水量 <output id="out-fl">80 mL</output></label>
+    <input type="range" id="fl" min="20" max="250" step="10" value="80">
+  </div>
+
+  <svg id="sec" viewBox="0 0 720 250" role="img" aria-label="沿井段的胶结质量分级与缺陷识别"></svg>
+
+  <svg id="kg" viewBox="0 0 720 240" role="img" aria-label="缺陷类型的判据命中与证据来源"></svg>
+
+  <svg id="act" viewBox="0 0 720 244" role="img" aria-label="补救措施的预期效果与成本对比"></svg>
+
+  <div class="legend">
+    <span><i style="background:#2f7d6b"></i>胶结良好</span>
+    <span><i style="background:#b9c6cf"></i>轻微 / 微环隙</span>
+    <span><i style="background:#c9613f"></i>胶结不良 / 窜槽</span>
+    <span><i style="background:#41699b"></i>推荐措施</span>
+    <span><i style="background:#242b2e"></i>不适用（灰显）</span>
+  </div>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">整体评价</span><b id="ro-grade">—</b></div>
+    <div class="ro"><span class="k">问题井段</span><b id="ro-bad">—</b></div>
+    <div class="ro"><span class="k">推荐措施</span><b id="ro-act">—</b></div>
+    <div class="ro"><span class="k">证据命中</span><b id="ro-ev">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>

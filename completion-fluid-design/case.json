@@ -1,0 +1,158 @@
+{
+  "id": "completion-fluid-design",
+  "sceneId": "co5",
+  "methods": [
+    "kg",
+    "opt"
+  ],
+  "title": "完井液体系智能优选与配方设计",
+  "version": "1.0.0",
+  "updated": "2026-10-23",
+  "tabs": {
+    "background": {
+      "label": "专业背景",
+      "lede": "完井液（射孔液、压井液、砾石充填携砂液）是第一种与储层大面积接触的流体。它与储层不配伍造成的伤害会在投产时就压住产能，而且大部分不可解除。现场通常沿用区块成熟体系，等到发现产能偏低时，伤害已经造成。",
+      "judge": [
+        {
+          "label": "数据形态",
+          "value": "配方表 + 岩心实验结果",
+          "desc": "样本少但结构清晰，含定性配伍规则"
+        },
+        {
+          "label": "标注成本",
+          "value": "高",
+          "desc": "标签依赖岩心驱替实验，单口井难覆盖多种配方"
+        },
+        {
+          "label": "可见收益",
+          "value": "中",
+          "desc": "产能恢复率提升直接反映在初期产量上"
+        },
+        {
+          "label": "难度",
+          "value": "中",
+          "desc": "机理清楚但定量标定难，不同实验室口径不一致"
+        }
+      ],
+      "sections": [
+        {
+          "no": 1,
+          "en": "PROBLEM",
+          "title": "当前做法与问题",
+          "html": "<p>常规做法：按区块沿用体系——同一套低固相或清洁盐水体系在本区块用顺了，新井直接照搬，再由现场工程师凭粘土含量与邻井经验调整防膨剂、暂堵剂加量。</p><p>问题有三：<b>伤害来源不清</b>——投产后产能偏低时，说不清是粘土膨胀、固相侵入、乳化还是结垢，也就无从补救；<b>验证代价高</b>——配方的定量依据主要来自岩心驱替实验，单区块只有几十块岩心，覆盖不了全部配方组合；<b>多目标冲突</b>——配伍性最好的体系往往最贵、滤失控制最好的配方粘度损失又大。</p><div class='viz'><svg viewBox='0 0 700 240' role='img' aria-label='完井液伤害储层的五类机理'>\n<rect x='0' y='0' width='700' height='240' fill='#fbfaf6'/>\n<defs><marker id='arW' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0 0 L6 3 L0 6 Z' fill='#41699b'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>完井液会进地层：压差把滤液和固相推进孔隙，产能的损失就来自这里</text>\n<rect x='16' y='28' width='300' height='190' rx='6' fill='#efece1' stroke='#e2ded0'/><text x='30' y='48' font-size='10.5' fill='#4d565b'>滤液侵入：压差把液体推进孔隙</text>\n<rect x='34' y='64' width='264' height='110' fill='#e3dac7'/><text x='40' y='170' font-size='8.5' fill='#8a7f66'>产层孔隙</text>\n<circle cx='70' cy='96' r='4' fill='#8a7f66'/><circle cx='96' cy='88' r='4' fill='#8a7f66'/><circle cx='122' cy='104' r='4' fill='#8a7f66'/><circle cx='150' cy='92' r='4' fill='#8a7f66'/><circle cx='176' cy='110' r='4' fill='#8a7f66'/><circle cx='204' cy='96' r='4' fill='#8a7f66'/><circle cx='232' cy='112' r='4' fill='#8a7f66'/><circle cx='260' cy='98' r='4' fill='#8a7f66'/><circle cx='86' cy='126' r='4' fill='#8a7f66'/><circle cx='114' cy='134' r='4' fill='#8a7f66'/><circle cx='142' cy='124' r='4' fill='#8a7f66'/><circle cx='170' cy='140' r='4' fill='#8a7f66'/><circle cx='198' cy='130' r='4' fill='#8a7f66'/><circle cx='226' cy='144' r='4' fill='#8a7f66'/><circle cx='254' cy='132' r='4' fill='#8a7f66'/><circle cx='100' cy='156' r='4' fill='#8a7f66'/><circle cx='156' cy='160' r='4' fill='#8a7f66'/><circle cx='212' cy='158' r='4' fill='#8a7f66'/>\n<rect x='150' y='64' width='26' height='60' fill='#fff' stroke='#242b2e'/><line x1='150' y1='64' x2='150' y2='124' stroke='#41699b' stroke-width='2'/><line x1='176' y1='64' x2='176' y2='124' stroke='#41699b' stroke-width='2'/>\n<circle cx='110' cy='100' r='3.4' fill='#41699b'/><circle cx='128' cy='112' r='3.4' fill='#41699b'/><circle cx='98' cy='132' r='3.4' fill='#41699b'/><circle cx='116' cy='150' r='3.4' fill='#41699b'/>\n<path d='M136 100 L170 100' stroke='#41699b' stroke-width='1' marker-end='url(#arW)'/><text x='196' y='104' font-size='9' fill='#41699b'>滤液 + 固相</text>\n<text x='30' y='196' font-size='9.5' fill='#4d565b'>侵入越深，返排越难；滤饼造得好，侵入就浅。</text><text x='30' y='214' font-size='9.5' fill='#79828a'>这就是「暂堵剂加量」这一档参数的物理含义。</text>\n<rect x='332' y='28' width='352' height='190' rx='6' fill='#fbfaf6' stroke='#e2ded0'/><text x='346' y='48' font-size='10.5' fill='#4d565b'>五类伤害机理（损失是叠加的）</text>\n<text x='346' y='72' font-size='10' fill='#4d565b'>① 粘土水化 / 分散</text><text x='346' y='88' font-size='9' fill='#79828a'>滤液让粘土膨胀、运移，堵住喉道</text>\n<text x='346' y='108' font-size='10' fill='#4d565b'>② 滤液与固相侵入</text><text x='346' y='124' font-size='9' fill='#79828a'>受压差与滤饼封堵率控制</text>\n<text x='346' y='144' font-size='10' fill='#4d565b'>③ 乳化 / 润湿反转</text><text x='346' y='160' font-size='9' fill='#79828a'>油基体系滤液与地层水乳化</text>\n<text x='346' y='180' font-size='10' fill='#4d565b'>④ 结垢 / 化学不配伍</text><text x='346' y='196' font-size='9' fill='#79828a'>与地层水离子反应生成沉淀</text>\n<text x='346' y='216' font-size='10' fill='#4d565b'>⑤ 高温降解损失</text><text x='346' y='230' font-size='9' fill='#c9613f'>超过体系耐温上限后急剧恶化</text>\n</svg><span class='viz-cap'>左：滤液在压差下侵入孔隙。右：五类伤害机理叠加——只看总恢复率，永远说不清伤害来自哪里。</span></div>"
+        },
+        {
+          "no": 2,
+          "en": "INTERVENTION",
+          "title": "AI 能做什么",
+          "html": "<p>这个场景有两层。<b>知识图谱</b>负责定性部分：把储层敏感性（速敏、水敏、盐敏、酸敏、碱敏）、岩性与各体系的配伍规则、历史作业的成败连成一张图，回答「这口井哪些机理是主要矛盾、什么体系是可用的候选」。</p><p>第二层是<b>定量优化</b>：用岩心实验数据与机理模型训练一个<b>伤害预测代理模型</b>（输入储层条件 + 配方，输出各伤害机理的分量与渗透率恢复值），再在代理模型上按预算与滤失约束做配方寻优，输出<b>候选前沿</b>而不是单一配方。</p><p>被替掉的是「翻区块配方表 + 等岩心结果」这一环；人仍然要决定接受哪一点——要最好的恢复率还是最便宜的可行配方。</p><div class='viz'><svg viewBox='0 0 700 210' role='img' aria-label='知识图谱剪枝加配方寻优两层结构'>\n<rect x='0' y='0' width='700' height='210' fill='#fbfaf6'/>\n<defs><marker id='arX' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs>\n<text x='16' y='17' font-size='11' fill='#242b2e'>两层：知识图谱先剪枝（什么不能用），寻优再在剩下的组合里选（用多少）</text>\n<rect x='16' y='30' width='150' height='70' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='91' y='50' font-size='10.5' fill='#242b2e' text-anchor='middle'>5 种体系</text><text x='91' y='68' font-size='9' fill='#79828a' text-anchor='middle'>× 2 种添加剂加量</text><text x='91' y='86' font-size='9' fill='#79828a' text-anchor='middle'>= 715 组候选</text>\n<path d='M166 65 L200 65' stroke='#242b2e' marker-end='url(#arX)'/>\n<rect x='200' y='30' width='160' height='70' rx='5' fill='#41699b' opacity='0.9'/><text x='280' y='50' font-size='10.5' fill='#fff' text-anchor='middle'>知识图谱剪枝</text><text x='280' y='68' font-size='9' fill='#fff' text-anchor='middle'>配伍性 · 耐温上限</text><text x='280' y='86' font-size='9' fill='#fff' text-anchor='middle'>滤失上限</text>\n<path d='M360 65 L394 65' stroke='#242b2e' marker-end='url(#arX)'/>\n<rect x='394' y='30' width='150' height='70' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='469' y='50' font-size='10.5' fill='#fff' text-anchor='middle'>可行配方集</text><text x='469' y='68' font-size='9' fill='#fff' text-anchor='middle'>剪掉超温 / 不配伍</text><text x='469' y='86' font-size='9' fill='#fff' text-anchor='middle'>剩下的才参与比选</text>\n<path d='M544 65 L578 65' stroke='#242b2e' marker-end='url(#arX)'/>\n<rect x='578' y='30' width='106' height='70' rx='5' fill='#b26a39' opacity='0.9'/><text x='631' y='50' font-size='10.5' fill='#fff' text-anchor='middle'>预算内寻优</text><text x='631' y='68' font-size='9' fill='#fff' text-anchor='middle'>成本—恢复率</text><text x='631' y='86' font-size='9' fill='#fff' text-anchor='middle'>前沿</text>\n<line x1='16' y1='116' x2='684' y2='116' stroke='#e2ded0'/>\n<rect x='16' y='126' width='330' height='70' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='146' font-size='9.5' fill='#4d565b'>为什么必须剪：体系选错之后，再怎么调添加剂加量</text><text x='28' y='164' font-size='9.5' fill='#c9613f'>也补不回来——配伍性是一个乘在各类伤害上的因子。</text><text x='28' y='182' font-size='9' fill='#79828a'>先剪枝不只是省算力，更是避免「在不该选的方向上精细优化」。</text>\n<rect x='360' y='126' width='324' height='70' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='372' y='146' font-size='9.5' fill='#41699b'>输出是取舍曲线，不是一个数</text><text x='372' y='164' font-size='9' fill='#4d565b'>前沿上每一点都是「花这份钱能拿到的最高恢复率」，</text><text x='372' y='182' font-size='9' fill='#4d565b'>预算是多少就取哪一点，预算变了不用重跑。</text>\n</svg><span class='viz-cap'>知识图谱先做硬约束剪枝，寻优再在可行集里给出成本—恢复率的取舍前沿。</span></div>"
+        },
+        {
+          "no": 3,
+          "en": "DATA",
+          "title": "需要准备什么",
+          "html": "<p><b>储层与敏感性数据</b>：粘土矿物含量与类型（蒙脱石、伊利石、高岭石）、孔渗、地层水矿化度与离子组成、地层压力与温度。<b>这部分决定配伍判据</b>。</p><p><b>配方数据</b>：基液体系、添加剂种类与加量、滤液性质（矿化度、pH、表面张力）、滤失与流变参数——全部结构化，无需标注。</p><p><b>实验与作业标签</b>：① 岩心驱替实验的<b>渗透率恢复值</b>（最核心标签，单区块通常 20–60 块）；② 敏感性评价试验（速敏/水敏/盐敏 程度）；③ 投产后的产能与返排情况，用于事后校验。</p><p><b>规格库</b>：各体系的耐温上限、添加剂适用浓度窗口与成本——作为优化时的硬约束边界。</p><div class='viz'><svg viewBox='0 0 700 190' role='img' aria-label='数据来源与实验口径瓶颈'>\n<rect x='0' y='0' width='700' height='190' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>需要准备什么：实验数据不缺，缺的是口径一致</text>\n<rect x='16' y='30' width='200' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='116' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>岩心驱替实验</text>\n<text x='28' y='66' font-size='9' fill='#4d565b'>渗透率恢复率 Krec</text><text x='28' y='82' font-size='9' fill='#4d565b'>48 块岩心 · 分机理测定</text><line x1='28' y1='94' x2='204' y2='94' stroke='#d8d2c4'/><text x='28' y='110' font-size='9' fill='#c9613f'>驱替程序不同 → 数值不可比</text><text x='28' y='130' font-size='9' fill='#c9613f'>单位与围压口径要统一</text>\n<rect x='228' y='30' width='200' height='112' rx='5' fill='#dfe6ee' stroke='#d8d2c4'/><text x='328' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>储层与流体描述</text>\n<text x='240' y='66' font-size='9' fill='#4d565b'>粘土含量 · 矿物组成</text><text x='240' y='82' font-size='9' fill='#4d565b'>温度 · 压差 · 地层水离子</text><line x1='240' y1='94' x2='416' y2='94' stroke='#d8d2c4'/><text x='240' y='110' font-size='9' fill='#41699b'>来自测井与水分析，结构化</text><text x='240' y='130' font-size='9' fill='#41699b'>粘土含量决定敏感档</text>\n<rect x='440' y='30' width='244' height='112' rx='5' fill='#e9e4d8' stroke='#d8d2c4'/><text x='562' y='48' font-size='10.5' fill='#242b2e' text-anchor='middle'>配方与成本</text>\n<text x='452' y='66' font-size='9' fill='#4d565b'>体系基础成本 · 添加剂单价</text><text x='452' y='82' font-size='9' fill='#4d565b'>单方预算上限（管理约束）</text><line x1='452' y1='94' x2='672' y2='94' stroke='#d8d2c4'/><text x='452' y='110' font-size='9' fill='#c9613f'>预算不写进约束 → 推荐最贵的体系</text><text x='452' y='130' font-size='9' fill='#c9613f'>结果无人采纳，流程被绕开</text>\n<rect x='150' y='156' width='400' height='26' rx='5' fill='#2f7d6b' opacity='0.9'/><text x='350' y='173' font-size='10' fill='#fff' text-anchor='middle'>代理模型：48 块岩心标定 + 715 组配方枚举</text>\n<path d='M116 142 L116 156' stroke='#c9613f'/><path d='M328 142 L328 156' stroke='#41699b'/><path d='M562 142 L562 156' stroke='#79828a'/>\n</svg><span class='viz-cap'>数据分层：实验数据不缺，瓶颈是驱替口径统一；预算必须作为约束写进去。</span></div>"
+        },
+        {
+          "no": 4,
+          "en": "DIFFICULTY",
+          "title": "难度与参考方向",
+          "html": "<p>难点：<b>恢复率的实验口径不统一</b>——不同单位、不同驱替程序给出的同一个配方可能差十几个百分点，跨区块直接合并不成立；<b>机理之间存在耦合</b>（提高盐度抑制粘土膨胀，但加剧盐敏与结垢），单靠规则会顾此失彼；<b>成本口径复杂</b>——材料费只是一部分，还要计报废处理与占用周期。</p><p>改进路线：① 先做统一口径的实验复核，把历史数据按比例因子对齐到一个基准；② 图谱 + 规则先做可行性剪枝（耐温、配伍、预算），再由代理模型在小空间内寻优，避免在不合法区域外推；③ 代理模型优先高斯过程并保留不确定度，让实验室下一个该做的<b>驱替实验</b>由贝叶斯优化来选；④ 输出按机理拆分的伤害构成，而不是只给一个恢复率数字。</p><div class='viz'><svg viewBox='0 0 700 200' role='img' aria-label='机理掩盖与耐温忽略两个坑'>\n<rect x='0' y='0' width='700' height='200' fill='#fbfaf6'/>\n<text x='16' y='17' font-size='11' fill='#242b2e'>两个最容易踩的坑：机理互相掩盖，以及耐温上限被忽略</text>\n<rect x='16' y='28' width='330' height='160' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='28' y='46' font-size='10.5' fill='#4d565b'>① 只看总恢复率：伤害机理互相掩盖</text>\n<text x='28' y='66' font-size='9' fill='#79828a'>配方 A</text><rect x='80' y='56' width='240' height='16' rx='2' fill='#efece1'/><rect x='80' y='56' width='90' height='16' fill='#41699b'/><rect x='170' y='56' width='110' height='16' fill='#2f7d6b'/><rect x='280' y='56' width='40' height='16' fill='#b26a39'/><text x='80' y='86' font-size='8.5' fill='#4d565b'>水化 37% · 侵入 46% · 乳化 17%　总损失 62%</text>\n<text x='28' y='112' font-size='9' fill='#79828a'>配方 B</text><rect x='80' y='102' width='240' height='16' rx='2' fill='#efece1'/><rect x='80' y='102' width='180' height='16' fill='#41699b'/><rect x='260' y='102' width='60' height='16' fill='#2f7d6b'/><text x='80' y='132' font-size='8.5' fill='#4d565b'>水化 75% · 侵入 25%　总损失 62%</text>\n<text x='28' y='152' font-size='9' fill='#c9613f'>总损失相同，但 B 换到低粘土区块会立刻变差，</text><text x='28' y='168' font-size='9' fill='#c9613f'>而 A 不会——只看总数看不出这个差别。</text><text x='28' y='184' font-size='9' fill='#79828a'>处理：按机理分量训练，输出构成而不是一个数</text>\n<rect x='360' y='28' width='324' height='160' rx='5' fill='#efece1' stroke='#e2ded0'/><text x='372' y='46' font-size='10.5' fill='#4d565b'>② 忽略耐温上限</text>\n<line x1='386' y1='150' x2='660' y2='150' stroke='#242b2e'/><line x1='386' y1='62' x2='386' y2='150' stroke='#242b2e'/>\n<path d='M396 140 C 450 136, 500 130, 540 112 C 580 92, 620 76, 656 68' fill='none' stroke='#41699b' stroke-width='2'/><text x='540' y='96' font-size='9' fill='#41699b'>恢复率随温度</text>\n<line x1='560' y1='62' x2='560' y2='150' stroke='#c9613f' stroke-dasharray='4 3'/><text x='564' y='76' font-size='8.5' fill='#c9613f'>耐温上限 130 ℃</text>\n<text x='520' y='164' font-size='9' fill='#c9613f'>超过上限 → 体系降解失效 → 曲线陡降</text>\n<text x='372' y='182' font-size='9' fill='#4d565b'>图纸上配伍性很好，井底却已成为另一种流体。</text>\n</svg><span class='viz-cap'>左：总恢复率相同但机理构成不同，换区块表现会反转。右：耐温上限越过后体系降解失效。</span></div>"
+        }
+      ]
+    },
+    "workflow": {
+      "label": "案例流程",
+      "title": "一口井的完井液配方优选流程",
+      "lead": [
+        "关键是顺序：先把「不可能 / 不可用」的体系用图谱规则剪掉，再在剩下的小空间里定量寻优。反过来先优化再校核，多半会得到一个打不出来或超预算的配方。",
+        "下面的示范就是这个顺序的第 2–4 步：改储层条件或预算，看伤害构成怎么变、以及约束内的最优配方和当前配方差多少。"
+      ],
+      "stats": [
+        [
+          "候选配方",
+          "715 组"
+        ],
+        [
+          "岩心标定",
+          "48 块"
+        ],
+        [
+          "单方成本",
+          "1.00 – 3.20"
+        ]
+      ],
+      "steps": [
+        {
+          "name": "配伍知识整理成图谱",
+          "role": "数据",
+          "do": "把敏感性档位、岩性、体系类型、添加剂之间的配伍与禁忌关系录入图谱，附上与实验/作业记录的关联。",
+          "effect": "得到可查询的「什么井能用什么体系」规则层，作为后续剪枝依据。",
+          "trap": "把配伍规则写成硬约束而不留证据来源，几年后没人知道这条规则从哪来、还成不成立。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='配伍知识整理成图谱'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='30' width='120' height='36' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='72' y='52' font-size='9.5' fill='#242b2e' text-anchor='middle'>实验室配伍记录</text><rect x='12' y='72' width='120' height='30' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='72' y='91' font-size='9.5' fill='#242b2e' text-anchor='middle'>历史作业结果</text><path d='M132 48 L162 60' stroke='#79828a'/><path d='M132 87 L162 68' stroke='#79828a'/><rect x='162' y='42' width='130' height='36' rx='4' fill='#41699b' opacity='0.9'/><text x='227' y='58' font-size='9.5' fill='#fff' text-anchor='middle'>敏感档 × 体系</text><text x='227' y='72' font-size='9' fill='#fff' text-anchor='middle'>配伍性矩阵</text><path d='M292 60 L322 60' stroke='#242b2e' marker-end='url(#arY)'/><defs><marker id='arY' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='322' y='42' width='150' height='36' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='397' y='58' font-size='9.5' fill='#fff' text-anchor='middle'>附历史井次</text><text x='397' y='72' font-size='9' fill='#fff' text-anchor='middle'>n&lt;10 提示证据不足</text><path d='M472 60 L502 60' stroke='#242b2e' marker-end='url(#arY)'/><rect x='502' y='42' width='146' height='36' rx='4' fill='#c9613f' opacity='0.85'/><text x='575' y='58' font-size='9.5' fill='#fff' text-anchor='middle'>硬约束清单</text><text x='575' y='72' font-size='9' fill='#fff' text-anchor='middle'>耐温 / 滤失 / 预算</text><rect x='162' y='88' width='486' height='24' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='174' y='104' font-size='9' fill='#4d565b'>图谱里每一格都要带上<tspan font-weight='600'>井次</tspan>：配伍性 0.95 但只有 3 井次，与 0.88 但有 31 井次，可信度并不一样</text></svg>"
+        },
+        {
+          "name": "伤害机理拆分与分量标定",
+          "role": "算法",
+          "do": "按粘土水化、固相滤液侵入、乳化润湿反转、结垢不配伍、高温降解五类建立分量模型，用岩心数据标定系数。",
+          "effect": "预测结果可以按机理拆分，「为什么恢复率低」有具体答案而不是一个数字。",
+          "trap": "只拟合总恢复率会让不同机理的贡献互相抵消，换个区块就失准。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='伤害机理拆分与分量标定'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>把总损失拆成五个分量：每个分量单独标定，再叠加</text><text x='12' y='42' font-size='9' fill='#4d565b'>粘土水化</text><rect x='80' y='32' width='200' height='14' rx='2' fill='#efece1'/><rect x='80' y='32' width='86' height='14' fill='#41699b'/><text x='288' y='43' font-size='9' fill='#4d565b'>d = 2.04 · 粘土 · 水化因子 · (1−抑制率)</text><text x='12' y='64' font-size='9' fill='#4d565b'>固相侵入</text><rect x='80' y='54' width='200' height='14' rx='2' fill='#efece1'/><rect x='80' y='54' width='128' height='14' fill='#2f7d6b'/><text x='288' y='65' font-size='9' fill='#4d565b'>d = 20 · (Δp/25) · 侵入因子 · (1−封堵率)</text><text x='12' y='86' font-size='9' fill='#4d565b'>乳化 / 结垢</text><rect x='80' y='76' width='200' height='14' rx='2' fill='#efece1'/><rect x='80' y='76' width='58' height='14' fill='#b26a39'/><rect x='138' y='76' width='34' height='14' fill='#c9613f'/><text x='288' y='87' font-size='9' fill='#4d565b'>随体系属性与温度压力变化</text><rect x='12' y='96' width='636' height='18' rx='4' fill='#fbfaf6' stroke='#e2ded0'/><text x='24' y='109' font-size='9' fill='#c9613f'>配伍性是一个乘在各类伤害上的因子：体系选错，五个分量同时变大，靠加添加剂补不回来</text></svg>"
+        },
+        {
+          "name": "训练伤害预测代理模型",
+          "role": "算法",
+          "do": "用机理模型 + 实验数据训练代理模型，留出实验样本做交叉验证，重点看高伤害区的预测稳定性。",
+          "effect": "单次评估降到毫秒，上千组配方的寻优与不确定度传播成为可能。",
+          "trap": "实验样本少时必须给出不确定度；只有点估计会让寻优跑到样本稀疏区取到虚假最优。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='训练伤害预测代理模型'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>48 块岩心标定，再在 715 组配方上枚举——实验只做代表性点，其余由模型外推</text><rect x='12' y='30' width='150' height='40' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='87' y='48' font-size='9.5' fill='#242b2e' text-anchor='middle'>48 块岩心</text><text x='87' y='64' font-size='9' fill='#79828a' text-anchor='middle'>分机理测定</text><path d='M162 50 L192 50' stroke='#242b2e' marker-end='url(#arY2)'/><defs><marker id='arY2' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='192' y='30' width='150' height='40' rx='4' fill='#41699b' opacity='0.9'/><text x='267' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>分量系数标定</text><text x='267' y='64' font-size='9' fill='#fff' text-anchor='middle'>每机理 2–3 个系数</text><path d='M342 50 L372 50' stroke='#242b2e' marker-end='url(#arY2)'/><rect x='372' y='30' width='150' height='40' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='447' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>代理模型</text><text x='447' y='64' font-size='9' fill='#fff' text-anchor='middle'>毫秒级 · 可枚举</text><path d='M522 50 L552 50' stroke='#242b2e' marker-end='url(#arY2)'/><rect x='552' y='30' width='96' height='40' rx='4' fill='#b26a39' opacity='0.85'/><text x='600' y='48' font-size='9.5' fill='#fff' text-anchor='middle'>715 组</text><text x='600' y='64' font-size='9' fill='#fff' text-anchor='middle'>候选配方</text><rect x='12' y='78' width='636' height='34' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='94' font-size='9' fill='#4d565b'>留出集校验：48 块里留 8 块不参与标定，只用它评估分量预测的误差。</text><text x='24' y='108' font-size='9' fill='#c9613f'>不同驱替程序、不同围压做出的恢复率混着训练 = 模型学到的是实验室而不是储层</text></svg>"
+        },
+        {
+          "name": "约束剪枝与配方寻优",
+          "role": "算法",
+          "do": "先用耐温、配伍性、预算、滤失四项硬约束剔除不可行配方，再在余下的组合里求最大恢复率并出帕累托前沿。",
+          "effect": "工程师看到的是「成本—恢复率」取舍曲线，预算变了立刻能重选。",
+          "trap": "忘记把预算做成显式约束，模型永远推荐最贵的那个体系，实际不会被采纳。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='约束剪枝与配方寻优'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><text x='12' y='18' font-size='10' fill='#4d565b'>剪枝后剩下的候选，按「成本—恢复率」排帕累托前沿，再由预算定取哪一点</text><line x1='30' y1='98' x2='300' y2='98' stroke='#242b2e'/><line x1='30' y1='30' x2='30' y2='98' stroke='#242b2e'/><circle cx='56' cy='88' r='2.4' fill='#b9c6cf'/><circle cx='78' cy='78' r='2.4' fill='#b9c6cf'/><circle cx='104' cy='70' r='2.4' fill='#b9c6cf'/><circle cx='134' cy='60' r='2.4' fill='#b9c6cf'/><circle cx='168' cy='52' r='2.4' fill='#b9c6cf'/><circle cx='206' cy='46' r='2.4' fill='#b9c6cf'/><circle cx='248' cy='42' r='2.4' fill='#b9c6cf'/><circle cx='284' cy='40' r='2.4' fill='#b9c6cf'/><path d='M56 88 C 110 66, 180 46, 284 40' fill='none' stroke='#41699b' stroke-width='1.8'/><line x1='210' y1='30' x2='210' y2='98' stroke='#c9613f' stroke-dasharray='4 3'/><text x='214' y='40' font-size='8.5' fill='#c9613f'>预算上限</text><circle cx='196' cy='48' r='5' fill='none' stroke='#2f7d6b' stroke-width='1.6'/><text x='204' y='64' font-size='9' fill='#2f7d6b'>预算内最优</text><text x='30' y='112' font-size='8.5' fill='#79828a'>单方成本 →</text><rect x='330' y='28' width='318' height='84' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='342' y='46' font-size='9.5' fill='#4d565b'>前沿右侧的点恢复率更高，但超出预算 → 不可行；</text><text x='342' y='64' font-size='9.5' fill='#4d565b'>前沿左侧的点更便宜，恢复率略降 → 常常更划算。</text><text x='342' y='82' font-size='9' fill='#41699b'>边际收益递减：成本翻一倍往往只换来几个百分点</text><text x='342' y='100' font-size='9' fill='#c9613f'>预算收得过紧 → 可行集为空 → 只能接受较高伤害</text></svg>"
+        },
+        {
+          "name": "实验验证与回填",
+          "role": "人工",
+          "do": "对本井做一组对比驱替实验或返排跟踪，把实际恢复率回填到图谱与模型，更新该区块的适用性系数。",
+          "effect": "区块数据越多，推荐越准；这也是把「实验室口径」逐步统一起来的唯一办法。",
+          "trap": "只回填成功的配方、丢掉失败的，模型会退化成「推荐大家都在用的那个」。",
+          "viz": "<svg viewBox='0 0 660 120' role='img' aria-label='实验验证与回填'><rect x='0' y='0' width='660' height='120' fill='#fbfaf6'/><rect x='12' y='30' width='112' height='34' rx='4' fill='#41699b' opacity='0.9'/><text x='68' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>推荐配方</text><path d='M124 47 L158 47' stroke='#242b2e' marker-end='url(#arY3)'/><defs><marker id='arY3' markerWidth='7' markerHeight='7' refX='6' refY='3' orient='auto'><path d='M0 0 L7 3 L0 6 Z' fill='#242b2e'/></marker></defs><rect x='158' y='30' width='112' height='34' rx='4' fill='#e9e4d8' stroke='#d8d2c4'/><text x='214' y='51' font-size='9.5' fill='#242b2e' text-anchor='middle'>岩心复验</text><path d='M270 47 L304 47' stroke='#242b2e' marker-end='url(#arY3)'/><rect x='304' y='30' width='112' height='34' rx='4' fill='#2f7d6b' opacity='0.9'/><text x='360' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>投产对比</text><path d='M416 47 L450 47' stroke='#242b2e' marker-end='url(#arY3)'/><rect x='450' y='30' width='112' height='34' rx='4' fill='#b26a39' opacity='0.85'/><text x='506' y='51' font-size='9.5' fill='#fff' text-anchor='middle'>回填图谱</text><path d='M562 47 C 620 47, 626 84, 580 90 C 540 94, 130 96, 68 74' fill='none' stroke='#79828a' stroke-dasharray='4 3'/><rect x='12' y='74' width='300' height='36' rx='4' fill='#efece1' stroke='#e2ded0'/><text x='24' y='90' font-size='9' fill='#4d565b'>只回填「被采纳且验证过」的配方会让成功率虚高；</text><text x='24' y='104' font-size='9' fill='#c9613f'>被否掉的方案与原因同样要入库</text><rect x='324' y='74' width='324' height='36' rx='4' fill='#dfe6ee' stroke='#d8d2c4'/><text x='336' y='90' font-size='9' fill='#41699b'>靶心指标：预测恢复率 vs 岩心实测的偏差</text><text x='336' y='104' font-size='9' fill='#4d565b'>分机理分别统计，某一机理持续偏大 → 该分量系数要重标</text></svg>"
+        }
+      ],
+      "metrics": {
+        "title": "怎么算“做对了”",
+        "html": "<p><b>伤害预测精度</b>：留出法交叉验证，渗透率恢复值预测的平均绝对误差 ≤ 5 个百分点；更重要的是<b>排序能力</b>——按伤害机理归因的 Top-1 与实验判识一致的比例 ≥ 80%。</p><p><b>推荐被采纳率</b>：推荐配方实际被现场采用的比例，以及采纳井投产后的比采油指数相对同期井的提升。</p><p><b>约束遵循</b>：推荐配方中超出预算或超滤失限的比例应为 0——这是一票否决项。</p>"
+      },
+      "fails": [
+        {
+          "name": "口径不一致直接合并",
+          "why": "不同单位、不同驱替程序的恢复率数值混着训练，模型学到的是实验室而不是储层。"
+        },
+        {
+          "name": "只看总恢复率",
+          "why": "伤害机理互相掩盖，模型给出的配方在新区块上表现完全相反。"
+        },
+        {
+          "name": "推荐最贵的体系",
+          "why": "预算没写进约束，优化目标只盯着恢复率，结果无人采纳，流程被绕开。"
+        },
+        {
+          "name": "忽略耐温上限",
+          "why": "体系在高温段降解失效，图纸上配伍性很好，井底却已成为另一种流体。"
+        }
+      ]
+    },
+    "demo": {
+      "mode": "auto",
+      "html": "demo/index.html",
+      "label": "可运行示范",
+      "intro": "改粘土含量、温度、压差与两种添加剂加量，切换体系并调整预算：三张图给出五类伤害机理的构成、知识图谱的「敏感档 × 体系」配伍矩阵与剪枝清单、以及候选配方的成本—恢复率帕累托前沿。",
+      "height": 1240
+    }
+  }
+}

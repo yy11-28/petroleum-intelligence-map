@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>示范：人工举升方式智能优选与参数优化</title>
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div class="panel">
+  <h1>举升方式优选 · 知识图谱剪枝 + 制度参数寻优</h1>
+  <p class="lead">一口井的供液能力、气液比、含砂与温度决定了哪几种举升方式还能用；能用的那几种里，
+  又要靠制度参数（频率 / 注气量 / 转速）把日净收益与免修期一起算清楚。<b>知识图层负责前者，寻优层负责后者。</b></p><div class="meth"><div class="meth-h">智能方法 · 为什么起作用</div><div class="meth-g"><div><b>用了什么方法</b><ul><li>举升判据规则推理</li><li>工作制度寻优</li><li>失效模式分析</li></ul></div><div><b>为什么起作用</b><ul><li>先判「能不能举起来」（含砂、气液比、井斜），规则先行避免打分选出不适用的方式</li><li>可行方式内再优化制度，失效模式给出长期风险</li></ul></div><div><b>在示范里怎么看</b><ul><li>拉高含砂与气液比，看判据命中与推荐方式切换</li></ul></div></div></div>
+
+  <div class="ctl">
+    <label>地层供液能力 <output id="out-ql">150 m³/d</output></label>
+    <input type="range" id="ql" min="20" max="400" step="10" value="150">
+  </div>
+  <div class="ctl">
+    <label>含水 <output id="out-wc">84 %</output></label>
+    <input type="range" id="wc" min="0" max="95" step="1" value="84">
+  </div>
+  <div class="ctl">
+    <label>气液比 <output id="out-glr">240 m³/m³</output></label>
+    <input type="range" id="glr" min="0" max="400" step="10" value="240">
+  </div>
+  <div class="ctl">
+    <label>举升高度 <output id="out-h">1750 m</output></label>
+    <input type="range" id="h" min="600" max="3000" step="50" value="1750">
+  </div>
+  <div class="ctl">
+    <label>含砂 <output id="out-sand">0.6 ‰</output></label>
+    <input type="range" id="sand" min="0" max="5" step="0.1" value="0.6">
+  </div>
+  <div class="ctl">
+    <label>井底温度 <output id="out-t">95 ℃</output></label>
+    <input type="range" id="t" min="40" max="150" step="1" value="95">
+  </div>
+
+  <svg id="kg" viewBox="0 0 720 240" role="img" aria-label="三种举升方式的判据命中矩阵"></svg>
+
+  <svg id="cmp" viewBox="0 0 720 230" role="img" aria-label="三种方式寻优后的日净收益与免修期对比"></svg>
+
+  <svg id="tune" viewBox="0 0 720 230" role="img" aria-label="所选方式的制度参数扫描曲线"></svg>
+
+  <div class="legend">
+    <span><i style="background:#2f7d6b"></i>判据通过</span>
+    <span><i style="background:#b9c6cf"></i>软判据（降权）</span>
+    <span><i style="background:#c9613f"></i>硬判据（不可用）</span>
+    <span><i style="background:#41699b"></i>寻优结果</span>
+    <span><i style="background:#242b2e"></i>现场习惯做法</span>
+  </div>
+
+  <div class="readouts">
+    <div class="ro"><span class="k">推荐方式 / 制度</span><b id="ro-pick">—</b></div>
+    <div class="ro"><span class="k">日净收益</span><b id="ro-net">—</b></div>
+    <div class="ro"><span class="k">免修期（P10–P90）</span><b id="ro-life">—</b></div>
+    <div class="ro"><span class="k">判据命中</span><b id="ro-chk">—</b></div>
+  </div>
+
+  <p class="note" id="note"></p>
+</div>
+<script src="demo.js"></script>
+</body>
+</html>
